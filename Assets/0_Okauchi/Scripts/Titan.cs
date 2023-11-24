@@ -6,11 +6,11 @@ public class Titan : MonoBehaviour
 {
     private const float STOPPING_DISTANCE = 0.5f;
 
+    [SerializeField] private int hp = 0;
     [SerializeField] private float walkingSpeed = 0.0f;
     [SerializeField] private float rushingSpeed = 0.0f;
     [SerializeField] private float trackingValue = 0.0f;
     [SerializeField] private Transform targetTransform;   //•ÏX•s‰Â‚ÈŽQÆ‚Á‚Äinspector‚©‚çÝ’è‚Å‚«‚È‚¢‚Ì‚©
-    private Vector3 targetPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +21,7 @@ public class Titan : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        targetPosition = targetTransform.position;
-        Vector3 toTargetVector = targetPosition - transform.position;
+        Vector3 toTargetVector = targetTransform.position - transform.position;
         toTargetVector -= new Vector3(0.0f, toTargetVector.y, 0.0f);
         if (toTargetVector.magnitude >= STOPPING_DISTANCE)
         {
@@ -42,5 +41,14 @@ public class Titan : MonoBehaviour
     private void Move(float speed)
     {
         transform.position += speed * transform.forward * Time.deltaTime;
+    }
+
+    public void ReceiveDamage(int damage)
+    {
+        hp -= damage;
+        if(hp <= 0)
+        {
+            hp = 0;
+        }
     }
 }
