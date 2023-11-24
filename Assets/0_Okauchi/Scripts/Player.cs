@@ -23,6 +23,6 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.D)) direction += transform.right;
         if (Input.GetKey(KeyCode.A)) direction -= transform.right;
 
-        transform.position += speed * direction * Time.deltaTime;
+        transform.position += speed * direction.normalized * Time.deltaTime;
     }
 }
