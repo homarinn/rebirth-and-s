@@ -15,7 +15,7 @@ public class CS_Player : MonoBehaviour
     private float moveDecelerate = 5.0f;
 
     [SerializeField, Header("最高加速度")]
-    private float moveMaxSpeed = 10.0f;
+    private float moveMaxSpeed = 5.0f;
 
     [SerializeField, Header("水たまり上の最高速度")]
     private float moveOnTheWaterMaxSpeed = 0.5f;
@@ -98,7 +98,7 @@ public class CS_Player : MonoBehaviour
     {
         // コンポーネントを取得
         rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
 
         // ステータスの初期化
         hp = maxHP;
