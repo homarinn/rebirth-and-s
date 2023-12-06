@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 94baf1dac080cff4483664a00558881a
+guid: c021f31032f83144380c5c152571ff19
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,14 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FCUI \u8A2D\u5B9A (\u3000\u30E9\u30D5\u3000
-        )_0"
+      name: player_StatusBarFrame_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 10
-        width: 700
-        height: 300
+        x: 0
+        y: 0
+        width: 750
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -138,8 +137,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f19b956a3170519429652a83e0380786
-      internalID: 1038544228
+      spriteID: fabbacd6c5e93fc4d80c70430c606d5b
+      internalID: 1077386214
       vertices: []
       indices: 
       edges: []
@@ -147,7 +146,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: bf39ad902b96ce44aab017934fa41184
     internalID: 0
     vertices: []
     indices: 
@@ -155,7 +154,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FCUI \u8A2D\u5B9A (\u3000\u30E9\u30D5\u3000 )_0": 1038544228
+      player_StatusBarFrame_0: 1077386214
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
