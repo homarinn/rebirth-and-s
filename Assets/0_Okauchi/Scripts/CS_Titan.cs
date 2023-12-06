@@ -11,12 +11,17 @@ public class CS_Titan : MonoBehaviour
         WALK,
         CHARGE,
         RUSH,
+        TURN,
         STOP,
         DOWN,
     }
     private State state = State.IDLE;
 
     private const float STOPPING_DISTANCE = 0.5f;
+
+    //アニメーション
+    [SerializeField]
+    private Animator animator;
 
     //HP
     [SerializeField] private float hp = 0;
@@ -97,6 +102,7 @@ public class CS_Titan : MonoBehaviour
             case State.WALK:   Walk();   break;
             case State.CHARGE: Charge(); break;
             case State.RUSH:   Rush();   break;
+            case State.TURN:   Turn();   break;
             case State.STOP:   Stop();   break;
             case State.DOWN:   Down();   break;
             default: 
@@ -113,6 +119,7 @@ public class CS_Titan : MonoBehaviour
     {
         state = State.WALK;
         attackIntervalCount = attackInterval;
+        animator.SetTrigger("triggerWalk");
     }
 
     private void Walk()
@@ -136,6 +143,7 @@ public class CS_Titan : MonoBehaviour
         chargeTimeCount = (float)Random.Range(chargeTimeMin, chargeTimeMax);
         rushPower = rushDefaultPower;
         rushSpeed = rushDefaultSpeed;
+        animator.SetTrigger("triggerCharge");
     }
 
     private void Charge()
@@ -146,6 +154,7 @@ public class CS_Titan : MonoBehaviour
         rushPower += rushPowerChargingIncrement * Time.deltaTime;
         if (chargeTimeCount <= 0.0f)
         {
+            rushCount = Random.Range(rushCountMin, rushCountMax + 1);
             StartRush();
         }
     }
@@ -153,37 +162,40 @@ public class CS_Titan : MonoBehaviour
     private void StartRush()
     {
         state = State.RUSH;
-        rushPower = rushDefaultPower;
-        rushSpeed = rushDefaultSpeed;
-        rushCount = Random.Range(rushCountMin, rushCountMax + 1);
         rushTimeCount = rushTime;
+        animator.SetTrigger("triggerRush");
     }
 
     private void Rush()
     {
-        if(rushIntervalCount <= 0.0f)
+        Transfer(rushSpeed);
+        rushTimeCount -= Time.deltaTime;
+        if (rushTimeCount <= 0.0f)
         {
-            Transfer(rushSpeed);
-            rushTimeCount -= Time.deltaTime;
-            if(rushTimeCount <= 0.0f)
+            rushCount--;
+            if (rushCount <= 0)
             {
-                rushIntervalCount = rushInterval;
-                rushCount--;
+                StartStop();
+                return;
             }
+            StartTurn();
         }
-        else
-        {
-            TrackConstantRotation();
-            rushIntervalCount -= Time.deltaTime;
-            if(rushIntervalCount <= 0.0f)
-            {
-                rushTimeCount = rushTime;
-            }
-        }
+    }
 
-        if(rushCount <= 0)
+    private void StartTurn()
+    {
+        state = State.TURN;
+        rushIntervalCount = rushInterval;
+        animator.SetTrigger("triggerIdle");
+    }
+
+    private void Turn()
+    {
+        TrackConstantRotation();
+        rushIntervalCount -= Time.deltaTime;
+        if (rushIntervalCount <= 0.0f)
         {
-            StartStop();
+            StartRush();
         }
     }
 
@@ -192,6 +204,7 @@ public class CS_Titan : MonoBehaviour
         state = State.STOP;
         rushIntervalCount = 0.0f;
         stoppingTimeCount = stoppingTime;
+        animator.SetTrigger("triggerIdle");
     }
 
     private void Stop()
@@ -209,9 +222,7 @@ public class CS_Titan : MonoBehaviour
 
         state = State.DOWN;
         downTimeCount = downTime;
-
-        //テスト用
-        transform.eulerAngles += new Vector3(90.0f, 0.0f, 0.0f);
+        animator.SetTrigger("triggerDown");
     }
 
     private void Down()
@@ -220,8 +231,6 @@ public class CS_Titan : MonoBehaviour
         if(downTimeCount <= 0.0f)
         {
             StartWalk();
-            //テスト用
-            transform.eulerAngles -= new Vector3(90.0f, 0.0f, 0.0f);
         }
     }
 

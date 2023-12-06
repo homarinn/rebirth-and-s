@@ -21,9 +21,6 @@ public class CS_TitanWeaknessCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
-        {
-            titan.StartDown();
-        }
+        titan.StartDown();
     }
 }
