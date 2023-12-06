@@ -73,6 +73,12 @@ public class CS_Titan : MonoBehaviour
     [SerializeField] private float stoppingTime = 0.0f;
     private float stoppingTimeCount = 0.0f;
 
+    //--------------------
+    //ダウン
+    //--------------------
+    [SerializeField] private float downTime = 0.0f;
+    private float downTimeCount = 0.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -111,54 +117,16 @@ public class CS_Titan : MonoBehaviour
 
     private void Walk()
     {
-        if (toTargetVector.magnitude >= STOPPING_DISTANCE)
-        {
-            TrackGradualRotation();
-            Transfer(walkSpeed);
-        }
-
         attackIntervalCount -= Time.deltaTime;
         if (attackIntervalCount <= 0.0f && toTargetVector.magnitude <= attackReactionDistance)
         {
             StartCharge();
         }
-    }
 
-    private void TrackGradualRotation()
-    {
-        Quaternion lookingRotation = Quaternion.LookRotation(toTargetVector);
-
-        lookingRotation = Quaternion.Slerp(transform.rotation, lookingRotation, gradualTrackingValue * Time.deltaTime);
-        transform.rotation = lookingRotation;
-    }
-
-    private void TrackConstantRotation()
-    {
-        float angle = Quaternion.Angle(transform.rotation, Quaternion.LookRotation(toTargetVector));
-        Vector3 cross = Vector3.Cross(transform.forward, toTargetVector);
-        float sign = (cross.y >= 0.0f) ? 1.0f : -1.0f;
-
-        if (angle >= constantTrackingAngle * Time.deltaTime)
+        if (toTargetVector.magnitude >= STOPPING_DISTANCE)
         {
-            transform.rotation *= Quaternion.AngleAxis(sign * constantTrackingAngle * Time.deltaTime, Vector3.up);
-        }
-        else
-        {
-            transform.rotation *= Quaternion.AngleAxis(sign * angle, Vector3.up);
-        }
-    }
-
-    private void Transfer(float speed)
-    {
-        transform.position += speed * transform.forward * Time.deltaTime;
-    }
-
-    public void ReceiveDamage(int damage)
-    {
-        hp -= damage;
-        if(hp <= 0)
-        {
-            hp = 0;
+            TrackGradualRotation();
+            Transfer(walkSpeed);
         }
     }
 
@@ -215,11 +183,11 @@ public class CS_Titan : MonoBehaviour
 
         if(rushCount <= 0)
         {
-            StartStopping();
+            StartStop();
         }
     }
 
-    private void StartStopping()
+    private void StartStop()
     {
         state = State.STOP;
         rushIntervalCount = 0.0f;
@@ -235,13 +203,63 @@ public class CS_Titan : MonoBehaviour
         }
     }
 
-    private void StartDown()
+    public void StartDown()
     {
+        if (state == State.DOWN) return;
 
+        state = State.DOWN;
+        downTimeCount = downTime;
+
+        //テスト用
+        transform.eulerAngles += new Vector3(90.0f, 0.0f, 0.0f);
     }
 
     private void Down()
     {
-        
+        downTimeCount -= Time.deltaTime;
+        if(downTimeCount <= 0.0f)
+        {
+            StartWalk();
+            //テスト用
+            transform.eulerAngles -= new Vector3(90.0f, 0.0f, 0.0f);
+        }
+    }
+
+    private void TrackGradualRotation()
+    {
+        Quaternion lookingRotation = Quaternion.LookRotation(toTargetVector);
+
+        lookingRotation = Quaternion.Slerp(transform.rotation, lookingRotation, gradualTrackingValue * Time.deltaTime);
+        transform.rotation = lookingRotation;
+    }
+
+    private void TrackConstantRotation()
+    {
+        float angle = Quaternion.Angle(transform.rotation, Quaternion.LookRotation(toTargetVector));
+        Vector3 cross = Vector3.Cross(transform.forward, toTargetVector);
+        float sign = (cross.y >= 0.0f) ? 1.0f : -1.0f;
+
+        if (angle >= constantTrackingAngle * Time.deltaTime)
+        {
+            transform.rotation *= Quaternion.AngleAxis(sign * constantTrackingAngle * Time.deltaTime, Vector3.up);
+        }
+        else
+        {
+            transform.rotation *= Quaternion.AngleAxis(sign * angle, Vector3.up);
+        }
+    }
+
+    private void Transfer(float speed)
+    {
+        transform.position += speed * transform.forward * Time.deltaTime;
+    }
+
+    public void ReceiveDamage(int damage)
+    {
+        hp -= damage;
+        if (hp <= 0.0f)
+        {
+            hp = 0.0f;
+        }
     }
 }

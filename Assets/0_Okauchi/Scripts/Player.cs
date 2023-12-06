@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField]
     private float speed = 0.0f;
+    private float upHeight = 2.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -24,5 +25,9 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) direction -= transform.right;
 
         transform.position += speed * direction.normalized * Time.deltaTime;
+
+        //上下（テスト用）
+        if (Input.GetKeyDown(KeyCode.Space)) transform.position += new Vector3(0.0f, upHeight, 0.0f);
+        if (Input.GetKeyUp(KeyCode.Space))   transform.position -= new Vector3(0.0f, upHeight, 0.0f);
     }
 }
