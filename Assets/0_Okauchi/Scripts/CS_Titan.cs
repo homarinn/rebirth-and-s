@@ -24,7 +24,14 @@ public class CS_Titan : MonoBehaviour
     private Animator animator;
 
     //HP
-    [SerializeField] private float hp = 0;
+    [SerializeField] private float hpMax = 0;
+    public float hp
+    {
+        get
+        {
+            return hp;
+        }
+    }
 
     //ターゲット（プレイヤー）の位置情報
     [SerializeField] private Transform targetTransform;   //変更不可な参照ってinspectorから設定できないのか
@@ -87,6 +94,7 @@ public class CS_Titan : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        hp = hpMax;
         StartMoving();  //テスト用
     }
 
