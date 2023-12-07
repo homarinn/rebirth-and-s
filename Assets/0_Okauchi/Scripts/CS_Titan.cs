@@ -24,18 +24,9 @@ public class CS_Titan : MonoBehaviour
     private Animator animator;
 
     //HP
-    [SerializeField] private float hpMax = 0;
-    public float hp
-    {
-        get
-        {
-            return hp;
-        }
-        private set
-        {
-            hp = value;
-        }
-    }
+    [SerializeField] private float hpMax = 0.0f;
+    private float hp = 0.0f;
+    public float Hp{ get{ return hp; } }
 
     //ターゲット（プレイヤー）の位置情報
     [SerializeField] private Transform targetTransform;   //変更不可な参照ってinspectorから設定できないのか
