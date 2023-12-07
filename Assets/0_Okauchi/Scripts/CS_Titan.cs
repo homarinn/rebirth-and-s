@@ -31,6 +31,10 @@ public class CS_Titan : MonoBehaviour
         {
             return hp;
         }
+        private set
+        {
+            hp = value;
+        }
     }
 
     //ターゲット（プレイヤー）の位置情報
