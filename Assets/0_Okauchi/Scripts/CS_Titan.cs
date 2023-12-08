@@ -113,6 +113,7 @@ public class CS_Titan : MonoBehaviour
     void Start()
     {
         //StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
+        //Okauchi
     }
 
     // Update is called once per frame
