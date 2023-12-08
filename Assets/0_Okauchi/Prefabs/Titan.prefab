@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aa129db9d5f1794da833028ad55dceb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  hpMax: 0
+  animator: {fileID: 8740670080112296232}
+  hpMax: 200
   hp: 200
   targetTransform: {fileID: 0}
   walkSpeed: 2
