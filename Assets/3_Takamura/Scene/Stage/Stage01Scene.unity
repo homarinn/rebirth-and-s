@@ -123,6 +123,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!95 &10806389 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8740670080112296232, guid: a1de378714d8efb4eb4b48f7b213b0db,
+    type: 3}
+  m_PrefabInstance: {fileID: 858178560}
+  m_PrefabAsset: {fileID: 0}
 --- !u!20 &134687514 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 1178814258017753787, guid: 692378a2593c90245bc3f095213d4698,
@@ -265,6 +271,12 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!4 &444719760 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 503217750427198751, guid: 692378a2593c90245bc3f095213d4698,
+    type: 3}
+  m_PrefabInstance: {fileID: 1111735054}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &548554104
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -282,8 +294,7 @@ PrefabInstance:
         type: 3}
       propertyPath: cameraTransform
       value: 
-      objectReference: {fileID: 503217750427198751, guid: 692378a2593c90245bc3f095213d4698,
-        type: 3}
+      objectReference: {fileID: 444719760}
     - target: {fileID: 8989165153783407479, guid: 5099749f0b696fa49a90660742c2b062,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -297,7 +308,7 @@ PrefabInstance:
     - target: {fileID: 8989165153783407479, guid: 5099749f0b696fa49a90660742c2b062,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -12.35
       objectReference: {fileID: 0}
     - target: {fileID: 8989165153783407479, guid: 5099749f0b696fa49a90660742c2b062,
         type: 3}
@@ -351,7 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &712788121
+--- !u!1001 &858178560
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -367,8 +378,13 @@ PrefabInstance:
     - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
       propertyPath: hpMax
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 10806389}
     - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
       propertyPath: targetTransform
@@ -441,12 +457,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1078459961 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4150658284361871605, guid: a1de378714d8efb4eb4b48f7b213b0db,
-    type: 3}
-  m_PrefabInstance: {fileID: 712788121}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1111735054
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -520,6 +530,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 692378a2593c90245bc3f095213d4698, type: 3}
+--- !u!1 &1521005826 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4150658284361871605, guid: a1de378714d8efb4eb4b48f7b213b0db,
+    type: 3}
+  m_PrefabInstance: {fileID: 858178560}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1783617548
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,7 +816,7 @@ PrefabInstance:
         type: 3}
       propertyPath: goEnemy
       value: 
-      objectReference: {fileID: 1078459961}
+      objectReference: {fileID: 1521005826}
     - target: {fileID: 767292631817329978, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: csPlayer
@@ -1145,7 +1161,7 @@ PrefabInstance:
         type: 3}
       propertyPath: goEnemy
       value: 
-      objectReference: {fileID: 1078459961}
+      objectReference: {fileID: 1521005826}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: csPlayer
@@ -1205,7 +1221,7 @@ SceneRoots:
   - {fileID: 1562136316962758789}
   - {fileID: 300836717}
   - {fileID: 1783617551}
-  - {fileID: 712788121}
+  - {fileID: 858178560}
   - {fileID: 1111735054}
   - {fileID: 548554104}
   - {fileID: 543450653003357694}

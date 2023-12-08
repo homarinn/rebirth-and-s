@@ -61,6 +61,7 @@ public class CS_GameMgr : MonoBehaviour
             case eState.FadeHide:
                 break;
             case eState.Game:
+                csTitan.StartMoving();
                 break;
             case eState.FadeShow:
                 cgFade.blocksRaycasts = true;
