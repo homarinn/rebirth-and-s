@@ -24,6 +24,7 @@ public class CS_Titan : MonoBehaviour
     //HP
     [SerializeField, Header("Hpの最大値")] 
     private float hpMax = 0.0f;
+    [SerializeField, Header("Hp")]
     private float hp = 0.0f;
     public float Hp{ get{ return hp; } }
 
@@ -111,7 +112,7 @@ public class CS_Titan : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
+        //StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
     }
 
     // Update is called once per frame
