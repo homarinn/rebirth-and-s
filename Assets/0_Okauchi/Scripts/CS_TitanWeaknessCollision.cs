@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CS_TitanWeaknessCollision : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField, Header("巨人のスクリプト")]
     private CS_Titan titan;
 
     // Start is called before the first frame update
@@ -21,6 +21,7 @@ public class CS_TitanWeaknessCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //弱点に当たったらダウンをスタートさせる
         titan.StartDown();
     }
 }
