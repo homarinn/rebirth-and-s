@@ -112,7 +112,8 @@ public class CS_Titan : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
+        StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
+        //Okauchi
     }
 
     // Update is called once per frame
