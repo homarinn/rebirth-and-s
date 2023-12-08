@@ -4,53 +4,60 @@ using UnityEngine;
 
 public class CS_Titan : MonoBehaviour
 {
-    //状態
+    //State
     private enum State
     {
-        IDLE,
-        WALK,
-        CHARGE,
-        RUSH,
-        TURN,
-        STOP,
-        DOWN,
+        IDLE,    //初期
+        WALK,    //歩く
+        CHARGE,  //溜め
+        RUSH,    //突進
+        TURN,    //突進時の方向転換
+        STOP,    //停止
+        DOWN,    //ダウン
     }
     private State state = State.IDLE;
 
-    private const float STOPPING_DISTANCE = 0.5f;
-
-    //アニメーション
-    [SerializeField]
+    //アニメーター
+    [SerializeField, Header("アニメーター")]
     private Animator animator;
 
     //HP
-    [SerializeField] private float hpMax = 0.0f;
+    [SerializeField, Header("Hpの最大値")] 
+    private float hpMax = 0.0f;
     private float hp = 0.0f;
     public float Hp{ get{ return hp; } }
 
     //ターゲット（プレイヤー）の位置情報
-    [SerializeField] private Transform targetTransform;   //変更不可な参照ってinspectorから設定できないのか
-    private Vector3 toTargetVector;
+    [SerializeField, Header("ターゲット（プレイヤー）の位置情報")] 
+    private Transform targetTransform;
+    private Vector3 toTargetVector;     //巨人からプレイヤー方向のベクトル
 
     //--------------------
     //歩き
     //--------------------
-    [SerializeField] private float walkSpeed = 0.0f;
-    [SerializeField] private float gradualTrackingValue = 0.0f;
+    [SerializeField, Header("歩き速度")] 
+    private float walkSpeed = 0.0f;
+    [SerializeField, Header("ぬるっと方向追尾するときの値（小さいとゆっくり）")] 
+    private float gradualTrackingValue = 0.0f;
 
     //--------------------
     //突進攻撃全体
     //--------------------
-    [SerializeField] private float attackReactionDistance = 0.0f;
-    [SerializeField] private float attackInterval = 0.0f;
-    [SerializeField] private float constantTrackingAngle = 0.0f;
+    [SerializeField, Header("突進攻撃が始まる距離")] 
+    private float attackReactionDistance = 0.0f;
+    [SerializeField, Header("突進攻撃全体のインターバル")] 
+    private float attackInterval = 0.0f;
+    [SerializeField, Header("一定の速度で方向追尾するときの値（一秒あたりの角度）")] 
+    private float constantTrackingAngle = 0.0f;
     private float attackIntervalCount = 0.0f;
 
     //--------------------
     //溜め
     //--------------------
-    [SerializeField] private int chargeTimeMin = 0;
-    [SerializeField] private int chargeTimeMax = 0;
+    [SerializeField, Header("最小溜め時間")] 
+    private int chargeTimeMin = 0;
+    [SerializeField, Header("最大溜め時間")] 
+    private int chargeTimeMax = 0;
     private float chargeTimeCount = 0.0f;
 
     //突進中は若干追尾するのか突進開始時のプレイヤーの位置に突っ込むか
@@ -60,14 +67,22 @@ public class CS_Titan : MonoBehaviour
     //--------------------
     //突進
     //--------------------
-    [SerializeField] private float rushInterval = 0.0f;
-    [SerializeField] private float rushTime = 0.0f;
-    [SerializeField] private float rushDefaultPower = 0.0f;
-    [SerializeField] private float rushDefaultSpeed = 0.0f;
-    [SerializeField] private float rushPowerChargingIncrement = 0;
-    [SerializeField] private float rushSpeedChargingIncrement = 0;
-    [SerializeField] private int rushCountMin = 0;
-    [SerializeField] private int rushCountMax = 0;
+    [SerializeField, Header("突進一回のインターバル")] 
+    private float rushInterval = 0.0f;
+    [SerializeField, Header("突進一回の時間")] 
+    private float rushTime = 0.0f;
+    [SerializeField, Header("突進の初期威力")] 
+    private float rushDefaultPower = 0.0f;
+    [SerializeField, Header("突進の初期速度")] 
+    private float rushDefaultSpeed = 0.0f;
+    [SerializeField, Header("溜め時間に比例して増える威力量")] 
+    private float rushPowerChargingIncrement = 0;
+    [SerializeField, Header("溜め時間に比例して増える突進速度")] 
+    private float rushSpeedChargingIncrement = 0;
+    [SerializeField, Header("最小突進回数")] 
+    private int rushCountMin = 0;
+    [SerializeField, Header("最大突進回数")] 
+    private int rushCountMax = 0;
     private int rushCount = 0;
     private float rushTimeCount = 0.0f;
     private float rushPower = 0.0f;
@@ -77,28 +92,37 @@ public class CS_Titan : MonoBehaviour
     //--------------------
     //停止
     //--------------------
-    [SerializeField] private float stoppingTime = 0.0f;
+    [SerializeField, Header("停止時間")] 
+    private float stoppingTime = 0.0f;
     private float stoppingTimeCount = 0.0f;
 
     //--------------------
     //ダウン
     //--------------------
-    [SerializeField] private float downTime = 0.0f;
+    [SerializeField, Header("ダウン時間")] 
+    private float downTime = 0.0f;
     private float downTimeCount = 0.0f;
+
+    private void Awake()
+    {
+        hp = hpMax;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        hp = hpMax;
-        StartMoving();  //テスト用
+        StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
     }
 
     // Update is called once per frame
     void Update()
     {
+        //プレイヤー方向へのベクトルを取得
         toTargetVector = targetTransform.position - transform.position;
+        //y方向の値は邪魔なので削除
         toTargetVector -= new Vector3(0.0f, toTargetVector.y, 0.0f);
 
+        //Stateごとの処理を行う
         switch (state)
         {
             case State.IDLE:   break;
@@ -113,33 +137,39 @@ public class CS_Titan : MonoBehaviour
         }
     }
 
+    //動き始める関数
     public void StartMoving()
     {
         StartWalk();
     }
 
+    //------------------------
+    //各Stateごとの関数
+    //①各Stateを始める「Start～関数」
+    //②毎フレームの処理を書いた「～関数」
+    //※「～」は各State名
+    //------------------------
+    //↓↓↓↓↓↓↓↓↓↓↓↓
+    //歩く（Walk）
     private void StartWalk()
     {
         state = State.WALK;
         attackIntervalCount = attackInterval;
         animator.SetTrigger("triggerWalk");
     }
-
     private void Walk()
     {
         attackIntervalCount -= Time.deltaTime;
         if (attackIntervalCount <= 0.0f && toTargetVector.magnitude <= attackReactionDistance)
         {
             StartCharge();
+            return;
         }
 
-        if (toTargetVector.magnitude >= STOPPING_DISTANCE)
-        {
-            TrackGradualRotation();
-            Transfer(walkSpeed);
-        }
+        TrackGradualRotation();
+        Transfer(walkSpeed);
     }
-
+    //
     private void StartCharge()
     {
         state = State.CHARGE;
