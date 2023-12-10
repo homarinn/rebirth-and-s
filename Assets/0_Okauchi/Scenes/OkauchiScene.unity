@@ -247,6 +247,12 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &1167588510 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2200137535017723519, guid: 5099749f0b696fa49a90660742c2b062,
+    type: 3}
+  m_PrefabInstance: {fileID: 1538940088}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1251016883
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,6 +418,7 @@ GameObject:
   - component: {fileID: 1377242604}
   - component: {fileID: 1377242603}
   - component: {fileID: 1377242602}
+  - component: {fileID: 1377242606}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -505,6 +512,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1377242606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377242601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec2ec94a7ac37f4ba8c238742de53aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boundaryCircleRadius: 20
+  character:
+  - {fileID: 1167588510}
+  - {fileID: 1840745753}
+  isCheckRange: 1
 --- !u!1001 &1538940088
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -593,6 +617,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5099749f0b696fa49a90660742c2b062, type: 3}
+--- !u!1 &1840745753 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4150658284361871605, guid: a1de378714d8efb4eb4b48f7b213b0db,
+    type: 3}
+  m_PrefabInstance: {fileID: 7484879877752534972}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7484879877752534972
 PrefabInstance:
   m_ObjectHideFlags: 0
