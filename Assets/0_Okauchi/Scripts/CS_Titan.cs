@@ -106,6 +106,17 @@ public class CS_Titan : MonoBehaviour
     [SerializeField, Header("弱点を攻撃されたときの追加ダメージ")]
     private float weakPointDamageIncrement = 0.0f;
 
+    //--------------------
+    //SE
+    //--------------------
+    [SerializeField, Header("SE：移動")]
+    private AudioSource moveSE;
+    [SerializeField, Header("SE：溜め")]
+    private AudioSource chargeSE;
+    [SerializeField, Header("SE：突進の衝突")]
+    private AudioSource clashSE;
+
+
     private void Awake()
     {
         hp = hpMax;
@@ -161,6 +172,8 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.WALK;
         animator.SetTrigger("triggerWalk");
+        //歩きのSEを再生
+        moveSE.Play();
         //攻撃のインターバルをリセット
         attackIntervalCount = attackInterval;
     }
@@ -171,6 +184,7 @@ public class CS_Titan : MonoBehaviour
         //攻撃のインターバルが終了 and ターゲットが攻撃範囲内なら
         if (attackIntervalCount <= 0.0f && toTargetVector.magnitude <= attackReactionDistance)
         {
+            moveSE.Stop();
             //溜めを始める
             StartCharge();
             return;
@@ -188,6 +202,8 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.CHARGE;
         animator.SetTrigger("triggerCharge");
+        //溜め用のSEを再生
+        chargeSE.Play();
         //溜め時間をランダムで決定
         chargeTimeCount = (float)Random.Range(chargeTimeMin, chargeTimeMax);
         //突進の威力と速度を元に戻しておく
@@ -344,6 +360,19 @@ public class CS_Titan : MonoBehaviour
         {
             //ダウンをスタートさせる
             StartDown();
+        }
+    }
+
+    //---------------------------------
+    //プレイヤーに衝突した際の処理
+    //---------------------------------
+    private void OnCollisionEnter(Collision collision)
+    {
+        //突進中にプレイヤーに衝突した場合
+        if(collision.gameObject.CompareTag("Player") && state == State.RUSH)
+        {
+            //衝突した際のSEを再生
+            clashSE.Play();
         }
     }
 
