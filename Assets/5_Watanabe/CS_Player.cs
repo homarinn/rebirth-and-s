@@ -15,14 +15,48 @@ public class CS_Player : MonoBehaviour
     [SerializeField, Header("プレイヤーの旋回速度")]
     private float rotationSpeed = 0.5f;
 
+    // 移動できるか true=可能 : false=不可 
+    private bool isMove = true;
+    private void IsMoveOk()
+    {
+        isMove = true;
+        if (isSliding)
+        {
+            isSliding = false;
+        }
+        if (isGuard)
+        {
+            isGuard = false;
+            Debug.Log("A");
+        }
+    }
+
     // ============　攻撃 ============= //
+    [SerializeField, Header("攻撃インターバル")]
+    private float attackInterval = 1;
+    private float attackTimer = 0;
 
     // =========== 必殺 ============== // 
 
     // =========== 防御 ============= //
+    [SerializeField, Header("防御力")]
+    private float guardPower = 0.5f;
+    [SerializeField, Header("スライディングインターバル")]
+    private float guardInterval = 1;
+    private float guardTimer = 0;
+    // 防御しているか true=している : false=していない
+    private bool isGuard = false;
+    
 
+    // ============= 回避 ============ //
+    [SerializeField, Header("スライディングの速度")]
+    private float slidingSpeed = 10.0f;
+    // スライディングしているか true=している : false=していない
+    private bool isSliding = false;
 
-    // ============= 回避 ============ //B
+    [SerializeField, Header("スライディングインターバル")]
+    private float slidingInterval = 1;
+    private float slidingTimer = 0;
 
     // ========= ダメージ ============= //
     [SerializeField, Header("ダメージを受けたときの無敵時間")]
@@ -46,6 +80,9 @@ public class CS_Player : MonoBehaviour
         }
     }
 
+    // 死んでいるか　true=死亡 : false=生きている
+    private bool isDead = false; 
+
     // ========== コンポーネント ========= //
     private Rigidbody rb;
     private Animator anim;
@@ -65,7 +102,7 @@ public class CS_Player : MonoBehaviour
     {
         // コンポーネントを取得
         rb = GetComponent<Rigidbody>();
-        anim = GetComponentInChildren<Animator>();
+        anim = GetComponent<Animator>();
     }
 
     /// <summary>
@@ -80,11 +117,27 @@ public class CS_Player : MonoBehaviour
             return;
         }
 
+        if(hp <= 0)
+        {
+            if (!isDead)
+            {
+                isDead = true;
+                anim.SetTrigger("DeadTrigger");
+
+            }
+        }
+
         // 移動処理
         Move();
 
         // 回避処理
-        Avoid();
+        Sliding();
+
+        // 攻撃処理
+        Attack();
+
+        // 防御処理
+        Guard();
 
         // 無敵時間だった場合タイマーを減らす
         if(mutekiTimer > 0)
@@ -103,6 +156,12 @@ public class CS_Player : MonoBehaviour
         if(cameraTransform == null)
         {
             Debug.Log("カメラの位置が取得できていない");
+            return;
+        }
+
+        // 移動を許可しない
+        if (!isMove)
+        {
             return;
         }
 
@@ -129,18 +188,66 @@ public class CS_Player : MonoBehaviour
     /// <summary>
     /// 回避関数
     /// </summary>
-    private void Avoid()
+    private void Sliding()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && slidingTimer <= 0)
         {
+            isMove = false;
+            isSliding = true;
+            slidingTimer = slidingInterval;
             anim.SetTrigger("SlidingTrigger");
         }
+
+        // 向いている方向に移動する
+        if (isSliding)
+        {
+            rb.velocity = transform.forward * slidingSpeed;
+        }
+
+        // タイマーが0以上なら減らす
+        if(slidingTimer > 0 && !isSliding)
+        {
+            slidingTimer -= Time.deltaTime;
+        }
+    }
+
+    /// <summary>
+    /// 攻撃関数
+    /// </summary>
+    private void Attack()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            isMove = false; // 移動しない
+            anim.SetTrigger("AttackTrigger");
+        }
+    }
+
+    /// <summary>
+    /// 防御関数
+    /// </summary>
+    private void Guard()
+    {
+        if(Input.GetMouseButtonDown(0) && guardTimer <= 0)
+        {
+            isMove = false; // 移動しない
+            isGuard = true; // 防御している
+            guardTimer = guardInterval;
+            anim.SetTrigger("GuardTrigger");
+        }
+
+        // タイマーが0以上なら減らす
+        if (guardTimer > 0 && !isGuard)
+        {
+            guardTimer -= Time.deltaTime;
+        }
+
     }
 
     /// <summary>
     /// ダメージ関数
     /// </summary>
-    public void Damage(int i)
+    public void Damage(int damage)
     {
         // 無敵時間だったらダメージを受けない
         if (mutekiTimer <= 0)
@@ -148,7 +255,14 @@ public class CS_Player : MonoBehaviour
             return;
         }
         // HPをへらす
-        hp--;
+        if (isGuard)
+        {
+            hp -= (int)(damage * guardPower);
+        }
+        else
+        {
+            hp -= damage;
+        }
         mutekiTimer = mutekiTime;
         if (anim != null)
         {

@@ -55,8 +55,6 @@ public class CS_Camera : MonoBehaviour
             return;
         }
 
-        //transform.LookAt(playerTransform);
-
         transform.position = playerTransform.position +  transform.rotation * offsetPos;
         // X•ûŒü‚Éˆê’è—ÊˆÚ“®‚µ‚Ä‚¢‚ê‚Î‰¡‰ñ“]
         if (Mathf.Abs(mouseX) > 0.001f)
