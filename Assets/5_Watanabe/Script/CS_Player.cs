@@ -75,7 +75,7 @@ public class CS_Player : MonoBehaviour
     {
         get
         {
-            return ultTimer;
+            return Mathf.Clamp(ultTimer,0, 5);
         }
     }
     private bool isUlt = false;
