@@ -368,7 +368,7 @@ public class CS_Player : MonoBehaviour
     public void Damage(int damage)
     {
         // –³“GŠÔ‚¾‚Á‚½‚çƒ_ƒ[ƒW‚ğó‚¯‚È‚¢
-        if (mutekiTimer <= 0)
+        if (mutekiTimer > 0)
         {
             return;
         }
