@@ -71,6 +71,13 @@ public class CS_Player : MonoBehaviour
     [SerializeField, Header("必殺のインターバル")]
     private float ultInterval = 5;
     private float ultTimer = 0;
+    public float UltTimer
+    {
+        get
+        {
+            return Mathf.Clamp(ultTimer,0, 5);
+        }
+    }
     private bool isUlt = false;
 
     // =========== 防御 ============= //
