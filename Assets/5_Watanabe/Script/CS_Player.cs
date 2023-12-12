@@ -122,6 +122,17 @@ public class CS_Player : MonoBehaviour
     private Rigidbody rb;
     private Animator anim;
 
+    // =========== Sound ======== //
+    [SerializeField, Header("UŒ‚‹óU‚èSE")]
+    private AudioClip SE_PlayerAttackMis;
+    [SerializeField, Header("UŒ‚‚PƒqƒbƒgSE")]
+    private AudioClip SE_PlayerAttack1Hit;
+    [SerializeField, Header("UŒ‚2ƒqƒbƒgSE")]
+    private AudioClip SE_PlayerAttack2Hit;
+    [SerializeField, Header("•KESE")]
+    private AudioClip SE_PlayerSpecalAttack;
+
+
     /// <summary>
     /// À‘Ì‰»‚µ‚½‚Æ‚«‚ÉŒÄ‚Ño‚³‚ê‚é
     /// </summary>
