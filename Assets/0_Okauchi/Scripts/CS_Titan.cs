@@ -371,6 +371,7 @@ public class CS_Titan : MonoBehaviour
         //突進中にプレイヤーに衝突した場合
         if(collision.gameObject.CompareTag("Player") && state == State.RUSH)
         {
+            collision.gameObject.GetComponent<CS_Player>().Damage((int)rushPower);
             //衝突した際のSEを再生
             clashSE.Play();
         }
