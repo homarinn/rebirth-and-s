@@ -5,101 +5,103 @@ using UnityEngine.UI;
 
 public class CS_UIControl : MonoBehaviour
 {
-    //[SerializeField]
-    //CS_Player csPlayer;
-    [SerializeField]
-    [Header("PlayerHPバー")]
-    Image playerHP;
-    [SerializeField]
-    [Header("必殺技アイコン")]
-    Image specialMove;
-    [SerializeField]
-    [Header("必殺技マスクアイコン")]
-    Image spMask;
+    [SerializeField,Header("PlayerのPrefab")]
+    GameObject goPlayer;
+    //! @brief PlayerのMaxHP
+   public float playerHpMax;
+    [SerializeField,Header("PlayerHPバー")]
+    Image cpPlayerHP;
+    [SerializeField, Header("必殺技バー")]
+    Image cpSpecialAttack;
 
-    //[SerializeField]
-    //CS_Spirit csSpirit;
-    [SerializeField]
-    [Header("精霊回復バー")]
-    Image spilit;
+    [SerializeField, Header("EnemyのPrefab")]
+    GameObject goEnemy;
+    [SerializeField, Header("EnemyHPバー")]
+    Image cpEnemyHP;
+    //! @brief 敵のMaxHP
+    float enemyHpMax;
+    //! @brief 敵のHP
+    float enemyHp;
 
-    //[SerializeField]
-    //CS_Enemy csEnemy;
-    [SerializeField]
-    [Header("EnemyHPバー")]
-    Image enemyHP;
-
-    //! test
-    float cooldownTime = 5.0f;
-    float currentTime = 0.0f;
+    //! @brief 巨人のスクリプト格納
+    CS_Titan csTitan = null;
+    //! @brief シヴァ
+    //! @brief Playerミラー
 
 
     void Start()
     {
+        //! 各キャラ、Start関数で設定された値はここでは反映されない。
+        //! Awake関数で初期化をしてもらうか…
+
         //! Todo:各キャラのステータスの初期化
-        spilit.fillAmount = 0.0f;
+        playerHpMax = (float)goPlayer.GetComponent<CS_Player>().Hp;
+
+        
+
+        csTitan = goEnemy.GetComponent<CS_Titan>();
+        if(csTitan != null)
+        {
+            enemyHpMax = csTitan.Hp;
+        }       
     }
 
     // Update is called once per frame
     void Update()
     {
-        ControlPlayerHP();
-        ControlSpilit();
-        ControlSpecilMove();
+        Debug.Log(goPlayer.GetComponent<CS_Player>().Hp);
+        SetEnemyHP();
 
-        ControlEnemyHP();
+        ControlPlayerHPBar();
+        ControlSpecilAttackBar();
+
+        ControlEnemyHPBar();
 
         //! test
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            currentTime = cooldownTime;
+            cpSpecialAttack.fillAmount = 0.0f;
         }
     }
 
-
+    //! @brief Stageに合った敵のHPを設定
+    void SetEnemyHP()
+    {
+        if (csTitan != null)
+        {
+            enemyHp = csTitan.Hp;
+        }
+    }
     //! @brief PlayerHPバー操作
-    void ControlPlayerHP()
+    void ControlPlayerHPBar()
     {
-        //! Todo:PlayerScriptからHP取得(割合に変換して代入)
-        //playerHP.fillAmount -= 0.001f;
-        if (playerHP.fillAmount <= 0.0f)
+        var csPlayer = goPlayer.GetComponent<CS_Player>();
+        cpPlayerHP.fillAmount = (float)csPlayer.Hp / playerHpMax;
+
+        if (cpPlayerHP.fillAmount <= 0.0f)
         {
-            playerHP.fillAmount = 0.0f;
-        }
-    }
-    //! @brief Player必殺技アイコン操作
-    void ControlSpecilMove()
-    {
-        if (currentTime <= 0.0f)
-        {
-            spMask.fillAmount = 0.0f;
-        }
-        else
-        {
-            currentTime -= Time.deltaTime;
-            float val = Mathf.Clamp01(currentTime / cooldownTime);
-            spMask.fillAmount = val;
+            cpPlayerHP.fillAmount = 0.0f;
         }
     }
     //! @brief 精霊回復バー操作
-    void ControlSpilit()
+    void ControlSpecilAttackBar()
     {
-        //! Todo:SpilitScriptからゲージ取得(割合に変換して代入)
-        spilit.fillAmount += 0.001f;
-        if (spilit.fillAmount >= 1.0f)
+        var csPlayer = goPlayer.GetComponent<CS_Player>();
+        //specialAttack.fillAmount = csPlayer.;
+        if (cpSpecialAttack.fillAmount >= 1.0f)
         {
-            spilit.fillAmount = 1.0f;
+            cpSpecialAttack.fillAmount = 1.0f;
         }
     }
 
     //! @brief EnemyHPバー操作
-    void ControlEnemyHP()
+    void ControlEnemyHPBar()
     {
-        //! Todo:EnemyScriptからHP取得(割合に変換して代入)
-        //enemyHP.fillAmount -= 0.0001f;
-        if (enemyHP.fillAmount <= 0.0f)
+        cpEnemyHP.fillAmount = enemyHp / enemyHpMax;
+
+        if (cpEnemyHP.fillAmount <= 0.0f)
         {
-            enemyHP.fillAmount = 0.0f;
+            cpEnemyHP.fillAmount = 0.0f;
         }
     }
 

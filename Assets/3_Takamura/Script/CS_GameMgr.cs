@@ -14,20 +14,21 @@ public class CS_GameMgr : MonoBehaviour
         FadeShow,
     }
     eState state;
-
-    [SerializeField]
-    [Header("FadeImage")]
+    
+    [SerializeField, Header("FadeImage")]
     CanvasGroup cgFade;
-    [SerializeField]
-    [Header("フェード時間(秒)")]
+    [SerializeField, Header("フェード時間(秒)")]
     float fadeSpeed = 1.5f;
 
-    //[SerializeField]
-    //CS_Player csPlayer;
-    float playerCurrentHP;
-    //[SerializeField]
-    //CS_Enemy csEnemy;
-    float enemyCurrentHP;
+    [SerializeField,Header("Playerスクリプト")]
+    CS_Player csPlayer;
+    [SerializeField, Header("EnemyのPrefab")]
+    GameObject goEnemy;
+    //! @brief 巨人のスクリプト
+    CS_Titan csTitan = null;
+    //! @brief シヴァ
+    //! @brief Playerミラー
+    float enemyHp;
 
     //! @brief ゲームオーバーフラグ
     bool bGameOver;
@@ -60,6 +61,7 @@ public class CS_GameMgr : MonoBehaviour
             case eState.FadeHide:
                 break;
             case eState.Game:
+                csTitan.StartMoving();
                 break;
             case eState.FadeShow:
                 cgFade.blocksRaycasts = true;
@@ -80,35 +82,42 @@ public class CS_GameMgr : MonoBehaviour
         cgFade.blocksRaycasts = true;
         cgFade.interactable = true;
 
-        //! test
-        playerCurrentHP = 1.0f;
-        enemyCurrentHP = 1.0f;
+        bGameOver = false;
+        bGameClear = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        SetEnemyHP();
+
         SetGameFlag();
         SetNextSceneName();
 
         StateUpdate();
-
-        //! test
-        //enemyCurrentHP -= 0.001f;
     }
 
+    //! @brief Stageに合ったEnemyのHPを設定
+    void SetEnemyHP()
+    {
+        csTitan = goEnemy.GetComponent<CS_Titan>();
+        if (csTitan != null)
+        {
+            enemyHp = csTitan.Hp;
+        }
+    }
 
     //! @brief GameClear/GameOverのフラグ設定
     void SetGameFlag()
     {
         //! Todo:PlayerScriptからHP取得(割合に変換して代入)
-        if (playerCurrentHP <= 0.0f) 
+        if (csPlayer.Hp <= 0.0f) 
         {
             bGameOver = true;
             ChangeState(eState.FadeShow);
         }
         //! Todo:EnemyScriptからHP取得(割合に変換して代入)
-        if (enemyCurrentHP <= 0.0f)
+        if (enemyHp <= 0.0f)
         {
             bGameClear = true;
             ChangeState(eState.FadeShow);
