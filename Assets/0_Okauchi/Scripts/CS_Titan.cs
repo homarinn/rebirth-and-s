@@ -218,7 +218,7 @@ public class CS_Titan : MonoBehaviour
         chargeTimeCount -= Time.deltaTime;
         //—­‚ßŠÔ‚É‡‚í‚¹‚ÄˆĞ—Í‚Æ‘¬“x‚ğã‚°‚é
         rushPower += rushPowerChargingIncrement * Time.deltaTime;
-        rushPower += rushPowerChargingIncrement * Time.deltaTime;
+        rushSpeed += rushSpeedChargingIncrement * Time.deltaTime;
         //—­‚ß‚ªI—¹‚µ‚½‚ç
         if (chargeTimeCount <= 0.0f)
         {
