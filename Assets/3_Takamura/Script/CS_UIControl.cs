@@ -50,7 +50,7 @@ public class CS_UIControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(csTitan.Hp);
+        Debug.Log(ultInterval);
         SetEnemyHP();
 
         ControlPlayerHPBar();
@@ -84,11 +84,11 @@ public class CS_UIControl : MonoBehaviour
             cpPlayerHP.fillAmount = 0.0f;
         }
     }
-    //! @brief 精霊回復バー操作
+    //! @brief 必殺技インターバルバー
     void ControlSpecilAttackBar()
     {
         var csPlayer = goPlayer.GetComponent<CS_Player>();
-        cpUlt.fillAmount = 1.0f - csPlayer.UltTimer / ultInterval;
+        cpUlt.fillAmount = 1.0f - (csPlayer.UltTimer / ultInterval);
         if (cpUlt.fillAmount >= 1.0f)
         {
             cpUlt.fillAmount = 1.0f;
