@@ -27,14 +27,23 @@ public class CS_Player : MonoBehaviour
         if (isGuard)
         {
             isGuard = false;
-            Debug.Log("A");
+        }
+        if(!isAttack)
+        {
+            attackTimer = attackInterval;
+            isAttack = true;
         }
     }
 
     // ============　攻撃 ============= //
     [SerializeField, Header("攻撃インターバル")]
-    private float attackInterval = 1;
+    private float attackInterval = 0.5f;
     private float attackTimer = 0;
+    private bool isAttack = true; // コンボ可能か
+    public void IsAttackOk()
+    {
+        isAttack = true;
+    }
 
     // =========== 必殺 ============== // 
 
@@ -190,6 +199,12 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void Sliding()
     {
+        // 他の行動していたら何もしない
+        if (!isAttack && isGuard)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.LeftShift) && slidingTimer <= 0)
         {
             isMove = false;
@@ -216,11 +231,24 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(1))
+        // 他の行動していたら何もしない
+        if (isGuard && isSliding)
+        {
+            return;
+        }
+        if (Input.GetMouseButtonDown(1) && attackTimer <= 0 && isAttack)
         {
             isMove = false; // 移動しない
             anim.SetTrigger("AttackTrigger");
+            isAttack = false;
         }
+
+        // タイマーが0以上なら減らす
+        if (attackTimer > 0)
+        {
+            attackTimer -= Time.deltaTime;
+        }
+
     }
 
     /// <summary>
@@ -228,6 +256,11 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void Guard()
     {
+        // 他の行動していたら何もしない
+        if (!isAttack && isSliding)
+        {
+            return;
+        }
         if(Input.GetMouseButtonDown(0) && guardTimer <= 0)
         {
             isMove = false; // 移動しない
