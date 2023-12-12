@@ -83,7 +83,7 @@ public class CS_TitleMgr : MonoBehaviour
                 cgFade.alpha += Time.deltaTime / fadeSpeed;
                 if (cgFade.alpha >= 1.0f)
                 {
-                    SceneManager.LoadScene("Stage01Scene");
+                    SceneManager.LoadScene("Event01Scene");
                 }
                 break;
         }
