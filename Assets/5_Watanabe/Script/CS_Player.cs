@@ -75,7 +75,7 @@ public class CS_Player : MonoBehaviour
     {
         get
         {
-            return Mathf.Clamp(ultTimer,0, 5);
+            return Mathf.Clamp(ultTimer,0,  5);
         }
     }
     private bool isUlt = false;
@@ -146,6 +146,7 @@ public class CS_Player : MonoBehaviour
     private void Awake()
     {
         hp = maxHP;
+        ultTimer = ultInterval;
     }
 
     /// <summary>
@@ -156,7 +157,6 @@ public class CS_Player : MonoBehaviour
         // コンポーネントを取得
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        ultTimer = ultInterval;
     }
 
     /// <summary>
