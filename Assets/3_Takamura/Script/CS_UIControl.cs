@@ -8,11 +8,12 @@ public class CS_UIControl : MonoBehaviour
     [SerializeField,Header("PlayerのPrefab")]
     GameObject goPlayer;
     //! @brief PlayerのMaxHP
-   public float playerHpMax;
+    float playerHpMax;
     [SerializeField,Header("PlayerHPバー")]
     Image cpPlayerHP;
     [SerializeField, Header("必殺技バー")]
-    Image cpSpecialAttack;
+    Image cpUlt;
+    float ultInterval;
 
     [SerializeField, Header("EnemyのPrefab")]
     GameObject goEnemy;
@@ -36,7 +37,7 @@ public class CS_UIControl : MonoBehaviour
 
         //! Todo:各キャラのステータスの初期化
         playerHpMax = (float)goPlayer.GetComponent<CS_Player>().Hp;
-
+        ultInterval = goPlayer.GetComponent<CS_Player>().UltTimer;
         
 
         csTitan = goEnemy.GetComponent<CS_Titan>();
@@ -49,7 +50,7 @@ public class CS_UIControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(goPlayer.GetComponent<CS_Player>().Hp);
+        Debug.Log(csTitan.Hp);
         SetEnemyHP();
 
         ControlPlayerHPBar();
@@ -58,10 +59,10 @@ public class CS_UIControl : MonoBehaviour
         ControlEnemyHPBar();
 
         //! test
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            cpSpecialAttack.fillAmount = 0.0f;
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    cpSpecialAttack.fillAmount = 0.0f;
+        //}
     }
 
     //! @brief Stageに合った敵のHPを設定
@@ -87,10 +88,10 @@ public class CS_UIControl : MonoBehaviour
     void ControlSpecilAttackBar()
     {
         var csPlayer = goPlayer.GetComponent<CS_Player>();
-        //specialAttack.fillAmount = csPlayer.;
-        if (cpSpecialAttack.fillAmount >= 1.0f)
+        cpUlt.fillAmount = 1.0f - csPlayer.UltTimer / ultInterval;
+        if (cpUlt.fillAmount >= 1.0f)
         {
-            cpSpecialAttack.fillAmount = 1.0f;
+            cpUlt.fillAmount = 1.0f;
         }
     }
 
