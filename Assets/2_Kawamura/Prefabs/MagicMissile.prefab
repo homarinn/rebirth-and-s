@@ -119,9 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 069701af38773454db607dfb5a2b106c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magicMissileSpawnner: {fileID: 0}
-  enemy: {fileID: 0}
-  speed: 5
+  speed: 15
 --- !u!54 &674576250769490136
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -130,7 +128,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3062599185702283815}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 2.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
