@@ -50,7 +50,7 @@ public class CS_UIControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(ultInterval);
+        //Debug.Log(ultInterval);
         SetEnemyHP();
 
         ControlPlayerHPBar();
