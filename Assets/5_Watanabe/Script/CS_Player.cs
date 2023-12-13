@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Playerスクリプト
 public class CS_Player : MonoBehaviour
 {
-    [SerializeField, Header("カメラのTransformを取得")]
-    private Transform cameraTransform = null;
 
     // =========== 移動 =============== //
 
@@ -122,6 +121,10 @@ public class CS_Player : MonoBehaviour
         }
     }
 
+    // カメラの位置
+    private Transform cameraTransform = null;
+
+
     // 死んでいるか　true=死亡 : false=生きている
     private bool isDead = false; 
 
@@ -157,6 +160,7 @@ public class CS_Player : MonoBehaviour
         // コンポーネントを取得
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        cameraTransform = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Transform>();
     }
 
     /// <summary>
@@ -164,20 +168,16 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        // コンポーネントが取得できていない場合Logを出す
-        if(rb == null || anim == null)
-        {
-            Debug.Log("コンポーネントが取得できていない");
-            return;
-        }
-
+        // HPが0以下なら死んでいる
         if(hp <= 0)
         {
             if (!isDead)
             {
                 isDead = true;
-                anim.SetTrigger("DeadTrigger");
-
+                if (anim != null)
+                {
+                    anim.SetTrigger("DeadTrigger");
+                }
             }
         }
 
@@ -209,12 +209,6 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        // カメラとRigidoBody取得できない場合何もしない
-        if(cameraTransform == null)
-        {
-            Debug.Log("カメラの位置が取得できていない");
-            return;
-        }
 
         // 移動を許可しない
         if (!isMove)
