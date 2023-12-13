@@ -7,7 +7,7 @@ public class CS_PlayerWeapon : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        float damage = (int)(GetComponentInParent<CS_Player>().AttackPower);
+        float damage = 0;
         if (other.gameObject.tag == "Enemy")
         {
             Debug.Log("çUåÇÇµÇΩÇÊ" + damage);

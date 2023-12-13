@@ -8,6 +8,7 @@ public class CS_Camera : MonoBehaviour
     private float cameraSpeed = 1;
     [SerializeField, Header("プレイヤーとのOffsetPosition")]
     private Vector3 offsetPos;
+
     // プレイヤーのTransform
     private Transform playerTransform = null;
 
