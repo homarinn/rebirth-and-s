@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Playerスクリプト
@@ -26,10 +24,24 @@ public class CS_Player : MonoBehaviour
     // ============ 攻撃 ============= //
     [SerializeField, Header("Attack1攻撃力")]
     private float attack1Power = 10;
+    public float Attack1Power
+    { 
+        get
+        {
+            return attack1Power;
+        } 
+    }
     [SerializeField, Header("Attack1のインターバル")]
     private float attack1Interval = 0.5f;
     [SerializeField, Header("Attack2攻撃力")]
     private float attack2Power = 20;
+    public float Attack2Power
+    {
+        get
+        {
+            return attack2Power;
+        } 
+    }
     [SerializeField, Header("Attack2のインターバル")]
     private float attack2Interval = 1.0f;
     private float attackTimer = 0;
@@ -105,12 +117,6 @@ public class CS_Player : MonoBehaviour
     private new AudioSource audio;
 
     // =========== Sound ======== //
-    [SerializeField, Header("攻撃空振りSE")]
-    private AudioClip SE_PlayerAttackMis;
-    [SerializeField, Header("攻撃１ヒットSE")]
-    private AudioClip SE_PlayerAttack1Hit;
-    [SerializeField, Header("攻撃2ヒットSE")]
-    private AudioClip SE_PlayerAttack2Hit;
     [SerializeField, Header("必殺SE")]
     private AudioClip SE_PlayerSpecalAttack;
     [SerializeField, Header("ダメージSE")]
@@ -119,6 +125,8 @@ public class CS_Player : MonoBehaviour
     private AudioClip SE_PlayerMove;
     [SerializeField, Header("スライディング")]
     private AudioClip SE_PlayerEscape;
+    [SerializeField, Header("ガードSE")]
+    private AudioClip SE_PlayerGuard;
 
     /// <summary>
     /// 実体化したときに呼び出される
@@ -160,6 +168,11 @@ public class CS_Player : MonoBehaviour
                     anim.SetTrigger("DeadTrigger");
                 }
             }
+        }
+        // 無敵時間になったら減らす
+        if(invincibleTimer > 0)
+        {
+            invincibleTimer -= Time.deltaTime;
         }
 
         // 移動処理
@@ -446,6 +459,7 @@ public class CS_Player : MonoBehaviour
     /// <param name="damage">与えるダメージ</param>
     public void Damage(float _damage)
     {
+        damage = 0;
         // 無敵状態の場合無効
         if (invincibleTimer > 0)
         {
@@ -453,25 +467,45 @@ public class CS_Player : MonoBehaviour
         }
         if (!guardNow)
         {
+            if (audio != null || SE_PlayerReceiveDamage != null)
+            {
+                audio.PlayOneShot(SE_PlayerReceiveDamage);
+            }
+
             // damage分Hpを減らす
             hp -= (int)(_damage);
         }
         else
         {
+            if (audio != null || SE_PlayerGuard != null)
+            {
+                audio.PlayOneShot(SE_PlayerGuard);
+            }
             hp -= (int)(_damage * defDamgeCut);
         }
         // 無敵時間を入れる
         invincibleTimer = invincibleTime;
 
-        if(anim != null)
-        {            
-            // アニメーションを再生
-            anim.SetTrigger("HitTrigger");
+        if (anim != null)
+        {
+            if (!ultNow || !guardNow)
+            {
+                // アニメーションを再生
+                anim.SetTrigger("HitTrigger");
+            }
         }
         if(audio != null)
         {
             // ダメージ音を再生
             audio.PlayOneShot(SE_PlayerReceiveDamage);
         }
+    }
+
+    private void AnimDamgeFailed()
+    {
+        slidingNow = false;
+        attackNow = false;
+        ultNow = false;
+        guardNow = false;
     }
 }
