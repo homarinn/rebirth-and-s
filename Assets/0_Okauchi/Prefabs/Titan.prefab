@@ -72,6 +72,7 @@ MonoBehaviour:
   stoppingTime: 5
   downTime: 5
   weakPointDamageIncrement: 30
+  afterDownTime: 1
   moveSE: {fileID: 4888862678878637672}
   chargeSE: {fileID: 1403551164744738637}
   clashSE: {fileID: 1169020781980542164}
