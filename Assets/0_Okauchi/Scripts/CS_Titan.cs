@@ -14,6 +14,7 @@ public class CS_Titan : MonoBehaviour
         TURN,    //突進時の方向転換
         STOP,    //停止
         DOWN,    //ダウン
+        DIE,     //死亡
     }
     private State state = State.IDLE;
 
@@ -146,6 +147,7 @@ public class CS_Titan : MonoBehaviour
             case State.TURN:   Turn();   break;   //突進時の方向転換
             case State.STOP:   Stop();   break;   //停止
             case State.DOWN:   Down();   break;   //ダウン
+            case State.DIE:    break;
             default: 
                 break;
         }
@@ -332,6 +334,15 @@ public class CS_Titan : MonoBehaviour
             StartWalk();
         }
     }
+    //----------------------------------
+    //死亡（Die）
+    //----------------------------------
+    public void StartDie()
+    {
+        //Stateとアニメーションの遷移
+        state = State.DIE;
+        animator.SetTrigger("triggerDie");
+    }
     //↑↑↑↑↑↑↑↑↑↑↑↑↑
     //------------------------------------------------
 
@@ -344,9 +355,12 @@ public class CS_Titan : MonoBehaviour
     public void ReceiveDamage(float damage)
     {
         hp -= damage;
-        //一応0未満にならないようにしておく
         if (hp <= 0.0f)
         {
+            if(state != State.DIE)
+            {
+                StartDie();
+            }
             hp = 0.0f;
         }
     }

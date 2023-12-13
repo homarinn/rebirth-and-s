@@ -123,12 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &254586859 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8989165153783407479, guid: 5099749f0b696fa49a90660742c2b062,
-    type: 3}
-  m_PrefabInstance: {fileID: 1538940088}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &930639907
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,12 +241,6 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!1 &1167588510 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2200137535017723519, guid: 5099749f0b696fa49a90660742c2b062,
-    type: 3}
-  m_PrefabInstance: {fileID: 1538940088}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1251016883
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,7 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7967153a66df2e0409fbc40de402e78e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 254586859}
+  playerTransform: {fileID: 0}
   cameraSpeed: 2
   offsetPos: {x: 0, y: 2.75, z: -5}
 --- !u!1 &1377242601
@@ -526,7 +514,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boundaryCircleRadius: 20
   character:
-  - {fileID: 1167588510}
+  - {fileID: 0}
   - {fileID: 1840745753}
   isCheckRange: 1
 --- !u!1001 &1538940088
@@ -551,6 +539,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4456024871464833536, guid: 5099749f0b696fa49a90660742c2b062,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 8604778338032226050, guid: 5099749f0b696fa49a90660742c2b062,
         type: 3}
@@ -919,6 +912,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1169020781980542164, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1403551164744738637, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 4150658284361871605, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
       propertyPath: m_Name
@@ -941,9 +944,34 @@ PrefabInstance:
       objectReference: {fileID: 1840745756}
     - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
+      propertyPath: stoppingTime
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
       propertyPath: targetTransform
       value: 
-      objectReference: {fileID: 254586859}
+      objectReference: {fileID: 0}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: rushDefaultSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: rushPowerChargingIncrement
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: rushSpeedChargingIncrement
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888862678878637672, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 8483159459478184137, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
       propertyPath: m_LocalPosition.x
