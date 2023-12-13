@@ -447,7 +447,7 @@ public class CS_Player : MonoBehaviour
     public void Damage(float _damage)
     {
         // –³“Gó‘Ô‚Ìê‡–³Œø
-        if (invincibleTimer <= 0)
+        if (invincibleTimer > 0)
         {
             return;
         }
