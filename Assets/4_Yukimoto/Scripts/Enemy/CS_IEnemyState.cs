@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Resources;
 using UnityEngine;
 
 /// <summary>
@@ -17,5 +15,5 @@ public abstract class CS_IEnemyState : MonoBehaviour
     /// ó‘Ô‚Ìˆ—‚ğÀs‚·‚é
     /// </summary>
     /// <returns> Ÿ‚Ìó‘Ô‚ÌŠÇ—ƒNƒ‰ƒX </returns>
-    public abstract CS_IEnemyState RunState();
+    public abstract CS_IEnemyState RunState(Transform player);
 }
