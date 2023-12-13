@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class CS_Camera : MonoBehaviour
 {
-    [SerializeField, Header("プレイヤーのTransform")]
-    private Transform playerTransform = null;
     [SerializeField, Header("カメラの速度")]
     private float cameraSpeed = 1;
     [SerializeField, Header("プレイヤーとのOffsetPosition")]
     private Vector3 offsetPos;
+
+    // プレイヤーのTransform
+    private Transform playerTransform = null;
 
     /// <summary>
     /// スタートイベント
@@ -20,6 +21,9 @@ public class CS_Camera : MonoBehaviour
         Cursor.visible = false;
         // カーソルを真ん中に固定
         Cursor.lockState = CursorLockMode.Locked;
+
+        // プレイヤーの位置を取得
+        playerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 
     /// <summary>
