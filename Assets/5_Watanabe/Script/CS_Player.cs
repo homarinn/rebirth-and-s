@@ -16,15 +16,32 @@ public class CS_Player : MonoBehaviour
     // ============ 回避 ============= //
     [SerializeField, Header("回避速度")]
     private float slidingSpeed = 10.0f;
+    [SerializeField, Header("回避インターバル")]
+    private float slidingInterval = 1;
+    private float slidingTimer = 0;
 
-    // スライディング中
+    // スライディング中/
     private bool slidingNow = false;
 
     // ============ 攻撃 ============= //
+    [SerializeField, Header("Attack1攻撃力")]
+    private float attack1Power = 10;
+    [SerializeField, Header("Attack1のインターバル")]
+    private float attack1Interval = 0.5f;
+    [SerializeField, Header("Attack2攻撃力")]
+    private float attack2Power = 20;
+    [SerializeField, Header("Attack2のインターバル")]
+    private float attack2Interval = 1.0f;
+    private float attackTimer = 0;
+    // 攻撃中？
+    private bool attackNow = false;
+    private bool attackOk = true;
 
     // ============ 必殺 ============= //
+    [SerializeField, Header("必殺の威力")]
+    private float ultPower = 30;
     [SerializeField, Header("必殺のインターバル")]
-    private float ultInterval = 5;
+    private float ultInterval = 3;
     private float ultTimer = 0;
     public float UltTimer
     {
@@ -33,8 +50,18 @@ public class CS_Player : MonoBehaviour
             return Mathf.Clamp(ultTimer,0,  5);
         }
     }
+    // 必殺中?
+    private bool ultNow = false;
 
     // ============= 防御 ============ //
+    [SerializeField, Header("防御中のダメージカット率")]
+    private float defDamgeCut = 0.5f;
+    [SerializeField, Header("防御のインターバル")]
+    private float gurdInterval = 1;
+    private float gurdTimer = 0;
+
+    // ガード中?
+    private bool guardNow = false;
 
     // ========== ステータス ============= //
     [SerializeField, Header("プレイヤーのMaxHP")]
@@ -56,6 +83,15 @@ public class CS_Player : MonoBehaviour
     private float invincibleTime = 1;
     // 無敵時間タイマー
     private float invincibleTimer = 0;
+    // ダメージ
+    private float damage = 0;
+    public float GetDamage
+    {
+        get
+        {
+            return damage;
+        } 
+    }
 
     // カメラの位置
     private Transform cameraTransform = null;
@@ -131,6 +167,15 @@ public class CS_Player : MonoBehaviour
 
         // 回避処理
         Sliding();
+
+        // 攻撃処理
+        Attack();
+
+        // 防御処理
+        Guard();
+
+        // 必殺処理
+        Ult();
     }
 
     /// <summary>
@@ -138,6 +183,15 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        if(slidingNow)
+        {          
+            return;
+        }
+        if(attackNow || guardNow || ultNow)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
         // 移動入力を取得
         Vector2 inputAxis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
@@ -172,7 +226,19 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void Sliding()
     {
-        if(Input.GetKeyDown(KeyCode.LeftShift))
+        // スライディングインターバルがあるとき減らす
+        if (slidingTimer > 0)
+        {
+            slidingTimer -= Time.deltaTime;
+        }
+
+        // 他の行動中は何もしない
+        if (attackNow || guardNow || ultNow)
+        {
+            return;
+        }
+
+        if(Input.GetKeyDown(KeyCode.LeftShift) && !slidingNow && slidingTimer <= 0)
         {
             // スライディング中
             slidingNow = true;
@@ -192,7 +258,7 @@ public class CS_Player : MonoBehaviour
         if(slidingNow)
         {
             rb.velocity = transform.forward * slidingSpeed;
-        }
+        }      
     }
 
     /// <summary>
@@ -200,10 +266,177 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimSlidingFiled()
     {
+        // インターバル
+        slidingTimer = slidingInterval;
         // スライディングを終了
         slidingNow = false;
     }
 
+    #endregion
+
+    #region 攻撃
+    
+    /// <summary>
+    /// 攻撃処理
+    /// </summary>
+    private void Attack()
+    {
+        if(attackTimer > 0)
+        {
+            attackTimer -= Time.deltaTime;
+        }
+        // 他の行動中ならなにもしない
+        if(slidingNow || guardNow || ultNow)
+        {
+            return;
+        }
+        if (Input.GetMouseButtonDown(1) && attackOk && attackTimer <= 0)
+        {
+            attackOk = false;
+            attackNow = true;
+            if (anim != null)
+            {
+                // 攻撃トリガー
+                anim.SetTrigger("AttackTrigger");
+            }
+        }
+
+    }
+    
+    /// <summary>
+    /// 攻撃アニメーション1
+    /// </summary>
+    private void AnimAttack1()
+    {
+        damage = attack1Power;
+    }
+
+    /// <summary>
+    /// 攻撃アニメーションOk
+    /// </summary>
+    private void AnimAttackOk()
+    {
+        attackOk = true;
+    }
+
+    /// <summary>
+    /// 攻撃アニメーションの終了処理
+    /// </summary>
+    private void AnimAttack1Faild()
+    {
+        damage = 0;
+        attackTimer = attack1Interval;
+        attackNow = false;
+        
+    }
+
+    /// <summary>
+    /// 攻撃アニメーション２
+    /// </summary>
+    private void AnimAttack2()
+    {
+        damage = attack2Power;
+    }
+
+    /// <summary>
+    /// 攻撃2アニメーションの終了処理
+    /// </summary>
+    private void AnimAttack2Faild()
+    {
+        damage = 0;
+        attackTimer = attack2Interval;
+        attackNow = false;
+        attackOk = true;
+    }
+
+    #endregion
+
+    #region 防御
+
+    /// <summary>
+    ///  防御処理
+    /// </summary>
+    private void Guard()
+    {
+        // ガードインターバルを減らす
+        if(gurdTimer > 0)
+        {
+            gurdTimer -= Time.deltaTime;
+        }
+        // 他の行動してたら何もしない
+        if(attackNow || slidingNow || ultNow)
+        {
+            return;
+        }
+        if (Input.GetMouseButtonDown(0) && !guardNow && gurdTimer <= 0)
+        {
+            // ガード中
+            guardNow = true;
+            if(anim != null)
+            {
+                // ガードアニメーション再生
+                anim.SetTrigger("GuardTrigger");
+            }
+        }
+    }
+
+    /// <summary>
+    /// ガードアニメーション終了処理
+    /// </summary>
+    private void AnimGuardFailed()
+    {
+        guardNow = false;
+        gurdTimer = gurdInterval;
+    }
+    #endregion
+
+    #region 必殺
+
+    /// <summary>
+    /// 必殺処理
+    /// </summary>
+    private void Ult()
+    {
+        // インターバルがあった場合減らす
+        if(ultTimer > 0)
+        {
+            ultTimer -= Time.deltaTime;
+        }
+
+        // 他の行動していた場合何もしない
+        if(slidingNow || attackNow || guardNow)
+        {
+            return;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space) && !ultNow && ultTimer <= 0)
+        {
+            // 必殺中
+            ultNow = true;
+            if(anim != null)
+            {
+                anim.SetTrigger("UltTrigger");
+            }
+        }
+    }
+
+    /// <summary>
+    /// アニメーション必殺処理
+    /// </summary>
+    private void AnimUlt()
+    {
+        damage = ultPower;
+    }
+
+    /// <summary>
+    /// アニメーション必殺終了処理
+    /// </summary>
+    private void AnimUltFailed()
+    {
+        damage = 0;
+        ultNow = false;
+        ultTimer = ultInterval;
+    }
     #endregion
 
     /// <summary>
@@ -211,15 +444,22 @@ public class CS_Player : MonoBehaviour
     /// 攻撃した人に読んでもらう
     /// </summary>
     /// <param name="damage">与えるダメージ</param>
-    public void ReceiveDamage(float _damage)
+    public void Damage(float _damage)
     {
         // 無敵状態の場合無効
         if (invincibleTimer <= 0)
         {
             return;
         }
-        // damage分Hpを減らす
-        hp -= (int)(_damage);
+        if (!guardNow)
+        {
+            // damage分Hpを減らす
+            hp -= (int)(_damage);
+        }
+        else
+        {
+            hp -= (int)(_damage * defDamgeCut);
+        }
         // 無敵時間を入れる
         invincibleTimer = invincibleTime;
 
