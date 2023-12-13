@@ -103,6 +103,19 @@ public class CS_Titan : MonoBehaviour
     [SerializeField, Header("ダウン時間")] 
     private float downTime = 0.0f;
     private float downTimeCount = 0.0f;
+    [SerializeField, Header("弱点を攻撃されたときの追加ダメージ")]
+    private float weakPointDamageIncrement = 0.0f;
+
+    //--------------------
+    //SE
+    //--------------------
+    [SerializeField, Header("SE：移動")]
+    private AudioSource moveSE;
+    [SerializeField, Header("SE：溜め")]
+    private AudioSource chargeSE;
+    [SerializeField, Header("SE：突進の衝突")]
+    private AudioSource clashSE;
+
 
     private void Awake()
     {
@@ -159,6 +172,8 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.WALK;
         animator.SetTrigger("triggerWalk");
+        //歩きのSEを再生
+        moveSE.Play();
         //攻撃のインターバルをリセット
         attackIntervalCount = attackInterval;
     }
@@ -169,6 +184,7 @@ public class CS_Titan : MonoBehaviour
         //攻撃のインターバルが終了 and ターゲットが攻撃範囲内なら
         if (attackIntervalCount <= 0.0f && toTargetVector.magnitude <= attackReactionDistance)
         {
+            moveSE.Stop();
             //溜めを始める
             StartCharge();
             return;
@@ -186,6 +202,8 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.CHARGE;
         animator.SetTrigger("triggerCharge");
+        //溜め用のSEを再生
+        chargeSE.Play();
         //溜め時間をランダムで決定
         chargeTimeCount = (float)Random.Range(chargeTimeMin, chargeTimeMax);
         //突進の威力と速度を元に戻しておく
@@ -200,7 +218,7 @@ public class CS_Titan : MonoBehaviour
         chargeTimeCount -= Time.deltaTime;
         //溜め時間に合わせて威力と速度を上げる
         rushPower += rushPowerChargingIncrement * Time.deltaTime;
-        rushPower += rushPowerChargingIncrement * Time.deltaTime;
+        rushSpeed += rushSpeedChargingIncrement * Time.deltaTime;
         //溜めが終了したら
         if (chargeTimeCount <= 0.0f)
         {
@@ -297,9 +315,6 @@ public class CS_Titan : MonoBehaviour
     //----------------------------------
     public void StartDown()
     {
-        //既にダウン中の場合は抜ける
-        if (state == State.DOWN) return;
-
         //Stateとアニメーションの遷移
         state = State.DOWN;
         animator.SetTrigger("triggerDown");
@@ -326,7 +341,7 @@ public class CS_Titan : MonoBehaviour
     //（プレイヤー側の衝突判定時に呼び出してもらう）
     //------------------------------------------------
     //シンプルにダメージを受ける
-    public void ReceiveDamage(int damage)
+    public void ReceiveDamage(float damage)
     {
         hp -= damage;
         //一応0未満にならないようにしておく
@@ -335,11 +350,31 @@ public class CS_Titan : MonoBehaviour
             hp = 0.0f;
         }
     }
-    //弱点を攻撃された時の処理
-    public void ReceiveAttackOnWeakPoint()
+    //弱点にダメージを受けた時の処理
+    public void ReceiveDamageOnWeakPoint(float damage)
     {
-        //弱点に当たったらダウンをスタートさせる
-        StartDown();
+        ReceiveDamage(damage + weakPointDamageIncrement);
+
+        //ダウン中でない場合は
+        if (state != State.DOWN)
+        {
+            //ダウンをスタートさせる
+            StartDown();
+        }
+    }
+
+    //---------------------------------
+    //プレイヤーに衝突した際の処理
+    //---------------------------------
+    private void OnCollisionEnter(Collision collision)
+    {
+        //突進中にプレイヤーに衝突した場合
+        if(collision.gameObject.CompareTag("Player") && state == State.RUSH)
+        {
+            collision.gameObject.GetComponent<CS_Player>().Damage((int)rushPower);
+            //衝突した際のSEを再生
+            clashSE.Play();
+        }
     }
 
 
