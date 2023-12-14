@@ -7,14 +7,14 @@ public class CS_Titan : MonoBehaviour
     //State
     private enum State
     {
-        IDLE,    //初期
-        WALK,    //歩く
-        CHARGE,  //溜め
-        RUSH,    //突進
-        TURN,    //突進時の方向転換
-        STOP,    //停止
-        DOWN,    //ダウン
-        DIE,     //死亡
+        IDLE,       //初期
+        WALK,       //歩く
+        CHARGE,     //溜め
+        RUSH,       //突進
+        TURN,       //突進時の方向転換
+        STOP,       //突進後の停止
+        DOWN,       //ダウン
+        DIE,        //死亡
     }
     private State state = State.IDLE;
 
@@ -106,6 +106,9 @@ public class CS_Titan : MonoBehaviour
     private float downTimeCount = 0.0f;
     [SerializeField, Header("弱点を攻撃されたときの追加ダメージ")]
     private float weakPointDamageIncrement = 0.0f;
+    [SerializeField, Header("ダウン後から歩き始めるまでの時間")]
+    private float afterDownTime = 0.0f;
+    private float afterDownTimeCount = 0.0f;
 
     //--------------------
     //SE
@@ -145,7 +148,7 @@ public class CS_Titan : MonoBehaviour
             case State.CHARGE: Charge(); break;   //溜め
             case State.RUSH:   Rush();   break;   //突進
             case State.TURN:   Turn();   break;   //突進時の方向転換
-            case State.STOP:   Stop();   break;   //停止
+            case State.STOP:   Stop();   break;   //突進後の停止
             case State.DOWN:   Down();   break;   //ダウン
             case State.DIE:    break;
             default: 
@@ -325,19 +328,31 @@ public class CS_Titan : MonoBehaviour
     }
     private void Down()
     {
-        //ダウン時間のカウント
-        downTimeCount -= Time.deltaTime;
-        //ダウン時間が終了したら
-        if(downTimeCount <= 0.0f)
+        if(downTimeCount >= 0.0f)
         {
-            //再度歩き始める
-            StartWalk();
+            //ダウン時間のカウント
+            downTimeCount -= Time.deltaTime;
+            //ダウン時間が終了したら
+            if (downTimeCount < 0.0f)
+            {
+                animator.SetTrigger("triggerIdle");
+                afterDownTimeCount = afterDownTime;
+            }
+        }
+        else
+        {
+            //ダウン後の時間カウント
+            afterDownTimeCount -= Time.deltaTime;
+            if (afterDownTimeCount <= 0.0f)
+            {
+                StartWalk();
+            }
         }
     }
     //----------------------------------
     //死亡（Die）
     //----------------------------------
-    public void StartDie()
+    private void StartDie()
     {
         //Stateとアニメーションの遷移
         state = State.DIE;
