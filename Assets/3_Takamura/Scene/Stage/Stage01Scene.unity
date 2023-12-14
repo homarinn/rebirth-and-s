@@ -264,7 +264,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e28f1df9f8cfe164095626128f5bbc9c, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
@@ -1374,6 +1374,11 @@ PrefabInstance:
       propertyPath: csPlayer
       value: 
       objectReference: {fileID: 473272901}
+    - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
+      propertyPath: stageBGM
+      value: 
+      objectReference: {fileID: 440967667}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: stageNum
