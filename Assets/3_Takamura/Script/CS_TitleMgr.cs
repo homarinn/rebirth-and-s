@@ -97,7 +97,10 @@ public class CS_TitleMgr : MonoBehaviour
     //! Quitボタンが押された時の処理
     public void OnClickQuit()
     {
-        //! アプリケーション終了
-        Application.Quit();
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }

@@ -14,12 +14,25 @@ public class CS_TestMgr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Quit();
+        }
     }
 
     //! test : ボタンクリックシーン遷移
     public void OnClickButton()
     {
         SceneManager.LoadScene("Stage01Scene");
+    }
+
+    //! @brief アプリケーション終了
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
