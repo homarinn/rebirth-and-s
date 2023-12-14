@@ -303,7 +303,7 @@ public class CS_Player : MonoBehaviour
         {
             return;
         }
-        if (Input.GetMouseButtonDown(1) && attackOk && attackTimer <= 0)
+        if (Input.GetMouseButtonDown(0) && attackOk && attackTimer <= 0)
         {
             attackOk = false;
             attackNow = true;
@@ -381,7 +381,7 @@ public class CS_Player : MonoBehaviour
         {
             return;
         }
-        if (Input.GetMouseButtonDown(0) && !guardNow && gurdTimer <= 0)
+        if (Input.GetMouseButtonDown(1) && !guardNow && gurdTimer <= 0)
         {
             // ガード中
             guardNow = true;
@@ -411,7 +411,7 @@ public class CS_Player : MonoBehaviour
     private void Ult()
     {
         // インターバルがあった場合減らす
-        if(ultTimer > 0)
+        if(ultTimer > 0 && !ultNow)
         {
             ultTimer -= Time.deltaTime;
         }
@@ -426,7 +426,8 @@ public class CS_Player : MonoBehaviour
         {
             // 必殺中
             ultNow = true;
-            if(anim != null)
+            ultTimer = ultInterval;
+            if (anim != null)
             {
                 anim.SetTrigger("UltTrigger");
             }
@@ -448,7 +449,6 @@ public class CS_Player : MonoBehaviour
     {
         damage = 0;
         ultNow = false;
-        ultTimer = ultInterval;
     }
     #endregion
 
@@ -486,18 +486,15 @@ public class CS_Player : MonoBehaviour
         // 無敵時間を入れる
         invincibleTimer = invincibleTime;
 
+        if(guardNow || ultNow)
+        {
+            return;
+        }
+
         if (anim != null)
         {
-            if (!ultNow || !guardNow)
-            {
-                // アニメーションを再生
-                anim.SetTrigger("HitTrigger");
-            }
-        }
-        if(audio != null)
-        {
-            // ダメージ音を再生
-            audio.PlayOneShot(SE_PlayerReceiveDamage);
+            // アニメーションを再生
+            anim.SetTrigger("HitTrigger");
         }
     }
 
@@ -506,6 +503,5 @@ public class CS_Player : MonoBehaviour
         slidingNow = false;
         attackNow = false;
         ultNow = false;
-        guardNow = false;
     }
 }
