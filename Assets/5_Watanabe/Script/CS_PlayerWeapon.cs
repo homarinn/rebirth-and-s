@@ -37,7 +37,7 @@ public class CS_PlayerWeapon : MonoBehaviour
             if (other.GetComponentInParent<CS_Titan>() != null)
             {
                 cs_Player.IsAttack = true;
-                other.GetComponentInParent<CS_Titan>().ReceiveDamageOnWeakPoint(damage);
+                other.GetComponentInParent<CS_Titan>().ReceiveDamageOnWeakPoint();
             }
             else
             {
