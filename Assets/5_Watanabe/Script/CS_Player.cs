@@ -48,6 +48,18 @@ public class CS_Player : MonoBehaviour
     // 攻撃中？
     private bool attackNow = false;
     private bool attackOk = true;
+    private bool isAttack = false;
+    public bool IsAttack 
+    { 
+        get
+        {
+            return isAttack;
+        }
+        set
+        {
+            isAttack = value;
+        }
+    }
 
     // ============ 必殺 ============= //
     [SerializeField, Header("必殺の威力")]
@@ -114,7 +126,7 @@ public class CS_Player : MonoBehaviour
     // ========== コンポーネント ========= //
     private Rigidbody rb;
     private Animator anim;
-    private new AudioSource audio;
+    private new AudioSource[] audio;
 
     // =========== Sound ======== //
     [SerializeField, Header("必殺SE")]
@@ -147,7 +159,7 @@ public class CS_Player : MonoBehaviour
         // コンポーネントを取得
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        audio = GetComponent<AudioSource>();
+        audio = GetComponents<AudioSource>();
         // カメラの位置を取得
         cameraTransform = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Transform>();
     }
@@ -217,16 +229,11 @@ public class CS_Player : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveForward), rotationSpeed);
         }
+        float speed = new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
         if(anim != null)
         {
             // アニメーションを再生
-            float speed = new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
             anim.SetFloat("Speed", speed);
-            if(audio != null)
-            {
-                // 移動音を再生
-                audio.PlayOneShot(SE_PlayerMove);
-            }
         }
         // Playerの向いている方向に進む
         rb.velocity = moveForward * moveSpeed + new Vector3(0,rb.velocity.y,0); 
@@ -263,7 +270,7 @@ public class CS_Player : MonoBehaviour
             if(audio != null)
             {
                 // スライディング音声
-                audio.PlayOneShot(SE_PlayerEscape);
+                audio[0].PlayOneShot(SE_PlayerEscape);
             }
         }
 
@@ -321,6 +328,7 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimAttack1()
     {
+        isAttack = false;
         damage = attack1Power;
     }
 
@@ -340,7 +348,7 @@ public class CS_Player : MonoBehaviour
         damage = 0;
         attackTimer = attack1Interval;
         attackNow = false;
-        
+        isAttack = false;
     }
 
     /// <summary>
@@ -348,6 +356,7 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimAttack2()
     {
+        isAttack = false;
         damage = attack2Power;
     }
 
@@ -360,6 +369,7 @@ public class CS_Player : MonoBehaviour
         attackTimer = attack2Interval;
         attackNow = false;
         attackOk = true;
+        isAttack = false;
     }
 
     #endregion
@@ -439,6 +449,7 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimUlt()
     {
+        isAttack = false;
         damage = ultPower;
     }
 
@@ -449,6 +460,7 @@ public class CS_Player : MonoBehaviour
     {
         damage = 0;
         ultNow = false;
+        isAttack = false;
     }
     #endregion
 
@@ -469,7 +481,7 @@ public class CS_Player : MonoBehaviour
         {
             if (audio != null || SE_PlayerReceiveDamage != null)
             {
-                audio.PlayOneShot(SE_PlayerReceiveDamage);
+                audio[0].PlayOneShot(SE_PlayerReceiveDamage);
             }
 
             // damage分Hpを減らす
@@ -479,7 +491,7 @@ public class CS_Player : MonoBehaviour
         {
             if (audio != null || SE_PlayerGuard != null)
             {
-                audio.PlayOneShot(SE_PlayerGuard);
+                audio[0].PlayOneShot(SE_PlayerGuard);
             }
             hp -= (int)(_damage * defDamgeCut);
         }
@@ -502,6 +514,8 @@ public class CS_Player : MonoBehaviour
     {
         slidingNow = false;
         attackNow = false;
+        guardNow = false;
         ultNow = false;
+        attackOk = true;
     }
 }
