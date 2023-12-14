@@ -1387,7 +1387,7 @@ PrefabInstance:
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: nextStage
-      value: Event02Scene
+      value: Event01Scene
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

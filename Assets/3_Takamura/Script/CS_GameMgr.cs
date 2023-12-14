@@ -127,6 +127,7 @@ public class CS_GameMgr : MonoBehaviour
         if (csPlayer.Hp <= 0.0f) 
         {
             bGameOver = true;
+            csTitan.StopMoving();
             ChangeState(eState.FadeShow);
         }
         //! Todo:EnemyScript‚©‚çHPŽæ“¾(Š„‡‚É•ÏŠ·‚µ‚Ä‘ã“ü)
