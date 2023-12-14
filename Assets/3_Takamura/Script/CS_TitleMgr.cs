@@ -15,12 +15,13 @@ public class CS_TitleMgr : MonoBehaviour
     }
     eState state;
 
-    [SerializeField]
-    [Header("FadeImage")]
+    [SerializeField, Header("FadeImage")]
     CanvasGroup cgFade;
-    [SerializeField]
-    [Header("フェード時間(秒)")]
+    [SerializeField, Header("フェード時間(秒)")]
     float fadeSpeed = 1.5f;
+
+    [SerializeField,Header("TitleBGM")]
+    AudioSource titleBGM;
 
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
@@ -43,8 +44,10 @@ public class CS_TitleMgr : MonoBehaviour
             case eState.FadeHide:
                 break;
             case eState.Standby:
+                titleBGM.Play();
                 break;
             case eState.FadeShow:
+
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
                 break;
@@ -80,9 +83,11 @@ public class CS_TitleMgr : MonoBehaviour
             case eState.Standby:
                 break;
             case eState.FadeShow:
+                titleBGM.volume -= 0.1f * Time.deltaTime;
                 cgFade.alpha += Time.deltaTime / fadeSpeed;
-                if (cgFade.alpha >= 1.0f)
+                if (cgFade.alpha >= 1.0f && titleBGM.volume <= 0.0f)
                 {
+                    //titleBGM.Stop();
                     SceneManager.LoadScene("Event01Scene");
                 }
                 break;
@@ -97,7 +102,10 @@ public class CS_TitleMgr : MonoBehaviour
     //! Quitボタンが押された時の処理
     public void OnClickQuit()
     {
-        //! アプリケーション終了
-        Application.Quit();
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }

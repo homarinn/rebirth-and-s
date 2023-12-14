@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CS_GameMgr : MonoBehaviour
 {
+    //! @brief シーン内状態
     enum eState
     {
         None,
@@ -40,6 +41,10 @@ public class CS_GameMgr : MonoBehaviour
     [SerializeField, Header("次のステージ名")]
     string nextStage;
 
+    //! @brief BGM
+    [SerializeField, Header("BGM：ステージ")]
+    AudioSource stageBGM;
+
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
     void ChangeState(eState nextState)
@@ -61,9 +66,11 @@ public class CS_GameMgr : MonoBehaviour
             case eState.FadeHide:
                 break;
             case eState.Game:
+                if(stageBGM != null) stageBGM.Play();
                 csTitan.StartMoving();
                 break;
             case eState.FadeShow:
+                if (stageBGM != null) stageBGM.Stop();
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
                 break;
@@ -95,6 +102,12 @@ public class CS_GameMgr : MonoBehaviour
         SetNextSceneName();
 
         StateUpdate();
+
+        //! 終了
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Quit();
+        }
     }
 
     //! @brief Stageに合ったEnemyのHPを設定
@@ -140,8 +153,9 @@ public class CS_GameMgr : MonoBehaviour
             case eState.Game:
                 break;
             case eState.FadeShow:
+                stageBGM.volume -= 0.1f * Time.deltaTime;
                 cgFade.alpha += Time.deltaTime / fadeSpeed;
-                if (cgFade.alpha >= 1.0f)
+                if (cgFade.alpha >= 1.0f && stageBGM.volume <= 0.0f)
                 {
                     SceneManager.LoadScene(nextScene);
                 }
@@ -160,5 +174,15 @@ public class CS_GameMgr : MonoBehaviour
         {
             nextScene = "GameOverScene";
         }
+    }
+
+    //! @brief アプリケーション終了
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
