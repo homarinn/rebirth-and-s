@@ -101,6 +101,12 @@ public class CS_GameMgr : MonoBehaviour
         SetNextSceneName();
 
         StateUpdate();
+
+        //! 終了
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Quit();
+        }
     }
 
     //! @brief Stageに合ったEnemyのHPを設定
@@ -166,5 +172,15 @@ public class CS_GameMgr : MonoBehaviour
         {
             nextScene = "GameOverScene";
         }
+    }
+
+    //! @brief アプリケーション終了
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }

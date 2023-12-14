@@ -91,6 +91,12 @@ public class CS_GameOverMgr : MonoBehaviour
                 }
                 break;
         }
+
+        //! 終了
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Quit();
+        }
     }
 
     //! Retryボタンが押された時の処理
@@ -106,5 +112,15 @@ public class CS_GameOverMgr : MonoBehaviour
         //! アプリケーション終了
         ChangeState(eState.FadeShow);
         nextScene = "TitleScene";
+    }
+
+    //! @brief アプリケーション終了
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
