@@ -268,6 +268,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
+      propertyPath: walkSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
       propertyPath: targetTransform
       value: 
       objectReference: {fileID: 652855034}
@@ -343,6 +348,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4136324449169305625, guid: 5099749f0b696fa49a90660742c2b062,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4456024871464833536, guid: 5099749f0b696fa49a90660742c2b062,
         type: 3}
