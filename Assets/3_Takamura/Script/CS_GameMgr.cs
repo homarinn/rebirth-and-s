@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CS_GameMgr : MonoBehaviour
 {
+    //! @brief シーン内状態
     enum eState
     {
         None,
@@ -40,6 +41,10 @@ public class CS_GameMgr : MonoBehaviour
     [SerializeField, Header("次のステージ名")]
     string nextStage;
 
+    //! @brief BGM
+    [SerializeField, Header("BGM：ステージ")]
+    AudioSource stageBGM;
+
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
     void ChangeState(eState nextState)
@@ -61,6 +66,7 @@ public class CS_GameMgr : MonoBehaviour
             case eState.FadeHide:
                 break;
             case eState.Game:
+                stageBGM.Play();
                 csTitan.StartMoving();
                 break;
             case eState.FadeShow:
