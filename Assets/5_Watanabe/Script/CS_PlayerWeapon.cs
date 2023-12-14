@@ -31,10 +31,6 @@ public class CS_PlayerWeapon : MonoBehaviour
     {
         float damage = cs_Player.GetDamage;
 
-        if(cs_Player.IsAttack)
-        {
-            return;
-        }
         // 弱点に衝突したら弱点ダメージを与える
         if (other.gameObject.tag == "EnemyWeakness")
         {
@@ -89,6 +85,5 @@ public class CS_PlayerWeapon : MonoBehaviour
                 }
             }
         }
-    
     }
 }
