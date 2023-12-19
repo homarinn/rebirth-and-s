@@ -5,6 +5,7 @@ using UnityEngine;
 public class CS_Enemy1MagicMissile : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
+    [SerializeField] float attackPower;
     Transform playerTransform;
     Rigidbody rd;
     Vector3 direction;
@@ -30,11 +31,15 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
         //ƒvƒŒƒCƒ„[‚ÉŒü‚¯‚Ä’e‚ğ”­Ë‚·‚é
         if (isCanFire)
         {
+            //eqŠÖŒW‚ğ‰ğœ‚µ‚È‚¢‚Æ”­ËŒã‚àe‚Ì‰ñ“]’l‚ª‹O“¹‚É‰e‹¿‚ğ—^‚¦‚Ä‚µ‚Ü‚¤
+            transform.parent = null;  
+
             direction = playerTransform.position - transform.position;
             direction.Normalize();
             rd.velocity = direction * moveSpeed;
 
             isCanFire = false;
+            Debug.Log("isCanFire = " + isCanFire);
         }
 
         //’e‚ÌÁ‹

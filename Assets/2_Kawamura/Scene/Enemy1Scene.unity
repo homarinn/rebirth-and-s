@@ -494,7 +494,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &1228023187
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -594,16 +594,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1975246976}
-  magicMissilePrefab: {fileID: 3062599185702283815, guid: f635fa9c778e87244b1bdb905209bfc5,
+  weakMagicMissile: {fileID: 2129827334083275752, guid: 39ae1fde240768b48bcc922c61ae733f,
     type: 3}
-  magicMissileNumber: 5
+  strongMagicMissile: {fileID: 3124600088214066684, guid: 7571654e98713df4ebb0107dec5b3076,
+    type: 3}
+  weakMagicMissileNumber: 5
+  strongMagicMissileNumber: 7
   halfCircleRadius: 0.75
   spawnPos: {x: 0, y: 0.1, z: 1}
-  weakAttackProbability: 0
-  strongAttackProbability: 0
+  weakAttackProbability: 70
+  strongAttackProbability: 30
   blowOffAttackProbability: 0
-  maxCreationIntervalSeconds: 1
-  maxWeakShootInterval: 0
+  weakCreationInterval: 2
+  strongCreationInterval: 1
+  weakShootInterval: 0.5
+  strongShootInterval: 0.25
   maxAttackIntervalSeconds: 3
 --- !u!1001 &1379804671
 PrefabInstance:
@@ -909,8 +914,8 @@ Transform:
   m_GameObject: {fileID: 1975246976}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.92222196, z: -0, w: 0.38666102}
-  m_LocalPosition: {x: 17.24, y: 4.3, z: 17.13}
-  m_LocalScale: {x: 4, y: 6, z: 4}
+  m_LocalPosition: {x: 17.24, y: 1.37, z: 17.13}
+  m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 442806317}
