@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CS_TestMgr : MonoBehaviour
+public class CS_EventMgr : MonoBehaviour
 {
+    [SerializeField, Header("次のシーン名")]
+    string nextScene;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +26,7 @@ public class CS_TestMgr : MonoBehaviour
     //! test : ボタンクリックシーン遷移
     public void OnClickButton()
     {
-        SceneManager.LoadScene("Stage01Scene");
+        SceneManager.LoadScene(nextScene);
     }
 
     //! @brief アプリケーション終了
