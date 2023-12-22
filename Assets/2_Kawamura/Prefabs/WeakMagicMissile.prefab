@@ -121,6 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 12
   attackPower: 10
+  disapeearTime: 0.5
 --- !u!54 &6530913840329260098
 Rigidbody:
   m_ObjectHideFlags: 0

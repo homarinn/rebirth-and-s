@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CS_Enemy1 : MonoBehaviour
 {
@@ -16,6 +17,17 @@ public class CS_Enemy1 : MonoBehaviour
     AttackType attackType;
 
     [SerializeField] GameObject player;
+
+    [SerializeField] float maxHp;
+
+    //[SerializeField] Vector3 normalPos;  //通常時の位置
+    //[SerializeField] Vector3 downedPos;  //倒れたときの位置
+
+    //[SerializeField] float downedSpeed;  //倒れるスピード（秒）
+    [SerializeField] float downedDamage; //倒れるために必要なダメージ量
+    [SerializeField] float downedTime;   //ダウン時間
+
+    [SerializeField] float timeReturnNormalPos;  //定位置に到達するまでの時間（秒）
 
     [SerializeField] GameObject weakMagicMissile;
     [SerializeField] GameObject strongMagicMissile;
@@ -39,21 +51,47 @@ public class CS_Enemy1 : MonoBehaviour
     [SerializeField] float maxAttackIntervalSeconds;    //攻撃のインターバル（秒）
 
     //このコード内で使用するための変数
+    float hp;
     GameObject[] magicMissile = new GameObject[2]; //弾
     int[] magicMissileNumber = new int[2];         //弾の数
     float[] creationInterval = new float[2];       //弾の生成速度（秒）
     float[] shootInterval;                         //連射速度（秒）
     GameObject[] createdMagicMissile;              //生成した弾
     CS_Enemy1MagicMissile[] script;                //弾のスクリプト
+    Rigidbody myRigidbody;
+    Vector3 normalPos;                             //通常時の位置
+    Vector3 downedPos;                             //ダウンしたときの位置
+    float damageAmount;                            //ダウンのためのダメージ量変数
+    float totalDownedTime;                         //ダウンしている時間
+    float totalReturnTime;                         //定位置に戻るためにかかった時間
 
     float attackIntervalSeconds;
     int magicMissileCount = 1;
     int evenCount = 0;  //偶数発目の弾が生成された数
     int oddCount = 0;   //1発目を除く奇数発目の弾が生成された数
     bool isAttack;      //攻撃中か？
+    bool isReturningNormalPos;  //定位置に帰っている途中か？
+    bool isDeath;
+    bool isDowned;
 
     float[] weight = new float[3];  //各攻撃の重み（発生確率）
     float totalWeight;  //3種類の攻撃の重み（発生確率）の総和
+
+    //Vector3 prevDirectionToPlayer;     //前フレームのプレイヤー方向へのベクトル
+    //const float useLerpAngle = 10.0f;  //この変数の数値以上になったら回転にlerpを使用する
+    [SerializeField] float rotateSpeed;
+
+    //ゲッター
+    public float GetHp
+    {
+        get { return hp; }
+    }
+
+
+    private void Awake()
+    {
+        hp = maxHp;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -100,6 +138,10 @@ public class CS_Enemy1 : MonoBehaviour
         creationInterval[num] = 0.0f;
 
         //その他変数の初期化
+        myRigidbody = GetComponent<Rigidbody>();
+        myRigidbody.useGravity = false;
+        normalPos = transform.position;
+        downedPos = new Vector3(0, 0, 0);
         int max = Math.Max(magicMissileNumber[(int)AttackType.Weak],
                            magicMissileNumber[(int)AttackType.Strong]);
         shootInterval = new float[max];
@@ -111,13 +153,44 @@ public class CS_Enemy1 : MonoBehaviour
             createdMagicMissile[i] = null;
             script[i] = null;
         }
-        isAttack = false;
+        damageAmount = 0.0f;
+        totalDownedTime = 0.0f;
+        totalReturnTime = 0.0f;
         attackIntervalSeconds = maxAttackIntervalSeconds;
+        isAttack = false;
+        isReturningNormalPos = false;
+        isDeath = false;
+        isDowned = false;
+        //prevDirectionToPlayer = new Vector3(0, 0, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
+        ReduceHp(Time.deltaTime);
+        //Debug.Log("damageAmount = " + damageAmount);
+
+        //死亡
+        if (hp <= 0)
+        {
+            Death();
+            return;
+        }
+
+        //ダウン
+        if(damageAmount > downedDamage)
+        {
+            Downed();
+            return;
+        }
+
+        //定位置に戻る
+        if (isReturningNormalPos)
+        {
+            ReturnNormalPos();
+            return;
+        }
+
         //プレイヤーの方向を向く
         LookAtPlayer();
 
@@ -231,9 +304,34 @@ public class CS_Enemy1 : MonoBehaviour
             return;
         }
 
-        Vector3 direction = player.transform.position - transform.position;
-        direction.y = 0.0f;  //X軸回転を反映しない
-        transform.forward = direction;
+        //ターゲット方向を取得
+        Vector3 targetDirection = player.transform.position - transform.position;
+        targetDirection.y = 0.0f;  //X軸回転を反映しない
+
+        //ターゲット方向の回転を表すQuaternionを取得
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+
+        //滑らかに回転
+        transform.rotation = 
+            Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+
+        //Vector3 direction = player.transform.position - transform.position;
+        //direction.y = 0.0f;  //X軸回転を反映しない
+        //transform.forward = 
+        //    Vector3.MoveTowards(prevDirectionToPlayer, direction, rotateSpeed * Time.deltaTime);
+        ////transform.forward = 
+        ////    Vector3.Lerp(prevDirectionToPlayer, direction, rotateSpeed * Time.deltaTime);
+
+        ////if(Vector3.Angle(prevDirectionToPlayer, direction) > useLerpAngle)
+        ////{
+
+        ////}
+        ////else
+        ////{
+        ////    transform.forward = direction;
+        ////}
+
+        //prevDirectionToPlayer = direction;
     }
 
     /// <summary>
@@ -332,6 +430,143 @@ public class CS_Enemy1 : MonoBehaviour
                     attackIntervalSeconds = maxAttackIntervalSeconds;
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// 弾を消す
+    /// </summary>
+    void DestroyMagicMissile()
+    {
+        int max = Math.Max(magicMissileNumber[(int)AttackType.Weak],
+       magicMissileNumber[(int)AttackType.Strong]);
+        for (int i = 0; i < max; ++i)
+        {
+            if (createdMagicMissile[i] == null)
+            {
+                continue;
+            }
+            //発射されていたら消さない（いらない？）
+            if (script[i].GetSetIsCanFire)
+            {
+                continue;
+            }
+
+            Destroy(createdMagicMissile[i]);
+        }
+    }
+
+    /// <summary>
+    /// 死亡時処理
+    /// </summary>
+    void Death()
+    {
+        if (!isDeath)
+        {
+            isDeath = true;  //死亡
+
+            //変数の初期化
+            isAttack = false;
+
+            //弾を消す
+            DestroyMagicMissile();
+
+            //死亡アニメーション再生
+
+            //地面に下ろす（重力をonにするでもよい？）
+            myRigidbody.useGravity = true;
+        }
+    }
+
+    /// <summary>
+    /// ダウン時処理
+    /// </summary>
+    void Downed()
+    {
+        if (!isDowned)
+        {
+            isDowned = true;
+            myRigidbody.useGravity = true;
+
+            //変数の初期化（弾関連は絶対）
+            isAttack = false;
+            attackIntervalSeconds = maxAttackIntervalSeconds;
+            magicMissileCount = 1;
+            evenCount = oddCount = 0;
+            for(int i = 0; i < 2; ++i)
+            {
+                creationInterval[i] = 0.0f;
+            }
+
+            //弾を消す
+            DestroyMagicMissile();
+
+            //ダウンアニメーション再生
+
+            //地面に下ろす
+            myRigidbody.useGravity = true;
+        }
+
+        //ダウン時間が経過したら定位置に戻る
+        totalDownedTime += Time.deltaTime;
+        if(totalDownedTime > downedTime)
+        {
+            isDowned = false;
+            downedPos = transform.position;
+            myRigidbody.useGravity = false;
+            damageAmount = 0.0f;
+            totalDownedTime = 0.0f;
+
+            //上がるアニメーション再生
+
+            //定位置に戻す
+            isReturningNormalPos = true;
+        }
+    }
+
+    /// <summary>
+    /// 定位置に戻る
+    /// </summary>
+    void ReturnNormalPos()
+    {
+        Debug.Log("normalPos = " + normalPos);
+        Debug.Log("downedPos = " + downedPos);
+        //移動処理
+        totalReturnTime += Time.deltaTime;
+        float t = Mathf.Clamp01(totalReturnTime / timeReturnNormalPos);
+        transform.position = Vector3.Lerp(downedPos, normalPos, t);
+        if(transform.position == normalPos)
+        {
+            Debug.Log("戻った");
+            isReturningNormalPos = false;
+            totalReturnTime = 0.0f;
+        }
+    }
+
+    /// <summary>
+    /// ダウンのために必要な総ダメージ量に加算する
+    /// </summary>
+    /// <param name="attackPower">プレイヤーの攻撃力</param>
+    void AddDamageAmount(float attackPower)
+    {
+        if (!isDowned)
+        {
+            damageAmount += attackPower;
+        }
+    }
+
+    /// <summary>
+    /// 敵1のHPを減らす
+    /// </summary>
+    /// <param name="attackPower">プレイヤーの攻撃力</param>
+    public void ReduceHp(float attackPower)
+    {
+        hp -= attackPower;
+        AddDamageAmount(attackPower);
+
+        if(hp < 0)
+        {
+            hp = 0;
         }
     }
 }
