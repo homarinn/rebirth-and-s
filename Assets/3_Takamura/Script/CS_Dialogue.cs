@@ -5,14 +5,18 @@ using TMPro;
 
 public class CS_Dialogue : MonoBehaviour
 {
-    [SerializeField, Header("テキストUI")]
+    [SerializeField, Header("名前テキストUI")]
+    TextMeshProUGUI talkernameText;
+    [SerializeField, Header("セリフテキストUI")]
     TextMeshProUGUI dialogueText;
     [SerializeField, Header("テキストファイル")]
     TextAsset file;
     //! @brief 読込用バッファ
     string pBuffer;
-    //! @brief 改行で分割
+    //! @brief 改行で分割した1文
     string[] splitText;
+    //! @brief 名前で分割した1文
+    string[] nameText;
     //! @brief テキスト配列のインデックス
     int textIndex;
 
@@ -28,6 +32,7 @@ public class CS_Dialogue : MonoBehaviour
     {
         bFinishString = true;
         LoadText();
+        FindName();
         SplitString();
     }
 
@@ -36,10 +41,20 @@ public class CS_Dialogue : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return) && bFinishString == true)
         {
+            
             if (splitText[textIndex] != "")
             {
-                dialogueText.text = splitText[textIndex];
-                Show();
+                int index = splitText[textIndex].IndexOf("/");
+                if(index != -1)
+                {
+                    talkernameText.text = splitText[textIndex];
+                    Show();
+                }
+                else
+                {
+                    dialogueText.text = splitText[textIndex];
+                    Show();
+                }
 
                 bFinishString = false;
                 textIndex++;
@@ -73,6 +88,15 @@ public class CS_Dialogue : MonoBehaviour
     void SplitString()
     {
         splitText = pBuffer.Split(char.Parse("\n"));
+    }
+    //! @brief 名前部分を検索
+    void FindName()
+    {
+        int index = pBuffer.IndexOf("/");
+        if(index != -1)
+        {
+            nameText = pBuffer.Split(char.Parse("\n"));
+        }
     }
 
     //! @brief 文字送り演出表示
