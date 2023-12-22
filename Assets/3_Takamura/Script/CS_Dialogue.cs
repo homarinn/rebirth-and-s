@@ -32,7 +32,6 @@ public class CS_Dialogue : MonoBehaviour
     {
         bFinishString = true;
         LoadText();
-        FindName();
         SplitString();
     }
 
@@ -42,32 +41,66 @@ public class CS_Dialogue : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) && bFinishString == true)
         {
             
-            if (splitText[textIndex] != "")
+            //if (splitText[textIndex] != "")
+            //{
+            //    int index = splitText[textIndex].IndexOf("/");
+            //    if(index != -1)
+            //    {
+            //        talkernameText.text = splitText[textIndex];
+            //        Show();
+            //        //textIndex++;
+            //    }
+            //    else
+            //    {
+            //        dialogueText.text = splitText[textIndex];
+            //        Show();
+            //        //textIndex++;
+            //    }
+
+            //    bFinishString = false;
+                
+            //    if (textIndex + 1< splitText.Length)
+            //    {
+            //        textIndex++;
+            //    }
+            //    else
+            //    {
+            //        //! テキスト表示終了
+            //        textIndex = 0;
+            //    }
+            //}
+            //else
+            //{
+            //    dialogueText.text = "";
+            //    textIndex++;
+            //}
+
+            if(textIndex < splitText.Length)
             {
-                int index = splitText[textIndex].IndexOf("/");
-                if(index != -1)
+                string currentLine = splitText[textIndex];
+                if (!string.IsNullOrEmpty(currentLine))
                 {
-                    talkernameText.text = splitText[textIndex];
-                    Show();
-                }
-                else
-                {
-                    dialogueText.text = splitText[textIndex];
-                    Show();
+                    int index = currentLine.IndexOf("/");
+                    if(index != -1)
+                    {
+                        talkernameText.text = currentLine;
+                        dialogueText.text = "";
+                        textIndex++;
+                    }
+                    else
+                    {
+                        dialogueText.text = currentLine;
+                        Show();
+                        bFinishString = false;
+                        textIndex++;
+                    }
+
                 }
 
-                bFinishString = false;
-                textIndex++;
                 if (textIndex >= splitText.Length)
                 {
-                    //! テキスト表示終了
                     textIndex = 0;
                 }
-            }
-            else
-            {
-                dialogueText.text = "";
-                textIndex++;
             }
 
         }
@@ -89,15 +122,6 @@ public class CS_Dialogue : MonoBehaviour
     {
         splitText = pBuffer.Split(char.Parse("\n"));
     }
-    //! @brief 名前部分を検索
-    void FindName()
-    {
-        int index = pBuffer.IndexOf("/");
-        if(index != -1)
-        {
-            nameText = pBuffer.Split(char.Parse("\n"));
-        }
-    }
 
     //! @brief 文字送り演出表示
     void Show()
@@ -109,6 +133,7 @@ public class CS_Dialogue : MonoBehaviour
         //! 1文字ずつ表示するコルーチン実行
         showCoroutine = StartCoroutine(ShowCoroutine());
     }
+
     IEnumerator ShowCoroutine()
     {
         //! 待機用コルーチン
