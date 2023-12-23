@@ -40,56 +40,27 @@ public class CS_Dialogue : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return) && bFinishString == true)
         {
-            
-            //if (splitText[textIndex] != "")
-            //{
-            //    int index = splitText[textIndex].IndexOf("/");
-            //    if(index != -1)
-            //    {
-            //        talkernameText.text = splitText[textIndex];
-            //        Show();
-            //        //textIndex++;
-            //    }
-            //    else
-            //    {
-            //        dialogueText.text = splitText[textIndex];
-            //        Show();
-            //        //textIndex++;
-            //    }
-
-            //    bFinishString = false;
-                
-            //    if (textIndex + 1< splitText.Length)
-            //    {
-            //        textIndex++;
-            //    }
-            //    else
-            //    {
-            //        //! テキスト表示終了
-            //        textIndex = 0;
-            //    }
-            //}
-            //else
-            //{
-            //    dialogueText.text = "";
-            //    textIndex++;
-            //}
-
             if(textIndex < splitText.Length)
             {
-                string currentLine = splitText[textIndex];
-                if (!string.IsNullOrEmpty(currentLine))
+                if (!string.IsNullOrEmpty(splitText[textIndex]))
                 {
-                    int index = currentLine.IndexOf("/");
+                    //! 名前判定
+                    int index = splitText[textIndex].IndexOf("/");
                     if(index != -1)
                     {
-                        talkernameText.text = currentLine;
-                        dialogueText.text = "";
+                        //! 名前更新
+                        talkernameText.text = splitText[textIndex];
+
+                        //! セリフ表示
+                        dialogueText.text = splitText[++textIndex];
+                        Show();
+                        bFinishString = false;
                         textIndex++;
                     }
                     else
                     {
-                        dialogueText.text = currentLine;
+                        //! セリフのみ更新
+                        dialogueText.text = splitText[textIndex];
                         Show();
                         bFinishString = false;
                         textIndex++;
@@ -97,6 +68,7 @@ public class CS_Dialogue : MonoBehaviour
 
                 }
 
+                //! test：最後の文章まで行くと最初に戻る
                 if (textIndex >= splitText.Length)
                 {
                     textIndex = 0;

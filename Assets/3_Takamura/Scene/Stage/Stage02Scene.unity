@@ -247,6 +247,12 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!225 &371191365 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 1163849583164973268, guid: 4599c73d429970747bac1312071a185e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1562136316962758789}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &465736108
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -646,6 +652,18 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &1793845201 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6580249561548806646, guid: 4599c73d429970747bac1312071a185e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1562136316962758789}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1940648941 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4150658284361871605, guid: a1de378714d8efb4eb4b48f7b213b0db,
@@ -1027,6 +1045,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8621349053298837804, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: talkernameText
+      value: 
+      objectReference: {fileID: 1793845201}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1104,7 +1127,7 @@ PrefabInstance:
         type: 3}
       propertyPath: cgFade
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 371191365}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: goEnemy
