@@ -247,12 +247,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 86377583}
   m_PrefabAsset: {fileID: 0}
---- !u!225 &86377585 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 8982794342621556305, guid: 6de26fe3d1199ee4ea61e105b061076e,
-    type: 3}
-  m_PrefabInstance: {fileID: 86377583}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &392558165
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,8 +362,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -860595519, guid: ff2b215629dce614a91f04c2022caf07, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -569,8 +563,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 1555887225, guid: ff2b215629dce614a91f04c2022caf07, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -736,7 +730,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Continue
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1109,7 +1103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5154f892592a02c469cd22fb23d3f9cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cgFade: {fileID: 86377585}
+  cgFade: {fileID: 1961112256}
   fadeSpeed: 1.5
 --- !u!1 &1685258178
 GameObject:
@@ -1168,7 +1162,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Title
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1320,6 +1314,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687848852}
   m_CullTransparentMesh: 1
+--- !u!225 &1961112256 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 8432311307921041938, guid: 6de26fe3d1199ee4ea61e105b061076e,
+    type: 3}
+  m_PrefabInstance: {fileID: 86377583}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2032573515
 GameObject:
   m_ObjectHideFlags: 0

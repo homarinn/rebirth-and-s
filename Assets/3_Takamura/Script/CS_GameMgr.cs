@@ -73,6 +73,7 @@ public class CS_GameMgr : MonoBehaviour
                 if (stageBGM != null) stageBGM.Stop();
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
+                CS_GameOverMgr.SetCurrentSceneName();
                 break;
         }
 
