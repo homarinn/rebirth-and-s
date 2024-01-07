@@ -1,0 +1,7 @@
+/PlayerName
+aiueo
+/EnemyName
+kakikukeko
+abcde
+/PlayerName
+fghij

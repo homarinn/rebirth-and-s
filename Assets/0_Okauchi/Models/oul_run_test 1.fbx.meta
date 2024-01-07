@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/0_Okauchi/Models/oul_run_test 1.fbx.meta
 guid: 92bb881f9bcbdb04a81d98f4fda2170c
+========
+guid: df97b08e4af615e4a8c30fcb13e39ca1
+>>>>>>>> develop:Assets/0_Okauchi/Models/oul_run_test2.fbx.meta
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []

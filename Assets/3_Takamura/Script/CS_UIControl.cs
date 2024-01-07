@@ -5,101 +5,124 @@ using UnityEngine.UI;
 
 public class CS_UIControl : MonoBehaviour
 {
-    //[SerializeField]
-    //CS_Player csPlayer;
-    [SerializeField]
-    [Header("PlayerHPバー")]
-    Image playerHP;
-    [SerializeField]
-    [Header("必殺技アイコン")]
-    Image specialMove;
-    [SerializeField]
-    [Header("必殺技マスクアイコン")]
-    Image spMask;
+    [SerializeField,Header("PlayerのPrefab")]
+    GameObject goPlayer;
+    //! @brief PlayerのMaxHP
+    float playerHpMax;
+    [SerializeField,Header("PlayerHPバー")]
+    Image cpPlayerHP;
+    [SerializeField, Header("必殺技バー")]
+    Image cpUlt;
+    float ultInterval;
 
-    //[SerializeField]
-    //CS_Spirit csSpirit;
-    [SerializeField]
-    [Header("精霊回復バー")]
-    Image spilit;
+    [SerializeField, Header("EnemyのPrefab")]
+    GameObject goEnemy;
+    [SerializeField, Header("EnemyHPバー")]
+    Image cpEnemyHP;
+    //! @brief 敵のMaxHP
+    [SerializeField]float enemyHpMax;
+    //! @brief 敵のHP
+    [SerializeField]float enemyHp;
 
-    //[SerializeField]
-    //CS_Enemy csEnemy;
-    [SerializeField]
-    [Header("EnemyHPバー")]
-    Image enemyHP;
-
-    //! test
-    float cooldownTime = 5.0f;
-    float currentTime = 0.0f;
+    //! @brief 巨人のスクリプト格納
+    CS_Titan csTitan = null;
+    //! @brief シヴァ
+    CS_Enemy1 csEnemy01 = null;
+    //! @brief Playerミラー
+    CS_EnemyPlayer csEnPlayer = null;
 
 
     void Start()
     {
+        //! 各キャラ、Start関数で設定された値はここでは反映されない。
+        //! Awake関数で初期化をしてもらうか…
+
         //! Todo:各キャラのステータスの初期化
-        spilit.fillAmount = 0.0f;
+        playerHpMax = (float)goPlayer.GetComponent<CS_Player>().Hp;
+        ultInterval = goPlayer.GetComponent<CS_Player>().UltTimer;
+        
+
+        csTitan = goEnemy.GetComponent<CS_Titan>();
+        if(csTitan != null)
+        {
+            enemyHpMax = csTitan.Hp;
+        }
+        csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
+        if (csEnemy01 != null)
+        {
+            enemyHpMax = csEnemy01.GetHp;
+        }
+        csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
+        if(csEnPlayer != null)
+        {
+            enemyHpMax = 100;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        ControlPlayerHP();
-        ControlSpilit();
-        ControlSpecilMove();
+        //Debug.Log(ultInterval);
+        SetEnemyHP();
 
-        ControlEnemyHP();
+        ControlPlayerHPBar();
+        ControlSpecilAttackBar();
+
+        ControlEnemyHPBar();
 
         //! test
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            currentTime = cooldownTime;
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    cpSpecialAttack.fillAmount = 0.0f;
+        //}
     }
 
-
+    //! @brief Stageに合った敵のHPを設定
+    void SetEnemyHP()
+    {
+        if (csTitan != null)
+        {
+            enemyHp = csTitan.Hp;
+        }
+        if(csEnemy01 != null)
+        {
+            enemyHp = csEnemy01.GetHp;
+        }
+        if(csEnPlayer != null)
+        {
+            enemyHp = 100;
+        }
+    }
     //! @brief PlayerHPバー操作
-    void ControlPlayerHP()
+    void ControlPlayerHPBar()
     {
-        //! Todo:PlayerScriptからHP取得(割合に変換して代入)
-        //playerHP.fillAmount -= 0.001f;
-        if (playerHP.fillAmount <= 0.0f)
+        var csPlayer = goPlayer.GetComponent<CS_Player>();
+        cpPlayerHP.fillAmount = (float)csPlayer.Hp / playerHpMax;
+
+        if (cpPlayerHP.fillAmount <= 0.0f)
         {
-            playerHP.fillAmount = 0.0f;
+            cpPlayerHP.fillAmount = 0.0f;
         }
     }
-    //! @brief Player必殺技アイコン操作
-    void ControlSpecilMove()
+    //! @brief 必殺技インターバルバー
+    void ControlSpecilAttackBar()
     {
-        if (currentTime <= 0.0f)
+        var csPlayer = goPlayer.GetComponent<CS_Player>();
+        cpUlt.fillAmount = 1.0f - (csPlayer.UltTimer / ultInterval);
+        if (cpUlt.fillAmount >= 1.0f)
         {
-            spMask.fillAmount = 0.0f;
-        }
-        else
-        {
-            currentTime -= Time.deltaTime;
-            float val = Mathf.Clamp01(currentTime / cooldownTime);
-            spMask.fillAmount = val;
-        }
-    }
-    //! @brief 精霊回復バー操作
-    void ControlSpilit()
-    {
-        //! Todo:SpilitScriptからゲージ取得(割合に変換して代入)
-        spilit.fillAmount += 0.001f;
-        if (spilit.fillAmount >= 1.0f)
-        {
-            spilit.fillAmount = 1.0f;
+            cpUlt.fillAmount = 1.0f;
         }
     }
 
     //! @brief EnemyHPバー操作
-    void ControlEnemyHP()
+    void ControlEnemyHPBar()
     {
-        //! Todo:EnemyScriptからHP取得(割合に変換して代入)
-        //enemyHP.fillAmount -= 0.0001f;
-        if (enemyHP.fillAmount <= 0.0f)
+        cpEnemyHP.fillAmount = enemyHp / enemyHpMax;
+
+        if (cpEnemyHP.fillAmount <= 0.0f)
         {
-            enemyHP.fillAmount = 0.0f;
+            cpEnemyHP.fillAmount = 0.0f;
         }
     }
 

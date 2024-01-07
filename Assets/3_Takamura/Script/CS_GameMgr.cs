@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CS_GameMgr : MonoBehaviour
 {
+    //! @brief シーン内状態
     enum eState
     {
         None,
@@ -13,21 +14,25 @@ public class CS_GameMgr : MonoBehaviour
         Game,
         FadeShow,
     }
-    eState state;
-
-    [SerializeField]
-    [Header("FadeImage")]
+    [SerializeField] eState state;
+    
+    [SerializeField, Header("FadeImage")]
     CanvasGroup cgFade;
-    [SerializeField]
-    [Header("フェード時間(秒)")]
+    [SerializeField, Header("フェード時間(秒)")]
     float fadeSpeed = 1.5f;
 
-    //[SerializeField]
-    //CS_Player csPlayer;
-    float playerCurrentHP;
-    //[SerializeField]
-    //CS_Enemy csEnemy;
-    float enemyCurrentHP;
+    [SerializeField,Header("Playerスクリプト")]
+    CS_Player csPlayer;
+    [SerializeField, Header("EnemyのPrefab")]
+    GameObject goEnemy;
+    //! @brief 巨人のスクリプト
+    CS_Titan csTitan = null;
+    //! @brief シヴァ
+    CS_Enemy1 csEnemy01 = null;
+    //! @brief Playerミラー
+    CS_EnemyPlayer csEnPlayer = null;
+
+    float enemyHp;
 
     //! @brief ゲームオーバーフラグ
     bool bGameOver;
@@ -38,6 +43,10 @@ public class CS_GameMgr : MonoBehaviour
     string nextScene = "";
     [SerializeField, Header("次のステージ名")]
     string nextStage;
+
+    //! @brief BGM
+    [SerializeField, Header("BGM：ステージ")]
+    AudioSource stageBGM;
 
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
@@ -60,10 +69,14 @@ public class CS_GameMgr : MonoBehaviour
             case eState.FadeHide:
                 break;
             case eState.Game:
+                if(stageBGM != null) stageBGM.Play();
+                if(csTitan != null)csTitan.StartMoving();
                 break;
             case eState.FadeShow:
+                if (stageBGM != null) stageBGM.Stop();
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
+                CS_GameOverMgr.SetCurrentSceneName();
                 break;
         }
 
@@ -80,35 +93,59 @@ public class CS_GameMgr : MonoBehaviour
         cgFade.blocksRaycasts = true;
         cgFade.interactable = true;
 
-        //! test
-        playerCurrentHP = 1.0f;
-        enemyCurrentHP = 1.0f;
+        bGameOver = false;
+        bGameClear = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        SetEnemyHP();
+
         SetGameFlag();
         SetNextSceneName();
 
         StateUpdate();
 
-        //! test
-        //enemyCurrentHP -= 0.001f;
+        //! 終了
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Quit();
+        }
     }
 
+    //! @brief Stageに合ったEnemyのHPを設定
+    void SetEnemyHP()
+    {
+        csTitan = goEnemy.GetComponent<CS_Titan>();
+        if (csTitan != null)
+        {
+            enemyHp = csTitan.Hp;
+        }
+        csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
+        if(csEnemy01 != null)
+        {
+            enemyHp = csEnemy01.GetHp;
+        }
+        csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
+        if(csEnPlayer != null)
+        {
+            enemyHp = 100;
+        }
+    }
 
     //! @brief GameClear/GameOverのフラグ設定
     void SetGameFlag()
     {
         //! Todo:PlayerScriptからHP取得(割合に変換して代入)
-        if (playerCurrentHP <= 0.0f) 
+        if (csPlayer.Hp <= 0.0f) 
         {
             bGameOver = true;
+            if(csTitan != null)csTitan.StopMoving();
             ChangeState(eState.FadeShow);
         }
         //! Todo:EnemyScriptからHP取得(割合に変換して代入)
-        if (enemyCurrentHP <= 0.0f)
+        if (enemyHp <= 0.0f)
         {
             bGameClear = true;
             ChangeState(eState.FadeShow);
@@ -131,8 +168,9 @@ public class CS_GameMgr : MonoBehaviour
             case eState.Game:
                 break;
             case eState.FadeShow:
+                stageBGM.volume -= 0.1f * Time.deltaTime;
                 cgFade.alpha += Time.deltaTime / fadeSpeed;
-                if (cgFade.alpha >= 1.0f)
+                if (cgFade.alpha >= 1.0f && stageBGM.volume <= 0.0f)
                 {
                     SceneManager.LoadScene(nextScene);
                 }
@@ -151,5 +189,15 @@ public class CS_GameMgr : MonoBehaviour
         {
             nextScene = "GameOverScene";
         }
+    }
+
+    //! @brief アプリケーション終了
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }

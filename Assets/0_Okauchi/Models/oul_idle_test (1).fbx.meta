@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/0_Okauchi/Models/oul_idle_test (1).fbx.meta
 guid: 079e07e3bad3e4b4cb90c6b084c76840
+========
+guid: 48371ce84e9167d4d942ab6f57055472
+>>>>>>>> develop:Assets/4_Yukimoto/Models/oul_idle_test.fbx.meta
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -31,6 +35,7 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
+<<<<<<<< HEAD:Assets/0_Okauchi/Models/oul_idle_test (1).fbx.meta
     clipAnimations:
     - serializedVersion: 16
       name: Take 001
@@ -61,6 +66,9 @@ ModelImporter:
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
+========
+    clipAnimations: []
+>>>>>>>> develop:Assets/4_Yukimoto/Models/oul_idle_test.fbx.meta
     isReadable: 0
   meshes:
     lODScreenPercentages: []

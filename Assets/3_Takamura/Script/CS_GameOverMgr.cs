@@ -25,6 +25,8 @@ public class CS_GameOverMgr : MonoBehaviour
     //! @brief 次のシーン名
     string nextScene = "";
 
+    //! @brief 直前にプレイしたシーン名
+    public static string preScene;
 
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
@@ -91,6 +93,12 @@ public class CS_GameOverMgr : MonoBehaviour
                 }
                 break;
         }
+
+        //! 終了
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Quit();
+        }
     }
 
     //! Retryボタンが押された時の処理
@@ -98,7 +106,7 @@ public class CS_GameOverMgr : MonoBehaviour
     {
         ChangeState(eState.FadeShow);
         //! Todo:ステージ番号取得が必要
-        nextScene = "Stage01Scene";
+        nextScene = preScene;
     }
     //! Titleボタンが押された時の処理
     public void OnClickTitle()
@@ -106,5 +114,21 @@ public class CS_GameOverMgr : MonoBehaviour
         //! アプリケーション終了
         ChangeState(eState.FadeShow);
         nextScene = "TitleScene";
+    }
+
+    //! @brief アプリケーション終了
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
+    }
+
+    //! @brief プレイ中のシーン名を保存する
+    public static void SetCurrentSceneName()
+    {
+        preScene = SceneManager.GetActiveScene().name;
     }
 }
