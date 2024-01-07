@@ -120,7 +120,6 @@ public class CS_Titan : MonoBehaviour
     [SerializeField, Header("SE：突進の衝突")]
     private AudioSource clashSE;
 
-
     private void Awake()
     {
         hp = hpMax;
@@ -129,7 +128,7 @@ public class CS_Titan : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
+        //StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
     }
 
     // Update is called once per frame
@@ -162,6 +161,12 @@ public class CS_Titan : MonoBehaviour
         StartWalk();
     }
 
+    //止める関数
+    public void StopMoving()
+    {
+        StartIdle();
+    }
+
     //--------------------------------------------
     //各Stateごとの関数
     //①各Stateを始める「Start～関数」
@@ -169,6 +174,14 @@ public class CS_Titan : MonoBehaviour
     //※「～」は各State名
     //--------------------------------------------
     //↓↓↓↓↓↓↓↓↓↓↓↓
+    //----------------------------------
+    //初期状態（Idle）
+    //----------------------------------
+    private void StartIdle()
+    {
+        state = State.IDLE;
+        animator.SetTrigger("triggerIdle");
+    }
     //----------------------------------
     //歩く（Walk）
     //----------------------------------
@@ -380,9 +393,9 @@ public class CS_Titan : MonoBehaviour
         }
     }
     //弱点にダメージを受けた時の処理
-    public void ReceiveDamageOnWeakPoint(float damage)
+    public void ReceiveDamageOnWeakPoint()
     {
-        ReceiveDamage(damage + weakPointDamageIncrement);
+        ReceiveDamage(weakPointDamageIncrement);
 
         //ダウン中でない場合は
         if (state != State.DOWN)

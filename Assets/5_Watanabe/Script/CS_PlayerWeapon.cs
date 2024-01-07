@@ -31,17 +31,13 @@ public class CS_PlayerWeapon : MonoBehaviour
     {
         float damage = cs_Player.GetDamage;
 
-        if(cs_Player.IsAttack)
-        {
-            return;
-        }
         // 弱点に衝突したら弱点ダメージを与える
         if (other.gameObject.tag == "EnemyWeakness")
         {
             if (other.GetComponentInParent<CS_Titan>() != null)
             {
                 cs_Player.IsAttack = true;
-                other.GetComponentInParent<CS_Titan>().ReceiveDamageOnWeakPoint(damage);
+                other.GetComponentInParent<CS_Titan>().ReceiveDamageOnWeakPoint();
             }
             else
             {
@@ -89,6 +85,5 @@ public class CS_PlayerWeapon : MonoBehaviour
                 }
             }
         }
-    
     }
 }

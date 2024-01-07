@@ -179,6 +179,8 @@ public class CS_Player : MonoBehaviour
                 if (anim != null)
                 {
                     anim.SetTrigger("DeadTrigger");
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
                 }
             }
         }

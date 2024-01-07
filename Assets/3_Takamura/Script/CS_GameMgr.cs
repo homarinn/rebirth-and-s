@@ -70,7 +70,7 @@ public class CS_GameMgr : MonoBehaviour
                 csTitan.StartMoving();
                 break;
             case eState.FadeShow:
-                stageBGM.Stop();
+                if (stageBGM != null) stageBGM.Stop();
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
                 break;
@@ -127,6 +127,7 @@ public class CS_GameMgr : MonoBehaviour
         if (csPlayer.Hp <= 0.0f) 
         {
             bGameOver = true;
+            csTitan.StopMoving();
             ChangeState(eState.FadeShow);
         }
         //! Todo:EnemyScript‚©‚çHPŽæ“¾(Š„‡‚É•ÏŠ·‚µ‚Ä‘ã“ü)
@@ -153,8 +154,9 @@ public class CS_GameMgr : MonoBehaviour
             case eState.Game:
                 break;
             case eState.FadeShow:
+                stageBGM.volume -= 0.1f * Time.deltaTime;
                 cgFade.alpha += Time.deltaTime / fadeSpeed;
-                if (cgFade.alpha >= 1.0f)
+                if (cgFade.alpha >= 1.0f && stageBGM.volume <= 0.0f)
                 {
                     SceneManager.LoadScene(nextScene);
                 }
