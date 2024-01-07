@@ -25,11 +25,11 @@ public class CS_Player : MonoBehaviour
     [SerializeField, Header("Attack1攻撃力")]
     private float attack1Power = 10;
     public float Attack1Power
-    { 
+    {
         get
         {
             return attack1Power;
-        } 
+        }
     }
     [SerializeField, Header("Attack1のインターバル")]
     private float attack1Interval = 0.5f;
@@ -40,7 +40,7 @@ public class CS_Player : MonoBehaviour
         get
         {
             return attack2Power;
-        } 
+        }
     }
     [SerializeField, Header("Attack2のインターバル")]
     private float attack2Interval = 1.0f;
@@ -49,8 +49,8 @@ public class CS_Player : MonoBehaviour
     private bool attackNow = false;
     private bool attackOk = true;
     private bool isAttack = false;
-    public bool IsAttack 
-    { 
+    public bool IsAttack
+    {
         get
         {
             return isAttack;
@@ -71,7 +71,7 @@ public class CS_Player : MonoBehaviour
     {
         get
         {
-            return Mathf.Clamp(ultTimer,0,  5);
+            return Mathf.Clamp(ultTimer, 0, 5);
         }
     }
     // 必殺中?
@@ -92,7 +92,8 @@ public class CS_Player : MonoBehaviour
     private int maxHP = 200;
     [SerializeField, Header("プレイヤーのHP")]
     private int hp;
-    public int Hp {
+    public int Hp
+    {
         get
         {
             return hp;
@@ -114,14 +115,14 @@ public class CS_Player : MonoBehaviour
         get
         {
             return damage;
-        } 
+        }
     }
 
     // カメラの位置
     private Transform cameraTransform = null;
 
     // 死んでいるか　true=死亡 : false=生きている
-    private bool isDead = false; 
+    private bool isDead = false;
 
     // ========== コンポーネント ========= //
     private Rigidbody rb;
@@ -170,7 +171,7 @@ public class CS_Player : MonoBehaviour
     private void Update()
     {
         // HPが0以下なら死んでいる
-        if(hp <= 0)
+        if (hp <= 0)
         {
             if (!isDead)
             {
@@ -182,7 +183,7 @@ public class CS_Player : MonoBehaviour
             }
         }
         // 無敵時間になったら減らす
-        if(invincibleTimer > 0)
+        if (invincibleTimer > 0)
         {
             invincibleTimer -= Time.deltaTime;
         }
@@ -208,11 +209,11 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        if(slidingNow)
-        {          
+        if (slidingNow)
+        {
             return;
         }
-        if(attackNow || guardNow || ultNow)
+        if (attackNow || guardNow || ultNow)
         {
             rb.velocity = Vector3.zero;
             return;
@@ -230,13 +231,13 @@ public class CS_Player : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveForward), rotationSpeed);
         }
         float speed = new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
-        if(anim != null)
+        if (anim != null)
         {
             // アニメーションを再生
             anim.SetFloat("Speed", speed);
         }
         // Playerの向いている方向に進む
-        rb.velocity = moveForward * moveSpeed + new Vector3(0,rb.velocity.y,0); 
+        rb.velocity = moveForward * moveSpeed + new Vector3(0, rb.velocity.y, 0);
     }
 
     #region 回避
@@ -258,16 +259,16 @@ public class CS_Player : MonoBehaviour
             return;
         }
 
-        if(Input.GetKeyDown(KeyCode.LeftShift) && !slidingNow && slidingTimer <= 0)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !slidingNow && slidingTimer <= 0)
         {
             // スライディング中
             slidingNow = true;
-            if(anim != null)
+            if (anim != null)
             {
                 // スライディング再生
                 anim.SetTrigger("SlidingTrigger");
             }
-            if(audio != null)
+            if (audio != null)
             {
                 // スライディング音声
                 audio[0].PlayOneShot(SE_PlayerEscape);
@@ -275,10 +276,10 @@ public class CS_Player : MonoBehaviour
         }
 
         // スライディング中
-        if(slidingNow)
+        if (slidingNow)
         {
             rb.velocity = transform.forward * slidingSpeed;
-        }      
+        }
     }
 
     /// <summary>
@@ -295,18 +296,18 @@ public class CS_Player : MonoBehaviour
     #endregion
 
     #region 攻撃
-    
+
     /// <summary>
     /// 攻撃処理
     /// </summary>
     private void Attack()
     {
-        if(attackTimer > 0)
+        if (attackTimer > 0)
         {
             attackTimer -= Time.deltaTime;
         }
         // 他の行動中ならなにもしない
-        if(slidingNow || guardNow || ultNow)
+        if (slidingNow || guardNow || ultNow)
         {
             return;
         }
@@ -322,7 +323,7 @@ public class CS_Player : MonoBehaviour
         }
 
     }
-    
+
     /// <summary>
     /// 攻撃アニメーション1
     /// </summary>
@@ -382,12 +383,12 @@ public class CS_Player : MonoBehaviour
     private void Guard()
     {
         // ガードインターバルを減らす
-        if(gurdTimer > 0)
+        if (gurdTimer > 0)
         {
             gurdTimer -= Time.deltaTime;
         }
         // 他の行動してたら何もしない
-        if(attackNow || slidingNow || ultNow)
+        if (attackNow || slidingNow || ultNow)
         {
             return;
         }
@@ -395,7 +396,7 @@ public class CS_Player : MonoBehaviour
         {
             // ガード中
             guardNow = true;
-            if(anim != null)
+            if (anim != null)
             {
                 // ガードアニメーション再生
                 anim.SetTrigger("GuardTrigger");
@@ -421,18 +422,18 @@ public class CS_Player : MonoBehaviour
     private void Ult()
     {
         // インターバルがあった場合減らす
-        if(ultTimer > 0 && !ultNow)
+        if (ultTimer > 0 && !ultNow)
         {
             ultTimer -= Time.deltaTime;
         }
 
         // 他の行動していた場合何もしない
-        if(slidingNow || attackNow || guardNow)
+        if (slidingNow || attackNow || guardNow)
         {
             return;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && !ultNow && ultTimer <= 0)
+        if (Input.GetKeyDown(KeyCode.Space) && !ultNow && ultTimer <= 0)
         {
             // 必殺中
             ultNow = true;
@@ -498,7 +499,7 @@ public class CS_Player : MonoBehaviour
         // 無敵時間を入れる
         invincibleTimer = invincibleTime;
 
-        if(guardNow || ultNow)
+        if (guardNow || ultNow)
         {
             return;
         }
