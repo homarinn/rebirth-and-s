@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CS_Titan : MonoBehaviour
 {
@@ -128,7 +129,10 @@ public class CS_Titan : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
+        if(SceneManager.GetActiveScene().name == "OkauchiScene")
+        {
+            StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
+        }
     }
 
     // Update is called once per frame
