@@ -14,7 +14,7 @@ public class CS_GameMgr : MonoBehaviour
         Game,
         FadeShow,
     }
-    eState state;
+    [SerializeField] eState state;
     
     [SerializeField, Header("FadeImage")]
     CanvasGroup cgFade;
