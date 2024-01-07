@@ -14,7 +14,7 @@ public class CS_GameMgr : MonoBehaviour
         Game,
         FadeShow,
     }
-    eState state;
+    [SerializeField] eState state;
     
     [SerializeField, Header("FadeImage")]
     CanvasGroup cgFade;
@@ -28,7 +28,10 @@ public class CS_GameMgr : MonoBehaviour
     //! @brief 巨人のスクリプト
     CS_Titan csTitan = null;
     //! @brief シヴァ
+    CS_Enemy1 csEnemy01 = null;
     //! @brief Playerミラー
+    CS_EnemyPlayer csEnPlayer = null;
+
     float enemyHp;
 
     //! @brief ゲームオーバーフラグ
@@ -67,7 +70,7 @@ public class CS_GameMgr : MonoBehaviour
                 break;
             case eState.Game:
                 if(stageBGM != null) stageBGM.Play();
-                csTitan.StartMoving();
+                if(csTitan != null)csTitan.StartMoving();
                 break;
             case eState.FadeShow:
                 if (stageBGM != null) stageBGM.Stop();
@@ -119,6 +122,16 @@ public class CS_GameMgr : MonoBehaviour
         {
             enemyHp = csTitan.Hp;
         }
+        csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
+        if(csEnemy01 != null)
+        {
+            enemyHp = csEnemy01.GetHp;
+        }
+        csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
+        if(csEnPlayer != null)
+        {
+            enemyHp = 100;
+        }
     }
 
     //! @brief GameClear/GameOverのフラグ設定
@@ -128,7 +141,7 @@ public class CS_GameMgr : MonoBehaviour
         if (csPlayer.Hp <= 0.0f) 
         {
             bGameOver = true;
-            csTitan.StopMoving();
+            if(csTitan != null)csTitan.StopMoving();
             ChangeState(eState.FadeShow);
         }
         //! Todo:EnemyScriptからHP取得(割合に変換して代入)
