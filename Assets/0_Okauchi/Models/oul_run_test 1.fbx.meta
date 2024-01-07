@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/0_Okauchi/Models/oul_idle_test (1).fbx.meta
-guid: 015b9d9e6a1970d4091a70abd86ad2db
+<<<<<<<< HEAD:Assets/0_Okauchi/Models/oul_run_test 1.fbx.meta
+guid: 92bb881f9bcbdb04a81d98f4fda2170c
 ========
-guid: 48371ce84e9167d4d942ab6f57055472
->>>>>>>> develop:Assets/4_Yukimoto/Models/oul_idle_test.fbx.meta
+guid: df97b08e4af615e4a8c30fcb13e39ca1
+>>>>>>>> develop:Assets/0_Okauchi/Models/oul_run_test2.fbx.meta
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -35,14 +35,13 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-<<<<<<<< HEAD:Assets/0_Okauchi/Models/oul_idle_test (1).fbx.meta
     clipAnimations:
     - serializedVersion: 16
       name: Take 001
       takeName: Take 001
       internalID: 1827226128182048838
-      firstFrame: 3
-      lastFrame: 159
+      firstFrame: 1
+      lastFrame: 21
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -66,9 +65,6 @@ ModelImporter:
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
-========
-    clipAnimations: []
->>>>>>>> develop:Assets/4_Yukimoto/Models/oul_idle_test.fbx.meta
     isReadable: 0
   meshes:
     lODScreenPercentages: []
