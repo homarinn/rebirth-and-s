@@ -29,6 +29,7 @@ public class CS_UIControl : MonoBehaviour
     //! @brief シヴァ
     CS_Enemy1 csEnemy01 = null;
     //! @brief Playerミラー
+    CS_EnemyPlayer csEnPlayer = null;
 
 
     void Start()
@@ -50,6 +51,11 @@ public class CS_UIControl : MonoBehaviour
         if (csEnemy01 != null)
         {
             enemyHpMax = csEnemy01.GetHp;
+        }
+        csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
+        if(csEnPlayer != null)
+        {
+            enemyHpMax = 100;
         }
     }
 
@@ -81,6 +87,10 @@ public class CS_UIControl : MonoBehaviour
         if(csEnemy01 != null)
         {
             enemyHp = csEnemy01.GetHp;
+        }
+        if(csEnPlayer != null)
+        {
+            enemyHp = 100;
         }
     }
     //! @brief PlayerHPバー操作

@@ -30,6 +30,8 @@ public class CS_GameMgr : MonoBehaviour
     //! @brief シヴァ
     CS_Enemy1 csEnemy01 = null;
     //! @brief Playerミラー
+    CS_EnemyPlayer csEnPlayer = null;
+
     float enemyHp;
 
     //! @brief ゲームオーバーフラグ
@@ -124,6 +126,11 @@ public class CS_GameMgr : MonoBehaviour
         if(csEnemy01 != null)
         {
             enemyHp = csEnemy01.GetHp;
+        }
+        csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
+        if(csEnPlayer != null)
+        {
+            enemyHp = 100;
         }
     }
 
