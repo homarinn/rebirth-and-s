@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/0_Okauchi/Models/oul_idle_test (1).fbx.meta
-guid: 079e07e3bad3e4b4cb90c6b084c76840
-========
-guid: 48371ce84e9167d4d942ab6f57055472
->>>>>>>> develop:Assets/4_Yukimoto/Models/oul_idle_test.fbx.meta
+guid: f72d7cc2e9b17e4489828417b0e2cc4e
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -35,40 +31,7 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-<<<<<<<< HEAD:Assets/0_Okauchi/Models/oul_idle_test (1).fbx.meta
-    clipAnimations:
-    - serializedVersion: 16
-      name: Take 001
-      takeName: Take 001
-      internalID: 1827226128182048838
-      firstFrame: 3
-      lastFrame: 159
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-========
     clipAnimations: []
->>>>>>>> develop:Assets/4_Yukimoto/Models/oul_idle_test.fbx.meta
     isReadable: 0
   meshes:
     lODScreenPercentages: []
