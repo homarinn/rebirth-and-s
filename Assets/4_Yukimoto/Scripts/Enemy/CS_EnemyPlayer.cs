@@ -91,7 +91,7 @@ public class CS_EnemyPlayer : MonoBehaviour
     private bool canAttack = false;
 
     /// <summary> UŒ‚‚ÌŠm—¦‚ğˆø‚«“–‚Ä‚½‚çtrue </summary>
-    [SerializeField] private bool isAttackPercent = false;
+    private bool isAttackPercent = false;
 
     // ------------------------------
     // •KE‹Z
