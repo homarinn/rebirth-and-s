@@ -101,7 +101,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -119,10 +119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 069701af38773454db607dfb5a2b106c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 18
+  puddle: {fileID: 6801444558734101718, guid: 8b169a8e2b785294a935599df5e8d850, type: 3}
+  moveSpeed: 20
   attackPower: 20
-  puddle: {fileID: 4236626300090279086, guid: 6d745ab73af852145bb3812e4f391dd2, type: 3}
-  disapeearTime: 0.15
+  disappearTime: 0.15
+  period: 1
 --- !u!54 &1025355753799589203
 Rigidbody:
   m_ObjectHideFlags: 0

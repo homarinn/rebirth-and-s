@@ -16,77 +16,126 @@ public class CS_Enemy1 : MonoBehaviour
     }
     AttackType attackType;
 
+    [Header("プレイヤー")]
     [SerializeField] GameObject player;
 
-    [SerializeField] float maxHp;
-
-    //[SerializeField] Vector3 normalPos;  //通常時の位置
-    //[SerializeField] Vector3 downedPos;  //倒れたときの位置
-
-    //[SerializeField] float downedSpeed;  //倒れるスピード（秒）
-    [SerializeField] float downedDamage; //倒れるために必要なダメージ量
-    [SerializeField] float downedTime;   //ダウン時間
-
-    [SerializeField] float timeReturnNormalPos;  //定位置に到達するまでの時間（秒）
-
+    [Header("弾（弱攻撃）")]
     [SerializeField] GameObject weakMagicMissile;
+
+    [Header("弾（強攻撃）")]
     [SerializeField] GameObject strongMagicMissile;
 
-    [SerializeField] int weakMagicMissileNumber;              //一度に生成する弾の数
-    [SerializeField] int strongMagicMissileNumber;            //一度に生成する弾の数
+    [Header("吹き飛ばしエフェクト")]
+    [SerializeField] CS_Enemy1BlowOffEffect blowOffEffect;
 
-    [SerializeField] float halfCircleRadius;            //半円の半径
-    [SerializeField] Vector3 spawnPos = new Vector3(0.0f, 0.1f, 1.0f);  //敵1を基準とした弾の生成位置
+    [Header("最大HP")]
+    [SerializeField] float maxHp;
 
-    [SerializeField] float weakAttackProbability;       //弱攻撃の発生確率
-    [SerializeField] float strongAttackProbability;     //強攻撃の発生確率
-    [SerializeField] float blowOffAttackProbability;    //吹き飛ばし攻撃の発生確率
+    [Header("回転速度")]
+    [SerializeField] float rotateSpeed;
 
-    [SerializeField] float weakCreationInterval;  //弾を生成する間隔（秒）
-    [SerializeField] float strongCreationInterval;  //弾を生成する間隔（秒）
+    [Header("攻撃間のインターバル（秒）")]
+    [SerializeField] float maxAttackInterval;
 
-    [SerializeField] float weakShootInterval;        //次の弾を発射するまでの間隔（弱攻撃、秒）
-    [SerializeField] float strongShootInterval;        //次の弾を発射するまでの間隔（弱攻撃、秒）
+    [Header("弱攻撃の発生確率（%）")]
+    [SerializeField] float weakAttackProbability;   
 
-    [SerializeField] float maxAttackIntervalSeconds;    //攻撃のインターバル（秒）
+    [Header("強攻撃の発生確率（%）")]
+    [SerializeField] float strongAttackProbability; 
+
+    [Header("吹き飛ばし攻撃の発生確率（%）")]
+    [SerializeField] float blowOffAttackProbability;
+
+    [Header("半円状に弾を生成する時の半円の半径")]
+    [SerializeField] float halfCircleRadius;
+
+    [Header("敵の位置を基準とした弾の生成位置")]
+    [SerializeField] Vector3 magicMissileSpawnPos = new Vector3(0.0f, 0.1f, 1.0f);
+
+    [Header("曲線軌道にするか？（弱攻撃）")]
+    [SerializeField] bool isCurveWeakMagicMissile;
+
+    [Header("曲線軌道にするか？（強攻撃）")]
+    [SerializeField] bool isCurveStrongMagicMissile;
+
+    [Header("1回の攻撃で生成する弾の数（弱攻撃）")]
+    [SerializeField] int weakMagicMissileNumber;
+
+    [Header("1回の攻撃で生成する弾の数（強攻撃）")]
+    [SerializeField] int strongMagicMissileNumber;
+
+    [Header("弾を生成する間隔（弱攻撃、秒）")]
+    [SerializeField] float weakCreationInterval;  
+
+    [Header("弾を生成する間隔（強攻撃、秒）")]
+    [SerializeField] float strongCreationInterval;
+
+    [Header("弾の発射間隔（弱攻撃、秒)")]
+    [SerializeField] float weakShootInterval;   
+
+    [Header("弾の発射間隔（強攻撃、秒)")]
+    [SerializeField] float strongShootInterval;
+
+    [Header("ダウンさせるために必要なダメージ量")]
+    [SerializeField] float downedDamageAmount;
+
+    [Header("ダウン時間")]
+    [SerializeField] float downedTime;
+
+    [Header("ダウン終了後、定位置に戻るまでの速さ（秒）")]
+    [SerializeField] float timeReturnNormalPos;
+
+    [Header("弾を撃つSE")]
+    [SerializeField] private AudioClip shotSE;
+
+    [Header("吹き飛ばし攻撃のSE")]
+    [SerializeField] private AudioClip blowOffSE;
+
 
     //このコード内で使用するための変数
-    float hp;
+    Rigidbody myRigidbody;                         //自分のRigidbody
+    CS_Enemy1MagicMissile[] script;                //弾のスクリプト
+
     GameObject[] magicMissile = new GameObject[2]; //弾
+    GameObject[] createdMagicMissile;              //生成した弾
+
+    Vector3 normalPos;                             //通常時の位置
+    Vector3 downedPos;                             //ダウンしたときの位置
+    float hp;                                      //HP
     int[] magicMissileNumber = new int[2];         //弾の数
     float[] creationInterval = new float[2];       //弾の生成速度（秒）
     float[] shootInterval;                         //連射速度（秒）
-    GameObject[] createdMagicMissile;              //生成した弾
-    CS_Enemy1MagicMissile[] script;                //弾のスクリプト
-    Rigidbody myRigidbody;
-    Vector3 normalPos;                             //通常時の位置
-    Vector3 downedPos;                             //ダウンしたときの位置
-    float damageAmount;                            //ダウンのためのダメージ量変数
-    float totalDownedTime;                         //ダウンしている時間
-    float totalReturnTime;                         //定位置に戻るためにかかった時間
+    float[] probability = new float[3];            //各攻撃の発生確率
+    float totalProbability;                        //全攻撃の発生確率の総和
+    float damageAmount;                            //ダメージ量
+    float totalDownedTime;                         //ダウン時間
+    float totalReturnTime;                         //定位置に戻るまでにかかった総合計時間
 
-    float attackIntervalSeconds;
-    int magicMissileCount = 1;
-    int evenCount = 0;  //偶数発目の弾が生成された数
-    int oddCount = 0;   //1発目を除く奇数発目の弾が生成された数
-    bool isAttack;      //攻撃中か？
-    bool isReturningNormalPos;  //定位置に帰っている途中か？
-    bool isDeath;
-    bool isDowned;
+    float attackInterval;                          //攻撃間のインターバル用変数
+    int magicMissileCount = 1;                     //何発目かを表す変数
+    int evenCount = 0;                             //偶数発目の弾が生成された数
+    int oddCount = 0;                              //1発目を除く奇数発目の弾が生成された数
+    bool isAttack;                                 //攻撃中か？
+    bool isReturningNormalPos;                     //定位置に戻っている途中か？
+    bool isDowned;                                 //ダウン状態か？
+    bool isDead;                                   //死亡したか？
 
-    float[] weight = new float[3];  //各攻撃の重み（発生確率）
-    float totalWeight;  //3種類の攻撃の重み（発生確率）の総和
+    AudioSource shotAudioSource;                   //弾を撃つ用のAudioSource
+    //AudioSource blowOffAudioSource;              //吹き飛ばし攻撃用のAudioSource
 
-    //Vector3 prevDirectionToPlayer;     //前フレームのプレイヤー方向へのベクトル
-    //const float useLerpAngle = 10.0f;  //この変数の数値以上になったら回転にlerpを使用する
-    [SerializeField] float rotateSpeed;
+    //実験用
+    [Header("吹き飛ばし攻撃するまでの時間（実験用）")]
+    [SerializeField] float maxBlowOffCount;
+
+    float blowOffCount;
+    float blowOffDuration;
+    bool isBlowingOff;
 
     //ゲッター
     public float GetHp
     {
         get { return hp; }
     }
-
 
     private void Awake()
     {
@@ -96,19 +145,8 @@ public class CS_Enemy1 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //変数の初期化
+        //初期化処理
         Initialize();
-
-        //最初の攻撃を設定
-        weight[0] = weakAttackProbability;
-        weight[1] = strongAttackProbability;
-        weight[2] = blowOffAttackProbability;
-        for(int i = 0; i < GetEnumLength<AttackType>(); ++i)
-        {
-            totalWeight += weight[i];
-        }
-        ChooseAttackType();
-
 
         //エラーメッセージ
         for(int i = 0; i < 2; ++i)
@@ -156,12 +194,32 @@ public class CS_Enemy1 : MonoBehaviour
         damageAmount = 0.0f;
         totalDownedTime = 0.0f;
         totalReturnTime = 0.0f;
-        attackIntervalSeconds = maxAttackIntervalSeconds;
+        attackInterval = maxAttackInterval;
         isAttack = false;
         isReturningNormalPos = false;
-        isDeath = false;
         isDowned = false;
-        //prevDirectionToPlayer = new Vector3(0, 0, 0);
+        isDead = false;
+
+        //最初の攻撃を設定
+        probability[0] = weakAttackProbability;
+        probability[1] = strongAttackProbability;
+        probability[2] = blowOffAttackProbability;
+        for (int i = 0; i < GetEnumLength<AttackType>(); ++i)
+        {
+            totalProbability += probability[i];
+        }
+        ChooseAttackType();
+
+        //AudioSourceの取得
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        shotAudioSource = audioSources[0];
+        //blowOffAudioSource = audioSources[1];
+
+
+        //実験用変数の初期化
+        blowOffCount = maxBlowOffCount;
+        isBlowingOff = false;
+        blowOffDuration = 0.0f;
     }
 
     // Update is called once per frame
@@ -171,14 +229,14 @@ public class CS_Enemy1 : MonoBehaviour
         //Debug.Log("damageAmount = " + damageAmount);
 
         //死亡
-        if (hp <= 0)
+        if (hp <= 0.0f)
         {
             Death();
             return;
         }
 
         //ダウン
-        if(damageAmount > downedDamage)
+        if(damageAmount > downedDamageAmount)
         {
             Downed();
             return;
@@ -197,7 +255,7 @@ public class CS_Enemy1 : MonoBehaviour
         //攻撃
         if (isAttack)
         {
-            Shoot(attackType);  //弾を発射する
+            Attack(attackType);  //攻撃する
 
             //攻撃が終了したら次の攻撃の種類を決定
             if (!isAttack)
@@ -208,16 +266,11 @@ public class CS_Enemy1 : MonoBehaviour
         }
 
         //インターバルが経過したら次の攻撃へ移る
-        attackIntervalSeconds -= Time.deltaTime;
-        if(attackIntervalSeconds <= 0.0f)
+        attackInterval -= Time.deltaTime;
+        if(attackInterval <= 0.0f)
         {
-            //弾の生成
-            int num = (int)attackType;  //要素番号指定用変数
-            creationInterval[num] -= Time.deltaTime;
-            if (creationInterval[num] <= 0.0f)
-            {
-                CreateMagicMissile(attackType);
-            }
+            //攻撃の準備
+            AttackReady(attackType);
         }
     }
 
@@ -226,7 +279,7 @@ public class CS_Enemy1 : MonoBehaviour
     /// </summary>
     /// <param name="type">攻撃の種類（弱・強）</param>
     /// <param name="iteration">生成した弾のイテレーション</param>
-    void SetTimeUntilShoot(AttackType type, int iteration)
+    void SetShootInterval(AttackType type, int iteration)
     {
         if(type == AttackType.Weak)
         {
@@ -244,13 +297,13 @@ public class CS_Enemy1 : MonoBehaviour
     void ChooseAttackType()
     {
         //位置を選ぶ
-        float randomPoint = UnityEngine.Random.Range(0, totalWeight);
+        float randomPoint = UnityEngine.Random.Range(0, totalProbability);
 
         //抽選
         float currentWeight = 0.0f;  //現在の重みの位置
         for(int i = 0; i < GetEnumLength<AttackType>(); ++i)
         {
-            currentWeight += weight[i];
+            currentWeight += probability[i];
 
             if(randomPoint < currentWeight)
             {
@@ -260,7 +313,7 @@ public class CS_Enemy1 : MonoBehaviour
         }
 
         //位置が重みの総和以上なら末尾要素とする
-        SetAttackType(weight.Length - 1) ;
+        SetAttackType(probability.Length - 1) ;
     }
 
     /// <summary>
@@ -314,24 +367,30 @@ public class CS_Enemy1 : MonoBehaviour
         //滑らかに回転
         transform.rotation = 
             Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+    }
 
-        //Vector3 direction = player.transform.position - transform.position;
-        //direction.y = 0.0f;  //X軸回転を反映しない
-        //transform.forward = 
-        //    Vector3.MoveTowards(prevDirectionToPlayer, direction, rotateSpeed * Time.deltaTime);
-        ////transform.forward = 
-        ////    Vector3.Lerp(prevDirectionToPlayer, direction, rotateSpeed * Time.deltaTime);
-
-        ////if(Vector3.Angle(prevDirectionToPlayer, direction) > useLerpAngle)
-        ////{
-
-        ////}
-        ////else
-        ////{
-        ////    transform.forward = direction;
-        ////}
-
-        //prevDirectionToPlayer = direction;
+    /// <summary>
+    /// 攻撃準備をする
+    /// </summary>
+    /// <param name="type">攻撃の種類</param>
+    void AttackReady(AttackType type)
+    {
+        switch (type)
+        {
+        case AttackType.Weak:
+        case AttackType.Strong:
+            //弾の生成
+            int num = (int)attackType;  //要素番号指定用変数
+            creationInterval[num] -= Time.deltaTime;
+            if (creationInterval[num] <= 0.0f)
+            {
+                CreateMagicMissile(attackType);
+            }
+            break;
+        case AttackType.BlowOff:
+            ReadyBlowOff();
+            break;
+        }
     }
 
     /// <summary>
@@ -342,8 +401,8 @@ public class CS_Enemy1 : MonoBehaviour
     {
         int num = (int)type;  //要素番号指定用変数
 
-        float angleSpace = 180.0f / magicMissileNumber[num];  //弾同士の間隔
-        const float baseAngle = 90.0f;  //1つ目の弾の配置角度
+        float angleSpace = 160.0f / magicMissileNumber[num];  //半円の中での弾同士の間隔
+        const float baseAngle = 90.0f;  //1つ目の弾の配置角度を半円の真ん中にする
         float angle = 0.0f;
 
         //半円のどこに配置するか決定
@@ -364,21 +423,22 @@ public class CS_Enemy1 : MonoBehaviour
 
         //敵1の回転を考慮して座標決定
         Vector3 magicMissilePos = new Vector3(
-            spawnPos.x + Mathf.Cos(angle * Mathf.Deg2Rad) * halfCircleRadius,
-            spawnPos.y + Mathf.Sin(angle * Mathf.Deg2Rad) * halfCircleRadius,
-            spawnPos.z);
+            magicMissileSpawnPos.x + Mathf.Cos(angle * Mathf.Deg2Rad) * halfCircleRadius,
+            magicMissileSpawnPos.y + Mathf.Sin(angle * Mathf.Deg2Rad) * halfCircleRadius,
+            magicMissileSpawnPos.z);
         magicMissilePos = transform.TransformPoint(magicMissilePos);
 
         //生成
         //magicMissileCountは1から始まるため-1
         createdMagicMissile[magicMissileCount - 1] =
             Instantiate(magicMissile[num], magicMissilePos, Quaternion.identity);
-        createdMagicMissile[magicMissileCount - 1].transform.SetParent(gameObject.transform);  //敵と弾を親子関係に
+        //敵と弾を親子関係に
+        createdMagicMissile[magicMissileCount - 1].transform.SetParent(gameObject.transform);  
         script[magicMissileCount - 1] =
             createdMagicMissile[magicMissileCount - 1].GetComponent<CS_Enemy1MagicMissile>();
 
         //各変数の更新
-        SetTimeUntilShoot(type, magicMissileCount - 1);
+        SetShootInterval(type, magicMissileCount - 1);
         magicMissileCount++;
         if(type == AttackType.Weak)
         {
@@ -392,10 +452,40 @@ public class CS_Enemy1 : MonoBehaviour
         //全て生成したら生成を止め、攻撃に移る
         if (magicMissileCount > magicMissileNumber[num])
         {
-            isAttack = true;      //攻撃中
+            isAttack = true;
             magicMissileCount = 1;
             evenCount = oddCount = 0;
             creationInterval[num] = 0.0f;  
+        }
+    }
+
+    /// <summary>
+    /// 吹き飛ばし攻撃の準備
+    /// </summary>
+    void ReadyBlowOff()
+    {
+        blowOffCount -= Time.deltaTime;
+        if(blowOffCount <= 0.0f)
+        {
+            isAttack = true;
+        }
+    }
+
+    /// <summary>
+    /// 攻撃する
+    /// </summary>
+    /// <param name="type">攻撃の種類</param>
+    void Attack(AttackType type)
+    {
+        switch (type)
+        {
+            case AttackType.Weak:
+            case AttackType.Strong:
+                Shoot(type);
+                break;
+            case AttackType.BlowOff:
+                BlowOff();
+                break;
         }
     }
 
@@ -418,16 +508,30 @@ public class CS_Enemy1 : MonoBehaviour
             if (shootInterval[i] < 0.0f)
             {
                 script[i].GetSetIsCanFire = true;  //発射
+                script[i].SetPlayerTransform = player.transform;
+                //実験用
+                if(type == AttackType.Weak)
+                {
+                    script[i].SetIsCurve = isCurveWeakMagicMissile;
+                }
+                else
+                {
+                    script[i].SetIsCurve = isCurveStrongMagicMissile;
+                }
 
                 //初期化
                 createdMagicMissile[i] = null;
                 script[i] = null;
 
+                //音
+                shotAudioSource.PlayOneShot(shotSE);
+                //shotAudioSource.PlayOneShot(shotAudioSource.clip);
+
                 //最後の弾を撃ったら攻撃終了
                 if (i == magicMissileNumber[num] - 1)
                 {
                     isAttack = false;
-                    attackIntervalSeconds = maxAttackIntervalSeconds;
+                    attackInterval = maxAttackInterval;
                 }
             }
         }
@@ -439,7 +543,8 @@ public class CS_Enemy1 : MonoBehaviour
     void DestroyMagicMissile()
     {
         int max = Math.Max(magicMissileNumber[(int)AttackType.Weak],
-       magicMissileNumber[(int)AttackType.Strong]);
+                           magicMissileNumber[(int)AttackType.Strong]);
+
         for (int i = 0; i < max; ++i)
         {
             if (createdMagicMissile[i] == null)
@@ -457,13 +562,41 @@ public class CS_Enemy1 : MonoBehaviour
     }
 
     /// <summary>
+    /// 吹き飛ばし攻撃を行う
+    /// </summary>
+    void BlowOff()
+    {
+        //エフェクト発生
+        if (!isBlowingOff)
+        {
+            var effect = Instantiate(blowOffEffect, transform.position, Quaternion.identity);
+            effect.PlayEffect();
+
+            isBlowingOff = true;
+            blowOffDuration = effect.GetEffectDuration;
+        }
+
+        //攻撃が終わったら変数を初期化
+        blowOffDuration -= Time.deltaTime;
+        if(blowOffDuration < 0.0f)
+        {
+            isAttack = false;
+            isBlowingOff = false;
+            attackInterval = maxAttackInterval;
+            blowOffCount = maxBlowOffCount;
+        }
+    }
+
+    /// <summary>
     /// 死亡時処理
     /// </summary>
     void Death()
     {
-        if (!isDeath)
+        if (!isDead)
         {
-            isDeath = true;  //死亡
+            //死亡
+            isDead = true;
+            Debug.Log("死亡");
 
             //変数の初期化
             isAttack = false;
@@ -473,7 +606,7 @@ public class CS_Enemy1 : MonoBehaviour
 
             //死亡アニメーション再生
 
-            //地面に下ろす（重力をonにするでもよい？）
+            //地面に下ろす（物理挙動を使わない方法でもよい？）
             myRigidbody.useGravity = true;
         }
     }
@@ -490,20 +623,22 @@ public class CS_Enemy1 : MonoBehaviour
 
             //変数の初期化（弾関連は絶対）
             isAttack = false;
-            attackIntervalSeconds = maxAttackIntervalSeconds;
+            attackInterval = maxAttackInterval;
             magicMissileCount = 1;
             evenCount = oddCount = 0;
             for(int i = 0; i < 2; ++i)
             {
                 creationInterval[i] = 0.0f;
             }
+            //吹き飛ばし攻撃
+            blowOffCount = maxBlowOffCount;
 
             //弾を消す
             DestroyMagicMissile();
 
             //ダウンアニメーション再生
 
-            //地面に下ろす
+            //地面に下ろす（物理挙動を使わない方法でもよい？）
             myRigidbody.useGravity = true;
         }
 
@@ -517,10 +652,13 @@ public class CS_Enemy1 : MonoBehaviour
             damageAmount = 0.0f;
             totalDownedTime = 0.0f;
 
-            //上がるアニメーション再生
+            //定位置に戻るアニメーション再生
 
             //定位置に戻す
             isReturningNormalPos = true;
+
+            //攻撃の種類を決定
+            ChooseAttackType();
         }
     }
 
@@ -529,22 +667,20 @@ public class CS_Enemy1 : MonoBehaviour
     /// </summary>
     void ReturnNormalPos()
     {
-        Debug.Log("normalPos = " + normalPos);
-        Debug.Log("downedPos = " + downedPos);
         //移動処理
         totalReturnTime += Time.deltaTime;
         float t = Mathf.Clamp01(totalReturnTime / timeReturnNormalPos);
         transform.position = Vector3.Lerp(downedPos, normalPos, t);
+
         if(transform.position == normalPos)
         {
-            Debug.Log("戻った");
             isReturningNormalPos = false;
             totalReturnTime = 0.0f;
         }
     }
 
     /// <summary>
-    /// ダウンのために必要な総ダメージ量に加算する
+    /// ダメージ量に加算する
     /// </summary>
     /// <param name="attackPower">プレイヤーの攻撃力</param>
     void AddDamageAmount(float attackPower)
@@ -570,298 +706,3 @@ public class CS_Enemy1 : MonoBehaviour
         }
     }
 }
-
-
-//using System;
-//using System.Collections;
-//using System.Collections.Generic;
-//using Unity.VisualScripting;
-//using UnityEngine;
-
-//public class CS_Enemy1 : MonoBehaviour
-//{
-//    //攻撃の種類
-//    enum AttackType
-//    {
-//        Weak,     //弱攻撃
-//        Strong,   //強攻撃
-//        BlowOff,  //吹き飛ばし攻撃
-//    }
-//    AttackType type;
-
-//    //弾を撃つ攻撃
-//    struct ShootAttack
-//    {
-//        GameObject magicMissilePrefab;  //弾のプレハブ
-//        int magicMissileNumber;         //弾の数
-//        //float Probability;              //攻撃の発生確率
-//        float creationInterval;         //弾の生成速度（秒）
-//        float shootInterval;            //連射速度（秒）
-//    }
-//    ShootAttack[] shootAttack = new ShootAttack[2];
-
-//    [SerializeField] GameObject player;
-//    [SerializeField] GameObject magicMissilePrefab;
-//    [SerializeField] int magicMissileNumber;            //一度に生成する弾の数
-//    [SerializeField] float halfCircleRadius;            //半円の半径
-//    [SerializeField] Vector3 spawnPos = new Vector3(0.0f, 0.1f, 1.0f);  //敵1を基準とした弾の生成位置
-
-//    [SerializeField] float weakAttackProbability;       //弱攻撃の発生確率
-//    [SerializeField] float strongAttackProbability;     //強攻撃の発生確率
-//    [SerializeField] float blowOffAttackProbability;    //吹き飛ばし攻撃の発生確率
-
-//    [SerializeField] float maxCreationIntervalSeconds;  //弾を生成する間隔（秒）
-//    [SerializeField] float maxWeakShootInterval;        //次の弾を発射するまでの間隔（弱攻撃、秒）
-//    [SerializeField] float maxAttackIntervalSeconds;    //攻撃のインターバル（秒）
-
-//    GameObject[] createdMagicMissile;                   //生成した弾
-//    CS_Enemy1MagicMissile[] script;
-
-//    float creationIntervalSeconds;
-//    float[] weakShootInterval;    //弾を発射するまでの時間
-//    float attackIntervalSeconds;
-//    int magicMissileCount = 1;
-//    int evenCount = 0;  //偶数発目の弾が生成された数
-//    int oddCount = 0;   //1発目を除く奇数発目の弾が生成された数
-//    bool isAttack;      //攻撃中か？
-
-//    float[] weight = new float[3];  //各攻撃の重み（発生確率）
-//    float totalWeight;  //3種類の攻撃の重み（発生確率）の総和
-
-//    // Start is called before the first frame update
-//    void Start()
-//    {
-//        //最初の攻撃を設定
-//        weight[0] = weakAttackProbability;
-//        weight[1] = strongAttackProbability;
-//        weight[2] = blowOffAttackProbability;
-//        for(int i = 0; i < GetEnumLength<AttackType>(); ++i)
-//        {
-//            totalWeight += weight[i];
-//        }
-
-//        ChooseAttackType();
-
-//        //攻撃の種類に合わせた値を変数に格納する
-
-
-
-//        //変数の初期化
-//        creationIntervalSeconds = 0.0f;  //1発目は即座に生成するため0
-//        isAttack = false;
-//        attackIntervalSeconds = maxAttackIntervalSeconds;
-//        createdMagicMissile = new GameObject[magicMissileNumber];
-//        script = new CS_Enemy1MagicMissile[magicMissileNumber];
-//        weakShootInterval = new float[magicMissileNumber];
-//        for(int i = 0; i < magicMissileNumber; ++i)
-//        {
-//            createdMagicMissile[i] = null;
-//            script[i] = null;
-//            weakShootInterval[i] = 0.0f;
-//        }
-
-//        if (magicMissileNumber % 2 == 0)
-//        {
-//            Debug.Log("（敵１）偶数発の弾数が設定されています。奇数発の弾数に変更してください。");
-//        }
-//    }
-
-//    // Update is called once per frame
-//    void Update()
-//    {
-//        ChooseAttackType();
-//        Debug.Log(type);
-
-//        //プレイヤーの方向を向く
-//        LookAtPlayer();
-
-//        //攻撃
-//        if (isAttack)
-//        {
-//            Shoot();  //弾を発射する
-
-//            //攻撃が終了したら次の攻撃の種類を決定
-//            if (!isAttack)
-//            {
-                
-//            }
-//            return;
-//        }
-
-//        //インターバルが経過したら次の攻撃へ移る
-//        attackIntervalSeconds -= Time.deltaTime;
-//        if(attackIntervalSeconds <= 0.0f)
-//        {
-//            //弾の生成
-//            creationIntervalSeconds -= Time.deltaTime;
-//            if (creationIntervalSeconds <= 0.0f)
-//            {
-//                CreateMagicMissile();
-//            }
-//        }
-
-
-//        //発射したらmagicMissileCountの初期化を忘れずに
-//    }
-
-//    /// <summary>
-//    /// 弾を発射するまでの時間を設定する
-//    /// </summary>
-//    /// <param name="iteration">生成した弾のイテレーション</param>
-//    void SetValueOfTimeUntilShoot(int iteration)
-//    {
-//        weakShootInterval[iteration] = maxWeakShootInterval * (iteration + 1);
-//    }
-
-//    /// <summary>
-//    /// 繰り出す攻撃の種類を選ぶ
-//    /// </summary>
-//    void ChooseAttackType()
-//    {
-//        //位置を選ぶ
-//        float randomPoint = UnityEngine.Random.Range(0, totalWeight);
-
-//        //抽選
-//        float currentWeight = 0.0f;  //現在の重みの位置
-//        for(int i = 0; i < GetEnumLength<AttackType>(); ++i)
-//        {
-//            currentWeight += weight[i];
-
-//            if(randomPoint < currentWeight)
-//            {
-//                SetAttackType(i);
-//                return;
-//            }
-//        }
-
-//        //位置が重みの総和以上なら末尾要素とする
-//        SetAttackType(weight.Length - 1) ;
-//    }
-
-//    /// <summary>
-//    /// AttackType型変数に値を設定する
-//    /// </summary>
-//    /// <param name="iteration">イテレーション</param>
-//    void SetAttackType(int iteration)
-//    {
-//        if(iteration == 0)
-//        {
-//            type = AttackType.Weak;
-//        }
-//        if(iteration == 1)
-//        {
-//            type = AttackType.Strong;
-//        }
-//        if(iteration == 2)
-//        {
-//            type = AttackType.BlowOff;
-//        }
-//    }
-
-//    /// <summary>
-//    /// enum型の要素数を取得する
-//    /// </summary>
-//    /// <typeparam name="T">enum型</typeparam>
-//    /// <returns>要素数</returns>
-//    int GetEnumLength<T>()
-//    {
-//        return Enum.GetValues(typeof(T)).Length;
-//    }
-
-//    /// <summary>
-//    /// プレイヤーの方向を向く
-//    /// </summary>
-//    void LookAtPlayer()
-//    {
-//        Vector3 direction = player.transform.position - transform.position;
-//        direction.y = 0.0f;  //X軸回転を反映しない
-//        transform.forward = direction;
-//    }
-
-//    /// <summary>
-//    /// 弾を生成する
-//    /// </summary>
-//    void CreateMagicMissile()
-//    {
-//        float angleSpace = 180.0f / magicMissileNumber;  //弾同士の間隔
-//        const float baseAngle = 90.0f;  //1つ目の弾の配置角度
-//        float angle = 0.0f;
-
-//        //半円のどこに配置するか決定
-//        if (magicMissileCount == 1)  //1発目
-//        {
-//            angle = baseAngle;
-//        }
-//        else if (magicMissileCount % 2 == 0)  //偶数発目
-//        {
-//            evenCount++;
-//            angle = baseAngle - evenCount * angleSpace;  //敵からみて左に順に配置
-//        }
-//        else  //奇数発目
-//        {
-//            oddCount++;
-//            angle = baseAngle + oddCount * angleSpace;   //敵から見て右に順に配置
-//        }
-
-//        //敵1の回転を考慮して座標決定
-//        Vector3 magicMissilePos = new Vector3(
-//            spawnPos.x + Mathf.Cos(angle * Mathf.Deg2Rad) * halfCircleRadius,
-//            spawnPos.y + Mathf.Sin(angle * Mathf.Deg2Rad) * halfCircleRadius,
-//            spawnPos.z);
-//        magicMissilePos = transform.TransformPoint(magicMissilePos);
-
-//        //生成
-//        //magicMissileCountは1から始まるため-1
-//        createdMagicMissile[magicMissileCount - 1] = 
-//            Instantiate(magicMissilePrefab, magicMissilePos, Quaternion.identity);
-//        createdMagicMissile[magicMissileCount - 1].transform.SetParent(gameObject.transform);  //敵と弾を親子関係に
-//        script[magicMissileCount - 1] =
-//            createdMagicMissile[magicMissileCount - 1].GetComponent<CS_Enemy1MagicMissile>();
-
-
-//        //各変数の更新
-//        SetValueOfTimeUntilShoot(magicMissileCount - 1);
-//        magicMissileCount++;
-//        creationIntervalSeconds = maxCreationIntervalSeconds;
-
-//        //全て生成したら生成を止め、攻撃に移る
-//        if (magicMissileCount > magicMissileNumber)
-//        {
-//            isAttack = true;      //攻撃中
-//            magicMissileCount = 1;
-//            evenCount = oddCount = 0;
-//            creationIntervalSeconds = 0.0f;  
-//        }
-//    }
-
-//    /// <summary>
-//    /// 弾を発射する
-//    /// </summary>
-//    void Shoot()
-//    {
-//        for(int i = 0; i < magicMissileNumber; ++i)
-//        {
-//            if (createdMagicMissile[i] == null)
-//            {
-//                continue;
-//            }
-
-//            //発射時間になったら発射
-//            weakShootInterval[i] -= Time.deltaTime;
-//            if (weakShootInterval[i] < 0.0f)
-//            {
-//                script[i].GetSetIsCanFire = true;
-
-//                createdMagicMissile[i] = null;
-//                script[i] = null;
-
-//                //最後の弾を撃ったら攻撃終了
-//                if(i == magicMissileNumber - 1)
-//                {
-//                    isAttack = false;
-//                    attackIntervalSeconds = maxAttackIntervalSeconds;
-//                }
-//            }
-//        }
-//    }
-//}
