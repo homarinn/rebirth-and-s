@@ -219,6 +219,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 226518664087956736, guid: fc38129d3aea01845a85b0971538f17b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279733623953111551, guid: fc38129d3aea01845a85b0971538f17b,
+        type: 3}
+      propertyPath: m_BaseOffset
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2375411310254846437, guid: fc38129d3aea01845a85b0971538f17b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -232,7 +242,7 @@ PrefabInstance:
     - target: {fileID: 2375411310254846437, guid: fc38129d3aea01845a85b0971538f17b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.38
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2375411310254846437, guid: fc38129d3aea01845a85b0971538f17b,
         type: 3}
@@ -297,6 +307,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3935349677582960826, guid: 5099749f0b696fa49a90660742c2b062,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4456024871464833536, guid: 5099749f0b696fa49a90660742c2b062,
         type: 3}

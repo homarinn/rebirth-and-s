@@ -125,7 +125,5 @@ MonoBehaviour:
   speed: 7
   startChaseDistance: 0.5
   rotationSpeed: 360
-  startAngle: 0
-  currentAngle: 0
   healCoolTime: 0
   healAmount: 50
