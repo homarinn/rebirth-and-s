@@ -1,6 +1,7 @@
-あいうえお
-かきくけこ
+/PlayerName
 aiueo
+/EnemyName
 kakikukeko
 abcde
+/PlayerName
 fghij
