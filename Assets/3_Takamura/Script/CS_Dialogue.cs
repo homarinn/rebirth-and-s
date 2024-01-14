@@ -22,6 +22,8 @@ public class CS_Dialogue : MonoBehaviour
 
     [SerializeField, Header("次の文字を表示するまでの時間(秒)")]
     float delayDuration;
+    [SerializeField, Header("1文表示完了後の待機時間(秒)")]
+    float waitSecond;
     //! @brief コルーチン
     Coroutine showCoroutine;
     //! @brief 一文表示終了フラグ
@@ -38,9 +40,9 @@ public class CS_Dialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && bFinishString == true)
+        if (/*Input.GetKeyDown(KeyCode.Return) && */bFinishString == true)
         {
-            if(textIndex < splitText.Length)
+            if(textIndex < splitText.Length - 1)
             {
                 if (!string.IsNullOrEmpty(splitText[textIndex]))
                 {
@@ -65,14 +67,11 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                     }
-
                 }
-
-                //! test：最後の文章まで行くと最初に戻る
-                if (textIndex >= splitText.Length)
-                {
-                    textIndex = 0;
-                }
+            }
+            else
+            {
+                this.gameObject.SetActive(false);
             }
 
         }
@@ -114,14 +113,18 @@ public class CS_Dialogue : MonoBehaviour
         int length = dialogueText.text.Length;
 
         //! 1文字ずつ表示
-        for(int i = 0; i < length; i++)
+        for(int i = 0; i <= length; i++)
         {
             dialogueText.maxVisibleCharacters = i;
             //! 一定時間待機
             yield return delay;
         }
+
+        yield return new WaitForSeconds(waitSecond);
+        
         //! 演出が終わったらすべての文字を表示
         dialogueText.maxVisibleCharacters = length;
+
         bFinishString = true;
 
         showCoroutine = null;

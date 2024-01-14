@@ -466,6 +466,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8621349053298837804, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
+      propertyPath: goDialogue
+      value: 
+      objectReference: {fileID: 1505086956}
+    - target: {fileID: 8621349053298837804, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: delayDuration
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621349053298837804, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
       propertyPath: talkernameText
       value: 
       objectReference: {fileID: 1909018915}
@@ -727,6 +737,12 @@ PrefabInstance:
 --- !u!225 &1106942810 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 1163849583164973268, guid: 4599c73d429970747bac1312071a185e,
+    type: 3}
+  m_PrefabInstance: {fileID: 608803283}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1505086956 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7373355126303394673, guid: 4599c73d429970747bac1312071a185e,
     type: 3}
   m_PrefabInstance: {fileID: 608803283}
   m_PrefabAsset: {fileID: 0}

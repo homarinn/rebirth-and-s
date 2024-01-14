@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CS_GameOverMgr : MonoBehaviour
+public class CS_EndingMgr : MonoBehaviour
 {
     //! @brief ステートマシン
     enum eState
@@ -15,21 +15,13 @@ public class CS_GameOverMgr : MonoBehaviour
     }
     eState state;
 
-    [SerializeField]
-    [Header("FadeImage")]
+    [SerializeField, Header("FadeImage")]
     CanvasGroup cgFade;
-    [SerializeField]
-    [Header("フェード時間(秒)")]
+    [SerializeField, Header("フェード時間(秒)")]
     float fadeSpeed = 1.5f;
 
-    [SerializeField, Header("GameOverBGM")]
-    AudioSource gameoverBGM;
-
-    //! @brief 次のシーン名
-    string nextScene = "";
-
-    //! @brief 直前にプレイしたシーン名
-    public static string preScene;
+    [SerializeField, Header("EndingBGM")]
+    AudioSource endingBGM;
 
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
@@ -52,8 +44,10 @@ public class CS_GameOverMgr : MonoBehaviour
             case eState.FadeHide:
                 break;
             case eState.Standby:
+                if (endingBGM != null) endingBGM.Play();
                 break;
             case eState.FadeShow:
+
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
                 break;
@@ -62,7 +56,6 @@ public class CS_GameOverMgr : MonoBehaviour
         state = nextState;
 
     }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -89,49 +82,20 @@ public class CS_GameOverMgr : MonoBehaviour
             case eState.Standby:
                 break;
             case eState.FadeShow:
+                if (endingBGM != null) endingBGM.volume -= 0.1f * Time.deltaTime;
                 cgFade.alpha += Time.deltaTime / fadeSpeed;
-                if (cgFade.alpha >= 1.0f)
+                if (cgFade.alpha >= 1.0f/* && endingBGM.volume <= 0.0f*/)
                 {
-                    SceneManager.LoadScene(nextScene);
+                    //titleBGM.Stop();
+                    SceneManager.LoadScene("Title");
                 }
                 break;
         }
 
-        //! 終了
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            Quit();
+            ChangeState(eState.FadeShow);
         }
     }
 
-    //! Retryボタンが押された時の処理
-    public void OnClickRetry()
-    {
-        ChangeState(eState.FadeShow);
-        //! Todo:ステージ番号取得が必要
-        nextScene = preScene;
-    }
-    //! Titleボタンが押された時の処理
-    public void OnClickTitle()
-    {
-        //! アプリケーション終了
-        ChangeState(eState.FadeShow);
-        nextScene = "TitleScene";
-    }
-
-    //! @brief アプリケーション終了
-    public void Quit()
-    {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
-    }
-
-    //! @brief プレイ中のシーン名を保存する
-    public static void SetCurrentSceneName()
-    {
-        preScene = SceneManager.GetActiveScene().name;
-    }
 }
