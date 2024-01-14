@@ -51,7 +51,7 @@ public class CS_Dialogue : MonoBehaviour
                     if(index != -1)
                     {
                         //! 名前更新
-                        talkernameText.text = splitText[textIndex];
+                        talkernameText.text = splitText[textIndex].Replace("/","");
 
                         //! セリフ表示
                         dialogueText.text = splitText[++textIndex];
