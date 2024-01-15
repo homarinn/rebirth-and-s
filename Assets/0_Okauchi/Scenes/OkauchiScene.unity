@@ -676,7 +676,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boundaryCircleRadius: 20
   character:
-  - {fileID: 0}
+  - {fileID: 1037386792}
   - {fileID: 1840745753}
   isCheckRange: 1
 --- !u!114 &1377242607
@@ -828,10 +828,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Titan
       objectReference: {fileID: 0}
-    - target: {fileID: 4150658284361871605, guid: a1de378714d8efb4eb4b48f7b213b0db,
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      propertyPath: hpMax
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}

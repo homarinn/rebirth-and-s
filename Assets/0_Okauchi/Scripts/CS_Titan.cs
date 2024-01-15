@@ -110,6 +110,19 @@ public class CS_Titan : MonoBehaviour
     [SerializeField, Header("ダウン後から歩き始めるまでの時間")]
     private float afterDownTime = 0.0f;
     private float afterDownTimeCount = 0.0f;
+    //コライダーいじる用
+    private CapsuleCollider collider;
+    private const float colliderChangingTime = 1.0f;
+    private float colliderRadius = 0.0f;
+    private float colliderHeight = 0.0f;
+    private Vector3 downColliderCenter = new Vector3(0.4f, 0.44f, 0.05f);
+    private const float downColliderRadius = 0.44f;
+    private const float downColliderHeight = 0.5f;
+
+    //--------------------
+    //死亡
+    //--------------------
+    private float dieTimeCount = 0.0f;
 
     //--------------------
     //SE
@@ -129,10 +142,15 @@ public class CS_Titan : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        collider = GetComponent<CapsuleCollider>();
+
         if(SceneManager.GetActiveScene().name == "OkauchiScene")
         {
             StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
         }
+
+        colliderRadius = collider.radius;
+        colliderHeight = collider.height;
     }
 
     // Update is called once per frame
@@ -153,7 +171,7 @@ public class CS_Titan : MonoBehaviour
             case State.TURN:   Turn();   break;   //突進時の方向転換
             case State.STOP:   Stop();   break;   //突進後の停止
             case State.DOWN:   Down();   break;   //ダウン
-            case State.DIE:    break;
+            case State.DIE:    Die();    break;
             default: 
                 break;
         }
@@ -349,11 +367,19 @@ public class CS_Titan : MonoBehaviour
         {
             //ダウン時間のカウント
             downTimeCount -= Time.deltaTime;
+            //colliderの調整
+            if (downTime - downTimeCount >= colliderChangingTime)
+            {
+                SetDownColliderParameter();
+            }
             //ダウン時間が終了したら
             if (downTimeCount < 0.0f)
             {
                 animator.SetTrigger("triggerIdle");
                 afterDownTimeCount = afterDownTime;
+
+                //collider戻す
+                SetDefaultColliderParameter();
             }
         }
         else
@@ -374,6 +400,14 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.DIE;
         animator.SetTrigger("triggerDie");
+    }
+    private void Die()
+    {
+        dieTimeCount += Time.deltaTime;
+        if (dieTimeCount >= colliderChangingTime)
+        {
+            SetDownColliderParameter();
+        }
     }
     //↑↑↑↑↑↑↑↑↑↑↑↑↑
     //------------------------------------------------
@@ -401,8 +435,8 @@ public class CS_Titan : MonoBehaviour
     {
         ReceiveDamage(weakPointDamageIncrement);
 
-        //ダウン中でない場合は
-        if (state != State.DOWN)
+        //ダウン中or死亡中でない場合は
+        if (state != State.DOWN && state != State.DIE)
         {
             //ダウンをスタートさせる
             StartDown();
@@ -462,5 +496,18 @@ public class CS_Titan : MonoBehaviour
     private void Transfer(float speed)
     {
         transform.position += speed * transform.forward * Time.deltaTime;
+    }
+    //collider調整用
+    private void SetDefaultColliderParameter()
+    {
+        collider.center = new Vector3(0.0f, colliderHeight / 2.0f, 0.0f);
+        collider.radius = colliderRadius;
+        collider.height = colliderHeight;
+    }
+    private void SetDownColliderParameter()
+    {
+        collider.center = downColliderCenter;
+        collider.radius = downColliderRadius;
+        collider.height = downColliderHeight;
     }
 }
