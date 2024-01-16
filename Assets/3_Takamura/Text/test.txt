@@ -1,7 +1,7 @@
-/PlayerName
-aiueo
+﻿/PlayerName
+あいうえお
 /EnemyName
-kakikukeko
+かkiくkeこ
 abcde
 /PlayerName
 fghij
