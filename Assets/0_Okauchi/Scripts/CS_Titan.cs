@@ -62,6 +62,8 @@ public class CS_Titan : MonoBehaviour
     [SerializeField, Header("最大溜め時間")] 
     private int chargeTimeMax = 0;
     private float chargeTimeCount = 0.0f;
+    [SerializeField, Header("溜め中のダメージカット率（0.0～1.0）")]
+    private float damageCutPercentage = 0.0f;
 
     //突進中は若干追尾するのか突進開始時のプレイヤーの位置に突っ込むか
     //追尾無し
@@ -420,6 +422,10 @@ public class CS_Titan : MonoBehaviour
     //シンプルにダメージを受ける
     public void ReceiveDamage(float damage)
     {
+        if(state == State.CHARGE)
+        {
+            damage *= 1.0f - damageCutPercentage;
+        }
         hp -= damage;
         if (hp <= 0.0f)
         {
