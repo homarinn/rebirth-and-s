@@ -57,13 +57,18 @@ public class CS_Titan : MonoBehaviour
     //--------------------
     //溜め
     //--------------------
-    [SerializeField, Header("最小溜め時間")] 
+    [SerializeField, Header("最小溜め時間（2秒未満はバグるかも）")] 
     private int chargeTimeMin = 0;
     [SerializeField, Header("最大溜め時間")] 
     private int chargeTimeMax = 0;
     private float chargeTimeCount = 0.0f;
+    private float chargeTime = 0.0f;
     [SerializeField, Header("溜め中のダメージカット率（0.0～1.0）")]
     private float damageCutPercentage = 0.0f;
+    //アニメーション速度の調整
+    private const float animationSpeedChangingTime = 0.3f;
+    private const float animationSpeedResetRemainingTime = 0.633f;
+    private bool changedAnimationSpeed = false;
 
     //突進中は若干追尾するのか突進開始時のプレイヤーの位置に突っ込むか
     //追尾無し
@@ -133,6 +138,7 @@ public class CS_Titan : MonoBehaviour
     private AudioSource moveSE;
     [SerializeField, Header("SE：溜め")]
     private AudioSource chargeSE;
+    private const float chargeSETime = 4.3f;
     [SerializeField, Header("SE：突進の衝突")]
     private AudioSource clashSE;
 
@@ -244,10 +250,12 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.CHARGE;
         animator.SetTrigger("triggerCharge");
-        //溜め用のSEを再生
-        chargeSE.Play();
         //溜め時間をランダムで決定
-        chargeTimeCount = (float)Random.Range(chargeTimeMin, chargeTimeMax);
+        chargeTime = (float)Random.Range(chargeTimeMin, chargeTimeMax);
+        chargeTimeCount = chargeTime;
+        //溜め用のSEを再生
+        chargeSE.pitch = chargeSETime / chargeTime;
+        chargeSE.Play();
         //突進の威力と速度を元に戻しておく
         rushPower = rushDefaultPower;
         rushSpeed = rushDefaultSpeed;
@@ -261,6 +269,19 @@ public class CS_Titan : MonoBehaviour
         //溜め時間に合わせて威力と速度を上げる
         rushPower += rushPowerChargingIncrement * Time.deltaTime;
         rushSpeed += rushSpeedChargingIncrement * Time.deltaTime;
+        //アニメーション速度を調整
+        if(chargeTime - chargeTimeCount >= animationSpeedChangingTime && chargeTime - chargeTimeCount < 1.0f && !changedAnimationSpeed)
+        {
+            float chargeRemainingTime = chargeTimeCount - animationSpeedResetRemainingTime;
+            float animationChargeRemainingTime = 1.0f - animationSpeedChangingTime;
+            animator.speed = animationChargeRemainingTime / chargeRemainingTime;
+            changedAnimationSpeed = true;
+        }
+        if(chargeTimeCount <= animationSpeedResetRemainingTime && changedAnimationSpeed)
+        {
+            animator.speed = 1.0f;
+            changedAnimationSpeed = false;
+        }
         //溜めが終了したら
         if (chargeTimeCount <= 0.0f)
         {
