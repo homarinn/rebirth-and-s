@@ -28,6 +28,8 @@ public class CS_Dialogue : MonoBehaviour
     Coroutine showCoroutine;
     //! @brief 一文表示終了フラグ
     bool bFinishString;
+    [SerializeField, Header("自動送り機能")]
+    bool bAuto;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +42,9 @@ public class CS_Dialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (/*Input.GetKeyDown(KeyCode.Return) && */bFinishString == true)
+        bool tmp = bAuto ? (bFinishString == true) : (Input.GetKeyDown(KeyCode.Return) && (bFinishString == true));
+        if (tmp
+            )
         {
             if(textIndex < splitText.Length - 1)
             {

@@ -506,8 +506,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6f91468e2846a44192b3d0a0f91128f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  talkernameText: {fileID: 0}
+  talkernameText: {fileID: 4998437303807077157}
   dialogueText: {fileID: 3357220280556641163}
   file: {fileID: 0}
   delayDuration: 0.2
   waitSecond: 1.5
+  bAuto: 0
