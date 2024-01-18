@@ -76,6 +76,9 @@ public class CS_Enemy1 : MonoBehaviour
     [Header("弾の発射間隔（強攻撃、秒)")]
     [SerializeField] float strongShootInterval;
 
+    [Header("吹き飛ばす力")]
+    [SerializeField] float blowOffPower;
+
     [Header("ダウンさせるために必要なダメージ量")]
     [SerializeField] float downedDamageAmount;
 
@@ -135,6 +138,10 @@ public class CS_Enemy1 : MonoBehaviour
     public float GetHp
     {
         get { return hp; }
+    }
+    public Vector3 GetLocalEulerAngle
+    {
+        get { return transform.localEulerAngles; }
     }
 
     private void Awake()
@@ -225,7 +232,7 @@ public class CS_Enemy1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ReduceHp(Time.deltaTime);
+        //ReduceHp(Time.deltaTime);
         //Debug.Log("damageAmount = " + damageAmount);
 
         //死亡
@@ -433,9 +440,19 @@ public class CS_Enemy1 : MonoBehaviour
         createdMagicMissile[magicMissileCount - 1] =
             Instantiate(magicMissile[num], magicMissilePos, Quaternion.identity);
         //敵と弾を親子関係に
-        createdMagicMissile[magicMissileCount - 1].transform.SetParent(gameObject.transform);  
+        createdMagicMissile[magicMissileCount - 1].transform.SetParent(gameObject.transform);
+
+        //弾の回転値設定
+        Vector3 localEulerAngles = createdMagicMissile[magicMissileCount - 1].transform.localEulerAngles;
+        localEulerAngles.y += transform.localEulerAngles.y;
+        createdMagicMissile[magicMissileCount - 1].transform.localEulerAngles = localEulerAngles;
+        //Debug.Log(createdMagicMissile[magicMissileCount - 1].transform.localEulerAngles);
+
         script[magicMissileCount - 1] =
             createdMagicMissile[magicMissileCount - 1].GetComponent<CS_Enemy1MagicMissile>();
+
+        //実験用
+        script[magicMissileCount - 1].SetMagicMissileCount = magicMissileCount;
 
         //各変数の更新
         SetShootInterval(type, magicMissileCount - 1);
@@ -570,6 +587,7 @@ public class CS_Enemy1 : MonoBehaviour
         if (!isBlowingOff)
         {
             var effect = Instantiate(blowOffEffect, transform.position, Quaternion.identity);
+            effect.SetBlowOffPower = blowOffPower;
             effect.PlayEffect();
 
             isBlowingOff = true;
