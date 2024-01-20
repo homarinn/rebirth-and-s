@@ -42,9 +42,8 @@ public class CS_Dialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool tmp = bAuto ? (bFinishString == true) : (Input.GetKeyDown(KeyCode.Return) && (bFinishString == true));
-        if (tmp
-            )
+        bool tmp = bAuto ? (bFinishString == true) : ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && (bFinishString == true));
+        if (tmp)
         {
             if(textIndex < splitText.Length - 1)
             {

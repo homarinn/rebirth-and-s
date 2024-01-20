@@ -989,6 +989,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7614062408334916607, guid: 80154821c16d27f4993f1906174cfabd,
         type: 3}
+      propertyPath: waitSecond
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7614062408334916607, guid: 80154821c16d27f4993f1906174cfabd,
+        type: 3}
+      propertyPath: delayDuration
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7614062408334916607, guid: 80154821c16d27f4993f1906174cfabd,
+        type: 3}
       propertyPath: talkernameText
       value: 
       objectReference: {fileID: 101632060}

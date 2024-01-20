@@ -509,6 +509,6 @@ MonoBehaviour:
   talkernameText: {fileID: 4998437303807077157}
   dialogueText: {fileID: 3357220280556641163}
   file: {fileID: 0}
-  delayDuration: 0.2
-  waitSecond: 1.5
+  delayDuration: 0.15
+  waitSecond: 1
   bAuto: 0
