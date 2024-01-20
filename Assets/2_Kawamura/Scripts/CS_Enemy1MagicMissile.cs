@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CS_Enemy1MagicMissile : MonoBehaviour
 {
     [Header("水溜り")]
-    [SerializeField] GameObject puddle;
+    [SerializeField] CS_Enemy1Puddle puddle;
 
     [Header("移動速度（直線軌道）")]
     [SerializeField] float moveSpeed;
@@ -20,7 +22,7 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     [SerializeField] float period;
 
 
-    GameObject puddleObject;    //水溜り
+    CS_Enemy1Puddle puddleObject;    //水溜り
     Transform playerTransform;
     Rigidbody myRigidbody;
     Vector3 direction;          //プレイヤーの方向
@@ -45,6 +47,15 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     int magicMissileCount;
     Vector3[] curveDirection = new Vector3[3];
     float rotateSpeed;
+
+    //実験用3
+    int puddleRenderQueue;
+
+    float boudaryCircleRadius;
+
+    float addAngle;
+
+    float scaleRatioBasedOnY;
     
 
     //ゲッターセッター
@@ -68,6 +79,19 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     public int SetMagicMissileCount
     {
         set { magicMissileCount = value; }
+    }
+
+    public int SetPuddleRenderQueue
+    {
+        set { puddleRenderQueue = value; }
+    }
+    public float SetBoundaryCircleRadius
+    {
+        set { boudaryCircleRadius = value; }
+    }
+    public float SetScaleRatioBasedOnY
+    {
+        set { scaleRatioBasedOnY = value; }
     }
 
     // Start is called before the first frame update
@@ -96,6 +120,23 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
         //float randomY = Random.Range(-10.0f, 10.0f);
         //float randomZ = Random.Range(-20.0f, 20.0f);
         //velocity = new Vector3(randomX, randomY, randomZ);
+
+        //親のスケールを反映しない
+        Vector3 parentLossyScale = transform.parent.lossyScale;
+        float scaleY = transform.localScale.y / parentLossyScale.y;
+        float newScaleXZ = scaleY * (scaleRatioBasedOnY * 2.0f);  //2.0 = 調整
+        transform.localScale = new Vector3(
+            newScaleXZ,
+            scaleY,
+            newScaleXZ);
+
+        //弾の先端を前にする
+        Transform parent = transform.parent;
+        addAngle = 360.0f - transform.parent.transform.localEulerAngles.y;
+        transform.rotation = Quaternion.Euler(90f, 0f, addAngle);
+
+
+        //transform.rotation = Quaternion.Euler(0f, 0f, 90.0f);
     }
 
     // Update is called once per frame
@@ -105,11 +146,14 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
         if (isCanFire)
         {
             //親子関係を解除しないと発射後も親の回転値が軌道に影響を与えてしまう
-            transform.parent = null;
-            Debug.Log(transform.localEulerAngles);
+            //transform.rotation = Quaternion.Euler(-90f, 0f, -addAngle);
+            if(transform.parent != null)
+            {
+                transform.parent = null;
+            }
 
             //プレイヤーに向けて発射（曲線軌道）
-            if(isCurve)
+            if (isCurve)
             {
                 targetPosition = playerTransform.position;
                 InitializeVelocity();
@@ -156,10 +200,13 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             }
 
             //進行方向を向いていないときだけ進行方向を向かせる
-            if(transform.forward != velocity)
+            if(transform.up != velocity)
+            //if(transform.forward != velocity)
             {
-                transform.forward =
-                    Vector3.Slerp(transform.forward, velocity, Time.deltaTime * rotateSpeed);
+                transform.up =
+                    Vector3.Slerp(transform.up, velocity, Time.deltaTime * rotateSpeed);
+                //transform.forward =
+                //    Vector3.Slerp(transform.forward, velocity, Time.deltaTime * rotateSpeed);
             }
         }
 
@@ -192,10 +239,14 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     void CreatePuddle()
     {
         startScale = transform.localScale;
-        Vector3 position = new Vector3(transform.position.x, 0.2f, transform.position.z);
+        Vector3 position = new Vector3(transform.position.x, 0.34f, transform.position.z);
         puddleObject = Instantiate(puddle, position, Quaternion.identity);
         //puddleTargetScale = puddleObject.transform.localScale;
         //puddleObject.transform.localScale = new Vector3(0, 0, 0);
+
+        puddleObject.SetRenderQueue = puddleRenderQueue;
+        puddleObject.SetBoundaryCircleRadius = boudaryCircleRadius;
+        //Debug.Log(puddleRenderQueue);
     }
 
     void InitializeVelocity()

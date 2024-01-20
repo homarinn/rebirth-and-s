@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CS_Enemy1Puddle : MonoBehaviour
 {
+    [Header("水たまり表面のコライダー")]
+    [SerializeField] BoxCollider surfaceCollider;
+
     [Header("存在できる時間（秒）")]
     [SerializeField] float existTime;
 
@@ -30,9 +34,25 @@ public class CS_Enemy1Puddle : MonoBehaviour
     bool isFinishExpansion;
     float elapsedForExpansion;
 
+    //実験用2
+    Material material;
+    int renderQueue;
+    float boundaryCircleRadius;
+
+    //セッター
+    public int SetRenderQueue
+    {
+        set { renderQueue = value; }
+    }
+    public float SetBoundaryCircleRadius
+    {
+        set { boundaryCircleRadius = value; }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+
         elapsed = 0.0f;
         elapsedForDisappear = 0.0f;
         isDisappearing = false;
@@ -48,6 +68,59 @@ public class CS_Enemy1Puddle : MonoBehaviour
         //実験用
         isFinishExpansion = false;
         elapsedForExpansion = 0.0f;
+
+        material = GetComponent<MeshRenderer>().material;
+
+        //実験用2
+        Vector2 direction = new Vector2(
+            transform.position.x,
+            transform.position.z);
+        float distance = direction.sqrMagnitude;
+        Debug.Log(distance);
+
+        Vector3 newPos = new Vector3(transform.position.x, 0.0f, transform.position.z);
+        float radiusDistance = boundaryCircleRadius * boundaryCircleRadius;
+        Debug.Log("RadiusDistance = " + radiusDistance);
+        if (distance > radiusDistance * 0.65f)
+        {
+            newPos.y = 0.35f;
+        }
+        else if(distance > radiusDistance * 0.3f)
+        {
+            newPos.y = 0.25f;
+        }
+        else if(distance > radiusDistance * 0.15f)
+        {
+            newPos.y = 0.22f;
+        }
+        //else if(distance > radiusDistance * 0.4f)
+        //{
+        //    newPos.y = 0.2f;
+        //}
+        //else if(distance > radiusDistance * 0.3f)
+        //{
+        //    newPos.y = 0.2f;
+        //}
+        //else if(distance > radiusDistance * 0.2f)
+        //{
+        //    newPos.y = 0.15f;
+        //}
+        else
+        {
+            newPos.y = 0.12f;
+            //newPos.y = 0.08f;
+        }
+        transform.position = newPos;
+        //if (distance > 480.0f)
+        //{
+        //    newPos.y = 0.35f;
+        //    //Vector3 newPos = new Vector3(transform.position.x, 0.35f, transform.position.z);
+        //}
+        //else if(distance > 300.0f)
+        //{
+        //    newPos.y = 0.27f;
+        //}
+        //transform.position = newPos;
     }
 
     // Update is called once per frame
@@ -64,6 +137,12 @@ public class CS_Enemy1Puddle : MonoBehaviour
         if(isFinishExpansion && elapsed > existTime)
         {
             ReduceScale();
+        }
+
+        //半透明オブジェクトのちらつきを無くすためにRenderQueueを個別に設定
+        if (renderQueue != 0 && material.renderQueue != renderQueue)
+        {
+            material.renderQueue = renderQueue;
         }
     }
 
@@ -109,13 +188,34 @@ public class CS_Enemy1Puddle : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnDestroy()
     {
-        //拡大中に他の水たまりと当たったら拡大終了
-        //if(!isFinishExpansion && other.gameObject.tag == "Puddle")
-        //{
-        //    Debug.Log("水たまり接触");
-        //    isFinishExpansion = true;
-        //}
+        if(material != null)
+        {
+            Destroy(material);
+            material = null;
+        }
     }
+
+    public void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            Debug.Log("プレイヤー侵入");
+        }
+    }
+
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    if(other.gameObject.tag == "Player")
+    //    {
+    //        Debug.Log("プレイヤー侵入");
+    //    }
+    //    //拡大中に他の水たまりと当たったら拡大終了
+    //    //if(!isFinishExpansion && other.gameObject.tag == "Puddle")
+    //    //{
+    //    //    Debug.Log("水たまり接触");
+    //    //    isFinishExpansion = true;
+    //    //}
+    //}
 }
