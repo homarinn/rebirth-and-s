@@ -13,15 +13,23 @@ public class CS_EndingMgr : MonoBehaviour
         Standby,    //! 待機状態
         FadeShow,   //! フェードが掛かる
     }
-    eState state;
+    [SerializeField] eState state;
 
     [SerializeField, Header("FadeImage")]
     CanvasGroup cgFade;
     [SerializeField, Header("フェード時間(秒)")]
     float fadeSpeed = 1.5f;
-
+    [SerializeField, Header("クレジット01Image")]
+    CanvasGroup cgCredit;
+    [SerializeField, Header("1枚目のクレジットを表示する時間(秒)")]
+    float delaySecond;
+    [SerializeField, Header("クレジットのフェード時間(秒)")]
+    float fadeCreditSpeed = 2.0f;
     [SerializeField, Header("EndingBGM")]
     AudioSource endingBGM;
+
+    //! @brief シーン遷移可能フラグ
+    bool bLoadScene;
 
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
@@ -80,6 +88,14 @@ public class CS_EndingMgr : MonoBehaviour
                 }
                 break;
             case eState.Standby:
+                StartCoroutine(DelayedAction(delaySecond));
+                if (bLoadScene)
+                {
+                    if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return))
+                    {
+                        state = eState.FadeShow;
+                    }
+                }
                 break;
             case eState.FadeShow:
                 if (endingBGM != null) endingBGM.volume -= 0.1f * Time.deltaTime;
@@ -87,7 +103,7 @@ public class CS_EndingMgr : MonoBehaviour
                 if (cgFade.alpha >= 1.0f/* && endingBGM.volume <= 0.0f*/)
                 {
                     //titleBGM.Stop();
-                    SceneManager.LoadScene("Title");
+                    SceneManager.LoadScene("TitleScene");
                 }
                 break;
         }
@@ -98,4 +114,24 @@ public class CS_EndingMgr : MonoBehaviour
         }
     }
 
+    //! @brief 指定秒数待って処理を行うコルーチン
+    IEnumerator DelayedAction(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        //! 1枚目のCreditを非表示にする
+        HideCreditImage();
+
+    }
+    //! @brief 1枚目のクレジットを非表示にする
+    void HideCreditImage()
+    {
+        cgCredit.alpha -= Time.deltaTime / fadeCreditSpeed;
+        //! Fade終了
+        if (cgCredit.alpha <= 0.0f)
+        {
+            cgCredit.alpha = 0.0f;
+            bLoadScene = true;
+        }
+    }
 }
