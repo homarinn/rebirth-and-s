@@ -123,6 +123,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &123422228 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7373355126303394673, guid: 4599c73d429970747bac1312071a185e,
+    type: 3}
+  m_PrefabInstance: {fileID: 653676860}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &158842062
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1133,6 +1139,11 @@ PrefabInstance:
       propertyPath: nextStage
       value: Event04Scene
       objectReference: {fileID: 0}
+    - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
+      propertyPath: goDialogue
+      value: 
+      objectReference: {fileID: 123422228}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

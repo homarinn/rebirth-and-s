@@ -211,6 +211,11 @@ PrefabInstance:
       propertyPath: nextStage
       value: Event02Scene
       objectReference: {fileID: 0}
+    - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
+      propertyPath: goDialogue
+      value: 
+      objectReference: {fileID: 1505086956}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

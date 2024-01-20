@@ -247,6 +247,12 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &339455188 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7373355126303394673, guid: 4599c73d429970747bac1312071a185e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1562136316962758789}
+  m_PrefabAsset: {fileID: 0}
 --- !u!225 &371191365 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 1163849583164973268, guid: 4599c73d429970747bac1312071a185e,
@@ -1304,6 +1310,11 @@ PrefabInstance:
       propertyPath: nextStage
       value: Event03Scene
       objectReference: {fileID: 0}
+    - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
+      propertyPath: goDialogue
+      value: 
+      objectReference: {fileID: 339455188}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

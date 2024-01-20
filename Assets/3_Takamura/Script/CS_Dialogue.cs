@@ -31,6 +31,16 @@ public class CS_Dialogue : MonoBehaviour
     [SerializeField, Header("自動送り機能")]
     bool bAuto;
 
+    //! @brief セリフ表示開始フラグ
+    bool bActive;
+    public bool BActive
+    {
+        get { return bActive; }
+        set { bActive = true; }
+    }
+    //! @brief 一度だけ処理を行うフラグ
+    bool bOnce = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,7 +52,13 @@ public class CS_Dialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (bActive == false) return;
         bool tmp = bAuto ? (bFinishString == true) : ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && (bFinishString == true));
+        if(bOnce == false)
+        {
+            tmp = true;
+            bOnce = true;
+        }
         if (tmp)
         {
             if(textIndex < splitText.Length - 1)
