@@ -77,9 +77,17 @@ public class CS_Titan : MonoBehaviour
     //--------------------
     //突進
     //--------------------
+    private enum RushState
+    {
+        SPEED_UP,    //速度上昇
+        SPEED_MAX,   //速度最大
+        SPEED_DOWN,  //速度減少
+        FINISH,      //終了
+    }
+    private RushState rushState = RushState.FINISH;
     [SerializeField, Header("突進一回のインターバル")] 
     private float rushInterval = 0.0f;
-    [SerializeField, Header("突進一回の時間")] 
+    [SerializeField, Header("突進の持続時間（最大速度の時間）")] 
     private float rushTime = 0.0f;
     [SerializeField, Header("突進の初期威力")] 
     private float rushDefaultPower = 0.0f;
@@ -98,6 +106,11 @@ public class CS_Titan : MonoBehaviour
     private float rushPower = 0.0f;
     private float rushSpeed = 0.0f;
     private float rushIntervalCount = 0.0f;
+    [SerializeField, Header("速度の係数（速度上昇時）")]
+    private float rushSpeedUpCoefficient = 0.0f;
+    [SerializeField, Header("速度の係数（速度減少時）")]
+    private float rushSpeedDownCoefficient = 0.0f;
+    private float rushSpeedLimit = 0.0f;
 
     //--------------------
     //停止
@@ -258,7 +271,7 @@ public class CS_Titan : MonoBehaviour
         chargeSE.Play();
         //突進の威力と速度を元に戻しておく
         rushPower = rushDefaultPower;
-        rushSpeed = rushDefaultSpeed;
+        rushSpeedLimit = rushDefaultSpeed;
     }
     private void Charge()
     {
@@ -268,7 +281,7 @@ public class CS_Titan : MonoBehaviour
         chargeTimeCount -= Time.deltaTime;
         //溜め時間に合わせて威力と速度を上げる
         rushPower += rushPowerChargingIncrement * Time.deltaTime;
-        rushSpeed += rushSpeedChargingIncrement * Time.deltaTime;
+        rushSpeedLimit += rushSpeedChargingIncrement * Time.deltaTime;
         //アニメーション速度を調整
         if(chargeTime - chargeTimeCount >= animationSpeedChangingTime && chargeTime - chargeTimeCount < 1.0f && !changedAnimationSpeed)
         {
@@ -300,16 +313,50 @@ public class CS_Titan : MonoBehaviour
         state = State.RUSH;
         animator.SetTrigger("triggerRush");
         //突進時間をリセット
-        rushTimeCount = rushTime;
+        rushTimeCount = 0.0f;
+        //速度をリセット
+        rushSpeed = 0.0f;
+        rushState = RushState.SPEED_UP;
     }
     private void Rush()
     {
+        //突進時間をカウント
+        rushTimeCount += Time.deltaTime;
+        //突進時の速度を調整
+        switch(rushState)
+        {
+            case RushState.SPEED_UP:
+                rushSpeed = rushSpeedUpCoefficient * Mathf.Pow(rushTimeCount, 3.0f);
+                if (rushSpeed > rushSpeedLimit)
+                {
+                    rushSpeed = rushSpeedLimit;
+                    rushTimeCount = 0.0f;
+                    rushState = RushState.SPEED_MAX;
+                }
+                break;
+            case RushState.SPEED_MAX:
+                if(rushTimeCount >= rushTime)
+                {
+                    float speedDownTime = Mathf.Pow(rushSpeed / rushSpeedDownCoefficient, 1.0f / 3.0f);
+                    rushTimeCount = -speedDownTime;
+                    rushState = RushState.SPEED_DOWN;
+                }
+                break;
+            case RushState.SPEED_DOWN:
+                rushSpeed = -1.0f * rushSpeedDownCoefficient * Mathf.Pow(rushTimeCount, 3.0f);
+                if (rushTimeCount >= 0.0f)
+                {
+                    rushSpeed = 0.0f;
+                    rushState = RushState.FINISH;
+                }
+                break;
+            default: 
+                break;
+        }
         //移動
         Transfer(rushSpeed);
-        //突進時間をカウント
-        rushTimeCount -= Time.deltaTime;
-        //一回の突進が終了したら
-        if (rushTimeCount <= 0.0f)
+        //突進一回分が終了したときの処理
+        if (rushState == RushState.FINISH)
         {
             //突進回数をカウント
             rushCount--;
@@ -460,6 +507,7 @@ public class CS_Titan : MonoBehaviour
     //弱点にダメージを受けた時の処理
     public void ReceiveDamageOnWeakPoint()
     {
+        if (state == State.CHARGE) return;
         ReceiveDamage(weakPointDamageIncrement);
 
         //ダウン中or死亡中でない場合は
