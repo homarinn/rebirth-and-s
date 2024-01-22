@@ -93,7 +93,7 @@ public class CS_Player : MonoBehaviour
     
     // Œ»İ‚ÌHP
     private float hp;
-    public float Hp { get { return hp;} }
+    public float Hp { get { return hp;} set { hp = value; } }
 
     [SerializeField, Header("–³“GŠÔ")]
     private float invincibleTime = 1;
