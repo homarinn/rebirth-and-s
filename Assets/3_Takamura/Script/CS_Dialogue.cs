@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Text.RegularExpressions;
 
 public class CS_Dialogue : MonoBehaviour
 {
@@ -110,7 +111,7 @@ public class CS_Dialogue : MonoBehaviour
     //! @brief ‰üs‚Å•ªŠ„‚·‚é
     void SplitString()
     {
-        splitText = pBuffer.Split(char.Parse("\n"));
+        splitText = Regex.Split(pBuffer, @"\r?\n\r?\n"); ;
     }
 
     //! @brief •¶š‘—‚è‰‰o•\¦

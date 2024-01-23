@@ -1,7 +1,0 @@
-﻿/PlayerName
-あいうえお
-/EnemyName
-かkiくkeこ
-abcde
-/PlayerName
-fghij

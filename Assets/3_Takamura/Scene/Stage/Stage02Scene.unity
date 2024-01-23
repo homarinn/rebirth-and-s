@@ -1097,6 +1097,23 @@ PrefabInstance:
       propertyPath: goPlayer
       value: 
       objectReference: {fileID: 473272897}
+    - target: {fileID: 3501694037673568600, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: b461f37458de3434a916ce25772672da,
+        type: 2}
+    - target: {fileID: 3501694037673568600, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -3313772920169313949, guid: b461f37458de3434a916ce25772672da,
+        type: 2}
+    - target: {fileID: 3501694037673568600, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5048628039042165494, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_Name
@@ -1107,6 +1124,23 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 134687514}
+    - target: {fileID: 6580249561548806646, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: b461f37458de3434a916ce25772672da,
+        type: 2}
+    - target: {fileID: 6580249561548806646, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -3313772920169313949, guid: b461f37458de3434a916ce25772672da,
+        type: 2}
+    - target: {fileID: 6580249561548806646, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7334371121781806245, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1206,6 +1240,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8621349053298837804, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: file
+      value: 
+      objectReference: {fileID: 4900000, guid: 7fecdf7bbfdbf314e8733c9fb3b54281, type: 3}
+    - target: {fileID: 8621349053298837804, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: bAuto
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8621349053298837804, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
