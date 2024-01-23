@@ -8,10 +8,14 @@ using UnityEngine.AI;
 /// </summary>
 public class CS_EnemyPlayer : MonoBehaviour
 {
+    // ----------------------------
+    // 状態制御用
+    // ----------------------------
+
     /// <summary>
     /// 状態
     /// </summary>
-    enum State
+    public enum State
     {
         /// <summary> 待機 </summary>
         Idle,
@@ -34,9 +38,20 @@ public class CS_EnemyPlayer : MonoBehaviour
         /// <summary> 防御 </summary>
         Guard,
 
+        /// <summary> 被ダメージ </summary>
+        ReceiveDamage,
+
         /// <summary> 死亡 </summary>
         Dead,
     }
+
+    /// <summary> 現在の状態 </summary>
+    private State currentState;
+
+    /// <summary>
+    /// 現在の状態
+    /// </summary>
+    public State CurrentState { get { return currentState; } }
 
     // ----------------------
     // プレイヤー
@@ -57,13 +72,21 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// <summary> 現在のHP </summary>
     private float hp;
 
+    /// <summary>
+    /// 現在のHP
+    /// </summary>
+    public float Hp { get { return hp; } }
+
     // ---------------------
     // 速度
     // ---------------------
 
-    /// <summary> 追尾速度 </summary>
-    [Header("追尾速度")]
+    /// <summary> 追尾時の最大速度 </summary>
+    [Header("追尾時の最大速度")]
     [SerializeField] private float chaseSpeed;
+
+    [Header("追尾時の加速度")]
+    [SerializeField] private float chaseAcceleration;
 
     /// <summary> プレイヤーに近づいた後の移動速度 </summary>
     [Header("プレイヤーに近づいた後の移動速度")]
@@ -84,8 +107,11 @@ public class CS_EnemyPlayer : MonoBehaviour
     [SerializeField] private float attackInterval;
 
     /// <summary> 攻撃する確率(%) </summary>
-    [Header("攻撃する確率(%)")]
+    [Header("攻撃した後に再攻撃する確率(%)")]
     [SerializeField] private float attackPercent;
+
+    [Header("trueなら、攻撃中に被ダメージモーションを起こさない")]
+    [SerializeField] private bool hasSuperArmor;
 
     /// <summary> 攻撃可能ならtrue </summary>
     private bool canAttack = false;
@@ -100,6 +126,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// <summary> 必殺技のインターバル時間 </summary>
     [Header("必殺技のインターバル時間")]
     [SerializeField] private float ultInterval;
+
+    [Header("必殺技の速度")]
+    [SerializeField] private float ultSpeed;
 
     /// <summary> 必殺技が使用可能ならtrue </summary>
     private bool canUlt = false;
@@ -126,9 +155,23 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// <summary> 防御可能ならtrue </summary>
     private bool canGuard = false;
 
-    // ---------------------------
+    // ----------------------------
+    // 与ダメージ
+    // ----------------------------
+
+    /// <summary> trueのとき、武器が当たるようになる(多段防止) </summary>
+    [NonSerialized] public bool canWeaponHit = false;
+
+    // ----------------------------
     // 被ダメージ
-    // ---------------------------
+    // ----------------------------
+
+    /// <summary> 被ダメージからの無敵時間 </summary>
+    [Header("被ダメージからの無敵時間")]
+    [SerializeField] private float invincibleTime;
+
+    /// <summary> 無敵中ならtrue </summary>
+    private bool isInvincible = false;
 
     // ----------------------------
     // 攻撃検知用
@@ -143,21 +186,11 @@ public class CS_EnemyPlayer : MonoBehaviour
     [SerializeField] private float ultReceptionTime;
 
     // --------------------
-    // 制御用
+    // AI制御用
     // --------------------
-
-    /// <summary> 現在の状態 </summary>
-    private State currentState;
 
     /// <summary> 敵AI制御用 </summary>
     private NavMeshAgent enemyAi;
-
-    // --------------------
-    // 物理
-    // --------------------
-
-    /// <summary> 物理用 </summary>
-    private Rigidbody rd;
 
     // --------------------------------
     // アニメーション検知用
@@ -189,6 +222,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     // アニメーション遷移用
     // ---------------------------------
 
+    /// <summary> ダッシュモーション遷移用 </summary>
+    private readonly string isRun = "IsRun";
+
     /// <summary> 攻撃アニメーション遷移用 </summary>
     private readonly string isAttack = "IsAttack";
 
@@ -210,6 +246,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     // -----------------------
     // タイマー
     // -----------------------
+
+    /// <summary> 無敵時間用タイマー </summary>
+    private float invincibleTimer = 0;
 
     /// <summary> 攻撃用タイマー </summary>
     private float attackTimer = 0;
@@ -242,9 +281,6 @@ public class CS_EnemyPlayer : MonoBehaviour
         // アニメーション制御用コンポーネントを取得
         playerAnimator = player.GetComponent<Animator>();
 
-        // 物理用コンポーネントを取得
-        rd = gameObject.GetComponent<Rigidbody>();
-
         // 待機状態から始める
         ChangeState(State.Idle);
     }
@@ -262,7 +298,13 @@ public class CS_EnemyPlayer : MonoBehaviour
         }
 
         // -------------------------------
-        // 状態に合わせて処理
+        // タイマー
+        // -------------------------------
+
+        TimerCount();
+
+        // -------------------------------
+        // 状態に合わせて行動
         // -------------------------------
 
         switch (currentState)
@@ -291,9 +333,6 @@ public class CS_EnemyPlayer : MonoBehaviour
             // --------------------------------------------
             case State.SelectAction:
 
-                // タイマー
-                TimerCount();
-
                 // 行動選択
                 SelectAction();
 
@@ -303,6 +342,13 @@ public class CS_EnemyPlayer : MonoBehaviour
             // 攻撃
             // ------------------------
             case State.Attack:
+
+                break;
+
+            // ------------------------
+            // 必殺技
+            // ------------------------
+            case State.Ult:
 
                 break;
 
@@ -321,15 +367,19 @@ public class CS_EnemyPlayer : MonoBehaviour
                 break;
 
             // ------------------------
+            // 被ダメージ
+            // ------------------------
+            case State.ReceiveDamage:
+
+                break;
+
+            // ------------------------
             // 死亡
             // ------------------------
             case State.Dead:
 
                 break;
         }
-
-        // アニメーション制御用に速度を渡す
-        enemyAnimator.SetFloat("Speed", rd.velocity.magnitude);
     }
 
     #region 状態別の処理
@@ -361,6 +411,8 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーとの距離が一定以内
         if (IsNear(player))
         {
+            enemyAi.speed = 0;
+
             // 行動選択状態に移行
             ChangeState(State.SelectAction);
             return;
@@ -372,10 +424,6 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void SelectAction()
     {
-        // ------------------------------
-        // ダメージモーション中か
-        // ------------------------------
-
         // -----------------------------
         // 攻撃・必殺技が可能か
         // -----------------------------
@@ -389,6 +437,9 @@ public class CS_EnemyPlayer : MonoBehaviour
         // 必殺技が使用不可で攻撃可能
         else if (canAttack)
         {
+            // タイマーリセット
+            attackTimer = 0;
+
             // 攻撃状態に移行
             ChangeState(State.Attack);
             return;
@@ -497,6 +548,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimAttack1()
     {
+        // 武器が当たるようにする
+        canWeaponHit = true;
+
         LookTarget(player);
     }
 
@@ -508,16 +562,17 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーがまだ近くにいる場合
         if (IsNear(player))
         {
+            // 連続攻撃するので状態を維持する
             return;
         }
+
+        // 武器が当たらないようにする
+        canWeaponHit = false;
 
         // 攻撃終了
         enemyAnimator.SetBool(isAttack, false);
 
-        // タイマーリセット
-        attackTimer = 0;
-
-        // この後で攻撃するか抽選する
+        // この後また攻撃するか抽選する
         isAttackPercent = CheckProbability(attackPercent);
 
         // 待機状態に移行
@@ -529,6 +584,10 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimAttack2()
     {
+        // 武器が当たるようにする
+        canWeaponHit = true;
+
+        // プレイヤーの方を向く
         LookTarget(player);
     }
 
@@ -537,6 +596,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimAttack2Faild()
     {
+        // 武器が当たらないようにする
+        canWeaponHit = false;
+
         // 攻撃終了
         enemyAnimator.SetBool(isAttack, false);
 
@@ -561,6 +623,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimUlt()
     {
+        // 武器が当たるようにする
+        canWeaponHit = true;
+
         // プレイヤーの方を向く
         LookTarget(player);
     }
@@ -570,8 +635,14 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimUltFailed()
     {
+        // 武器が当たらないようにする
+        canWeaponHit = false;
+
         // タイマーリセット
         ultTimer = 0;
+
+        // アニメーション速度を初期化
+        enemyAnimator.speed = 1;
 
         // 待機状態に移行
         ChangeState(State.Idle);
@@ -615,50 +686,85 @@ public class CS_EnemyPlayer : MonoBehaviour
 
     private void AnimDamgeFailed()
     {
-
+        ChangeState(State.Idle);
     }
 
     #endregion
 
     #region 被ダメージ
 
-    ///// <summary>
-    ///// ダメージを受ける
-    ///// </summary>
-    ///// <param name="damage"> ダメージ量 </param>
-    //public void ReceiveDamage(float damage)
-    //{
-    //    // 防御中ならtrue
-    //    bool isGuard = currentState == State.Guard;
+    /// <summary>
+    /// ダメージを受ける
+    /// </summary>
+    /// <param name="damage"> ダメージ量 </param>
+    public void ReceiveDamage(float damage)
+    {
+        // 既に死亡したなら何もしない
+        if (currentState == State.Dead)
+        {
+            return;
+        }
 
-    //    // 移動速度を0に設定
+        // 無敵時間中はダメージを受けない
+        if (isInvincible)
+        {
+            return;
+        }
 
-    //    // 防御中
-    //    if (isGuard)
-    //    {
+        // 必殺技中はダメージを受けない
+        if (currentState == State.Ult)
+        {
+            return;
+        }
 
-    //    }
-    //    else
-    //    {
-    //        // 与えられたダメージ分HPを減らす
-    //        hp -= damage;
+        // 回避中はダメージを受けない
+        if (currentState == State.Sliding)
+        {
+            return;
+        }
 
-    //    }
+        // 防御中ならtrue
+        bool isGuard = currentState == State.Guard;
 
-    //    // HPが無くなったら死亡
-    //    if (hp <= 0)
-    //    {
-    //        ChangeState(State.Dead);
-    //        return;
-    //    }
+        // 防御中
+        if (isGuard)
+        {
+            // 与ダメージを軽減
+        }
+        else
+        {
+            // 与ダメージ分HPを減らす
+            hp -= damage;
+            Debug.Log("ダメージ");
+        }
 
-    //    // HPが残っているので
-    //    // 防御してないならダメージモーション開始
-    //    if (!isGuard)
-    //    {
-    //        enemyAnimator.SetTrigger(hitTrigger);
-    //    }
-    //}
+        // HPが無くなったら死亡
+        if (hp <= 0)
+        {
+            ChangeState(State.Dead);
+            return;
+        }
+
+        // スーパーアーマーなら攻撃中に
+        // 被ダメージモーションはしない
+        if (currentState == State.Attack &&
+            hasSuperArmor)
+        {
+            return;
+        }
+
+        // 防御中なら被ダメージモーションはしない
+        if (isGuard)
+        {
+            return;
+        }
+
+        // 被ダメージ後の無敵時間を設定
+        invincibleTimer = invincibleTime;
+
+        // HPが残っているので被ダメージ状態に移行
+        ChangeState(State.ReceiveDamage);
+    }
 
     #endregion
 
@@ -684,13 +790,6 @@ public class CS_EnemyPlayer : MonoBehaviour
         if (!enemyAnimator || !playerAnimator)
         {
             Debug.Log("Animatorがありません");
-            return false;
-        }
-
-        // 物理用コンポーネントがない
-        if (!rd)
-        {
-            Debug.Log("Rigidbodyがありません");
             return false;
         }
 
@@ -898,6 +997,9 @@ public class CS_EnemyPlayer : MonoBehaviour
             // -------------------------
             case State.Idle:
 
+                // ダッシュモーション終了
+                enemyAnimator.SetBool(isRun, false);
+
                 // 待機状態に移行
                 currentState = State.Idle;
 
@@ -908,8 +1010,14 @@ public class CS_EnemyPlayer : MonoBehaviour
             // ----------------------
             case State.Chase:
 
-                // 追尾速度を設定
+                // 最大速度を設定
                 enemyAi.speed = chaseSpeed;
+
+                // 加速度を設定
+                enemyAi.acceleration = chaseAcceleration;
+
+                // ダッシュモーション開始
+                enemyAnimator.SetBool(isRun, true);
 
                 // 追尾状態に移行
                 currentState = State.Chase;
@@ -922,10 +1030,6 @@ public class CS_EnemyPlayer : MonoBehaviour
 
             case State.SelectAction:
 
-                // 行動選択中はNavMeshで動かさないので、
-                // speedを0に設定
-                //enemyAi.speed = 0;
-
                 // 行動選択状態に移行
                 currentState = State.SelectAction;
 
@@ -936,6 +1040,9 @@ public class CS_EnemyPlayer : MonoBehaviour
             // -----------------------
             case State.Attack:
 
+                // 移動しないようにする
+                //enemyAi.speed = 0;
+
                 // 攻撃アニメーション開始
                 enemyAnimator.SetBool(isAttack, true);
 
@@ -945,6 +1052,12 @@ public class CS_EnemyPlayer : MonoBehaviour
                 break;
 
             case State.Ult:
+
+                // 移動しないようにする
+                //enemyAi.speed = 0;
+
+                // 必殺技の速度を設定(0にならないようにする)
+                enemyAnimator.speed = Mathf.Max(ultSpeed, 0.1f);
 
                 // 必殺技アニメーション開始
                 enemyAnimator.SetTrigger(ultTirgger);
@@ -977,6 +1090,22 @@ public class CS_EnemyPlayer : MonoBehaviour
 
                 // 防御状態に移行
                 currentState = State.Guard;
+
+                break;
+
+            // ---------------------------
+            // 被ダメージ状態に移行
+            // ---------------------------
+            case State.ReceiveDamage:
+
+                // 移動しないようにする
+                enemyAi.speed = 0;
+
+                // 被ダメージモーション開始
+                enemyAnimator.SetTrigger(hitTrigger);
+
+                // 被ダメージ状態に移行
+                currentState = State.ReceiveDamage;
 
                 break;
 
@@ -1021,21 +1150,26 @@ public class CS_EnemyPlayer : MonoBehaviour
         // タイマーを進める
         // ----------------------------
 
-        // 攻撃可能になってないなら進める
+        // 無敵時間を減らす
+        if (isInvincible) invincibleTimer -= Time.deltaTime;
+
+        // 攻撃してからの時間を計測
         if (!canAttack) attackTimer += Time.deltaTime;
 
-        // 必殺技が使用可能になってないなら進める
+        // 必殺技を使用してからの時間を計測
         if (!canUlt) ultTimer += Time.deltaTime;
 
-        // 回避可能になってないなら進める
+        // 回避してからの時間を計測
         if (!canSliding) slidingTimer += Time.deltaTime;
 
-        // 防御可能になってないなら進める
+        // 防御してからの時間を計測
         if (!canGuard) guardTimer += Time.deltaTime;
 
         // ----------------------------------
         // 一定時間経ったか確認
         // ----------------------------------
+
+        isInvincible = invincibleTimer > 0;
 
         canAttack = attackTimer >= attackInterval;
         canUlt = ultTimer >= ultInterval;

@@ -123,6 +123,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!225 &99006228 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 1163849583164973268, guid: 4599c73d429970747bac1312071a185e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1562136316962758789}
+  m_PrefabAsset: {fileID: 0}
 --- !u!20 &134687514 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 1178814258017753787, guid: 692378a2593c90245bc3f095213d4698,
@@ -769,12 +775,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!225 &1909709491 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 1112490739989421558, guid: 4599c73d429970747bac1312071a185e,
-    type: 3}
-  m_PrefabInstance: {fileID: 1562136316962758789}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1940648941 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4150658284361871605, guid: a1de378714d8efb4eb4b48f7b213b0db,
@@ -1292,7 +1292,7 @@ PrefabInstance:
         type: 3}
       propertyPath: cgFade
       value: 
-      objectReference: {fileID: 1909709491}
+      objectReference: {fileID: 99006228}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: goEnemy
