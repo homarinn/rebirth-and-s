@@ -19,10 +19,12 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
 
     float radiusMax;    //風の最大半径
     float radiusMaxTime;//風の半径が最大になる秒数
+    float effectDuration;  //エフェクトの再生時間
     float blowOffPower;
     float startRadius;
     float elapsed;
-    bool isPlayEffect;
+    bool isMoveCollider;
+    //bool isPlayEffect;
 
     AudioSource audioSource;
 
@@ -43,10 +45,18 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
 
         radiusMax = effectCollider.radius;
         effectCollider.radius = 0.0f;
-        radiusMaxTime = effect.main.duration;
+
+        //孫のShockwaveのlifeTimeを取得
+        ParticleSystem shockwave =
+            effect.GetComponent<Transform>().transform.GetChild(0).gameObject.GetComponent<ParticleSystem>();
+        radiusMaxTime = shockwave.main.startLifetime.constant;
+        effectDuration = effect.main.duration;
+
+        //radiusMaxTime = effect.main.duration;
+        //Debug.Log("radiusMaxTime = " + radiusMaxTime);
         startRadius = 0.0f;
         elapsed = 0.0f;
-        isPlayEffect = false;
+        isMoveCollider = false;
 
         //AudioSourceの取得
         audioSource = GetComponent<AudioSource>();
@@ -54,7 +64,7 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
 
     public void Update()
     {
-        if (isPlayEffect && effectCollider.radius <= radiusMax)
+        if (isMoveCollider && effectCollider.radius <= radiusMax)
         {
             //パーティクルの広がりに合わせてコライダーの範囲も大きくする
             elapsed += Time.deltaTime;
@@ -65,7 +75,7 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
             if (effectCollider.radius > radiusMax)
             {
                 effectCollider.radius = radiusMax;
-                isPlayEffect = false;
+                isMoveCollider = false;
             }
         }
     }
@@ -82,15 +92,17 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
         effect.Play();
         audioSource.PlayOneShot(blowOffSE);
 
-        isPlayEffect = true;  //エフェクト再生
+        isMoveCollider = true;  //エフェクト再生
     }
 
     private IEnumerator StopCoroutine()
     {
         //時間経過後に消す
-        yield return new WaitForSeconds(radiusMaxTime);
+        yield return new WaitForSeconds(effectDuration);
+        //yield return new WaitForSeconds(radiusMaxTime);
         effect.Stop();
         effectCollider.enabled = false;
+        Debug.Log("エフェクト終了");
 
         Destroy(gameObject);
     }
@@ -108,11 +120,38 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
         if (rigidBody == null) return;
 
         //風によって中央から吹き飛ぶ方向のベクトルを作る
-        var direction = (other.transform.position - transform.position).normalized;
+        //var direction = (other.transform.position - transform.position).normalized;
 
-        //吹き飛ばす
-        //ForceModeを変えると挙動が変わる（今回は質量無視）
-        rigidBody.AddForce(direction * blowOffPower, ForceMode.Impulse);
+        //中央からの方向
+        Vector3 direction = new Vector3(
+            other.transform.position.x - transform.position.x,
+            0.0f,
+            other.transform.position.z - transform.position.z);
+
+        //距離が近すぎればプレイヤーの後ろ方向に飛ばす
+        const float rangeNormalDirection = 0.6f * 0.6f;  //中央から吹き飛ぶようにする判定範囲
+        if (direction.sqrMagnitude <= rangeNormalDirection)
+        {
+            //後ろ方向に吹き飛ばす
+            direction.x = -other.transform.forward.x;
+            direction.z = -other.transform.forward.z;
+
+            Debug.Log("吹き飛ばす方向 = " + direction);
+        }
+        else
+        {
+            //中央から外側に吹き飛ばす
+            direction = direction.normalized;
+            Debug.Log("吹き飛ばす方向(通常) = " + direction);
+        }
+
+        ////吹き飛ばす
+        ////ForceModeを変えると挙動が変わる（今回は質量無視）
+        //rigidBody.AddForce(direction * blowOffPower, ForceMode.Impulse);
+
+        //吹き飛ばす(プレイヤー関数に渡す)
+        
+        Debug.Log("吹き飛ばした");
 
         //Colliderを無効化して複数回Playerを吹き飛ばさないようにする
         effectCollider.enabled = false;

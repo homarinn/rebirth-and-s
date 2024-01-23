@@ -123,6 +123,8 @@ MonoBehaviour:
   cpUlt: {fileID: 4312558994954206004}
   goEnemy: {fileID: 0}
   cpEnemyHP: {fileID: 1776172266089444940}
+  enemyHpMax: 0
+  enemyHp: 0
 --- !u!1001 &2166154602673746643
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -364,6 +366,23 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 7232344532569028198, guid: cbedb5ebf4a9d4549bd53f672c799e7d,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a8e8eff4b98832148ac86fc80765d400,
+        type: 2}
+    - target: {fileID: 7232344532569028198, guid: cbedb5ebf4a9d4549bd53f672c799e7d,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2076606046629618213, guid: a8e8eff4b98832148ac86fc80765d400,
+        type: 2}
+    - target: {fileID: 7232344532569028198, guid: cbedb5ebf4a9d4549bd53f672c799e7d,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

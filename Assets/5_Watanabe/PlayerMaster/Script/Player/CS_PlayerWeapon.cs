@@ -5,85 +5,77 @@ using UnityEngine;
 // Player武器スクリプト
 public class CS_PlayerWeapon : MonoBehaviour
 {
-    [SerializeField, Header("攻撃空振りSE")]
-    private AudioClip SE_PlayerAttackMis;
+
     [SerializeField, Header("攻撃１ヒットSE")]
-    private AudioClip SE_PlayerAttack1Hit;
+    private AudioClip SE_Attack1Hit;
     [SerializeField, Header("攻撃2ヒットSE")]
-    private AudioClip SE_PlayerAttack2Hit;
-
-
-    private CS_Player cs_Player;
-
-    private float attack1Power;
-    private float attack2Power;
-
-
-    private void Start()
-    {
-        // コンポーネント取得
-        cs_Player = GetComponentInParent<CS_Player>();
-        attack1Power = cs_Player.Attack1Power;
-        attack2Power = cs_Player.Attack2Power;
-    }
+    private AudioClip SE_Attack2Hit;
 
     private void OnTriggerEnter(Collider other)
     {
-        float damage = cs_Player.GetDamage;
+        var cs_Player = GetComponentInParent<CS_Player>();
+        float attackDamage = cs_Player.AttackDamage;
+        Debug.Log(attackDamage);
+        if (attackDamage == 0)
+        {
+            return;
+        }
 
         // 弱点に衝突したら弱点ダメージを与える
         if (other.gameObject.tag == "EnemyWeakness")
         {
             if (other.GetComponentInParent<CS_Titan>() != null)
             {
-                cs_Player.IsAttack = true;
                 other.GetComponentInParent<CS_Titan>().ReceiveDamageOnWeakPoint();
+            } 
+        }
+        else if (other.gameObject.tag == "Enemy")
+        {
+            // 母
+            if(other.GetComponent<CS_Enemy1>() != null)
+            {
+            
+            }
+            // 父
+            else if (other.GetComponent<CS_Titan>() != null)
+            {
+                other.GetComponent<CS_Titan>().ReceiveDamage(attackDamage);
+            }
+            // 別の自分
+            else if(other.GetComponent<CS_EnemyPlayer>() != null)
+            {
+
             }
             else
             {
-                Debug.Log("タイタンのコンポーネントがないよ");
+                Debug.Log("敵にコンポーネントついてないよ");
             }
-            if (cs_Player.GetComponent<AudioSource>() != null)
-            {
-                if (damage == attack1Power)
-                {
-                    cs_Player.GetComponent<AudioSource>().PlayOneShot(SE_PlayerAttack1Hit);
-                }
-                else if (damage == attack2Power)
-                {
-                    cs_Player.GetComponent<AudioSource>().PlayOneShot(SE_PlayerAttack2Hit);
-                }
-            }
-
         }
-        if (cs_Player.IsAttack)
+        else
         {
             return;
         }
 
-        if (other.gameObject.tag == "Enemy")
+        // 親のAudoSouceを取得
+        var audio = cs_Player.GetComponentInParent<AudioSource>();
+        if (audio == null)
         {
-            if (other.GetComponent<CS_Titan>() != null)
-            {
-                cs_Player.IsAttack = true;
-                other.GetComponent<CS_Titan>().ReceiveDamage(damage);
-            }
-            else
-            {
-                Debug.Log("タイタンのコンポーネントがないよ");
-            }
-
-            if (cs_Player.GetComponent<AudioSource>() != null)
-            {
-                if (damage == attack1Power)
-                {
-                    cs_Player.GetComponent<AudioSource>().PlayOneShot(SE_PlayerAttack1Hit);
-                }
-                else if (damage == attack2Power)
-                {
-                    cs_Player.GetComponent<AudioSource>().PlayOneShot(SE_PlayerAttack2Hit);
-                }
-            }
+            Debug.Log("AudioSouceないよ");
+            return;        // AudioSouceがない
         }
+
+        // SE
+        if (attackDamage == cs_Player.Attack1Power)
+        {
+            audio.PlayOneShot(SE_Attack1Hit);
+        }
+        else if (attackDamage == cs_Player.Attack2Power)
+        {
+            audio.PlayOneShot(SE_Attack2Hit);
+        }
+        else if (attackDamage == cs_Player.UltPower)
+        {
+        }
+
     }
 }

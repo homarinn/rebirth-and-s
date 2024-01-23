@@ -1,28 +1,49 @@
 using UnityEngine;
 
-// Playerスクリプト
-public class CS_Player : MonoBehaviour
+/// <summary>
+/// Playerメイン
+/// </summary>
+public partial class CS_Player : MonoBehaviour
 {
-    // ============ 移動 =============  //
+    // =======================
+    //
+    // 変数
+    //
+    // =======================
+
+    enum State
+    {
+        Normal,
+        Sliding,
+        Attack,
+        Difence,
+        Damage,
+        Ult
+    }
+    State state;
+
+    // 移動
     [SerializeField, Header("移動速度")]
-    private float moveSpeed = 5.0f;
-
+    private float moveSpeed = 0;
     [SerializeField, Header("プレイヤーの旋回速度")]
-    private float rotationSpeed = 0.5f;
+    private float rotationSpeed = 0;
 
-    // ============ 回避 ============= //
-    [SerializeField, Header("回避速度")]
-    private float slidingSpeed = 10.0f;
-    [SerializeField, Header("回避インターバル")]
-    private float slidingInterval = 1;
+    [SerializeField, Header("水たまり上の移動速度低下(0～1)")]
+    private float waterOnTheMoveSpeedCut = 0;
+    private bool isWaterOnThe = false;
+
+    private bool moveOK = true;    // 移動許可
+
+    // スライディング
+    [SerializeField, Header("スライディング速度")]
+    private float slidingSpeed = 0;
+    [SerializeField, Header("スライディングインターバル")]
+    private float slidingInterval = 0;
     private float slidingTimer = 0;
 
-    // スライディング中/
-    private bool slidingNow = false;
-
-    // ============ 攻撃 ============= //
-    [SerializeField, Header("Attack1攻撃力")]
-    private float attack1Power = 10;
+    // 攻撃威力
+    [SerializeField, Header("攻撃１の威力")]
+    private float attack1Power = 0;
     public float Attack1Power
     {
         get
@@ -30,42 +51,112 @@ public class CS_Player : MonoBehaviour
             return attack1Power;
         }
     }
-    [SerializeField, Header("Attack1のインターバル")]
-    private float attack1Interval = 0.5f;
-    [SerializeField, Header("Attack2攻撃力")]
-    private float attack2Power = 20;
+    [SerializeField, Header("攻撃2の威力")]
+    private float attack2Power = 0;
     public float Attack2Power
-    {
+    { 
         get
         {
             return attack2Power;
         }
-    }
-    [SerializeField, Header("Attack2のインターバル")]
-    private float attack2Interval = 1.0f;
-    private float attackTimer = 0;
-    // 攻撃中？
-    private bool attackNow = false;
-    private bool attackOk = true;
-    private bool isAttack = false;
-    public bool IsAttack
+    }    
+    private float attackDamage = 0;
+    public float AttackDamage
     {
         get
         {
-            return isAttack;
-        }
-        set
-        {
-            isAttack = value;
+            return attackDamage;
         }
     }
 
-    // ============ 必殺 ============= //
-    [SerializeField, Header("必殺の威力")]
-    private float ultPower = 30;
-    [SerializeField, Header("必殺のインターバル")]
-    private float ultInterval = 3;
+    [SerializeField, Header("攻撃1インターバル")]
+    private float attack1Interval = 0;
+    [SerializeField, Header("攻撃2インターバル")]
+    private float attack2Interval = 0;
+    private float attackTimer = 0;
+
+    // 攻撃２が発動可能か
+    private bool attack2Ok = false;
+
+    // 必殺
+    [SerializeField, Header("必殺技の威力")]
+    private float ultPower = 0;
+    public float UltPower
+    {
+        get
+        {
+            return ultPower;
+        }
+    }
+    [SerializeField, Header("必殺技のインターバル")]
+    private float ultInterval = 0;
     private float ultTimer = 0;
+
+    // 防御
+    [SerializeField, Header("防御インターバル")]
+    private float difenceInterval = 0;
+    private float difenceTimer = 0;
+    [SerializeField, Header("防御中のダメージカット%")]
+    private float difenceDamageCut = 0;
+    [SerializeField]
+    private bool isDifence = false;
+
+
+    [SerializeField, Header("HPの最大値")]
+    private float maxHP = 0;    // 最大HP
+    private float hp;           // 現在のHP
+    private bool isInvisible = false;
+    
+    private Transform cameraTransform = null;       // カメラの位置
+
+    // コンポーネント
+    private Rigidbody rb;
+    private Animator anim;
+    private AudioSource audio;
+
+    // SE
+    [SerializeField, Header("移動SE")]
+    private AudioClip SE_Move;
+    [SerializeField, Header("攻撃SE")]
+    private AudioClip SE_Attack;
+    [SerializeField, Header("スライディングSE")]
+    private AudioClip SE_Sliding;
+    [SerializeField, Header("防御開始SE")]
+    private AudioClip SE_DifenceStart;
+    [SerializeField, Header("防御SE")]
+    private AudioClip SE_Difence;
+    [SerializeField, Header("ダメージSE")]
+    private AudioClip SE_Damage;
+
+    // =======================
+    //
+    // ゲッター・セッター
+    //
+    // =======================
+
+    // HPの最大値
+    public float MaxHP
+    {
+        get
+        {
+            return maxHP;
+        }
+    }
+
+    // HP
+    public float Hp
+    {
+        get
+        {
+            return hp;
+        }
+        set
+        {
+            hp = value;
+        }
+    }
+
+    // 必殺技タイマー
     public float UltTimer
     {
         get
@@ -73,64 +164,13 @@ public class CS_Player : MonoBehaviour
             return Mathf.Clamp(ultTimer, 0, 5);
         }
     }
-    // 必殺中?
-    private bool ultNow = false;
 
-    // ============= 防御 ============ //
-    [SerializeField, Header("防御中のダメージカット率")]
-    private float defDamgeCut = 0.5f;
-    [SerializeField, Header("防御のインターバル")]
-    private float gurdInterval = 1;
-    private float gurdTimer = 0;
+    // =======================
+    //
+    // 関数
+    //
+    // =======================
 
-    // ガード中?
-    private bool guardNow = false;
-
-    // 最大HP
-    [SerializeField, Header("HPの最大値")]
-    private float maxHP = 200;
-    public float MaxHP { get { return maxHP; } }
-    
-    // 現在のHP
-    private float hp;
-    public float Hp { get { return hp;} set { hp = value; } }
-
-    [SerializeField, Header("無敵時間")]
-    private float invincibleTime = 1;
-    // 無敵時間タイマー
-    private float invincibleTimer = 0;
-    // ダメージ
-    private float damage = 0;
-    public float GetDamage
-    {
-        get
-        {
-            return damage;
-        }
-    }
-
-    // カメラの位置
-    private Transform cameraTransform = null;
-
-    // 死んでいるか　true=死亡 : false=生きている
-    private bool isDead = false;
-
-    // ========== コンポーネント ========= //
-    private Rigidbody rb;
-    private Animator anim;
-    private new AudioSource[] audio;
-
-    // =========== Sound ======== //
-    [SerializeField, Header("必殺SE")]
-    private AudioClip SE_PlayerSpecalAttack;
-    [SerializeField, Header("ダメージSE")]
-    private AudioClip SE_PlayerReceiveDamage;
-    [SerializeField, Header("移動SE")]
-    private AudioClip SE_PlayerMove;
-    [SerializeField, Header("スライディング")]
-    private AudioClip SE_PlayerEscape;
-    [SerializeField, Header("ガードSE")]
-    private AudioClip SE_PlayerGuard;
 
     /// <summary>
     /// 実体化したときに呼び出される
@@ -151,7 +191,8 @@ public class CS_Player : MonoBehaviour
         // コンポーネントを取得
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        audio = GetComponents<AudioSource>();
+        audio = GetComponent<AudioSource>();
+
         // カメラの位置を取得
         cameraTransform = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Transform>();
     }
@@ -161,55 +202,102 @@ public class CS_Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        // HPが0以下なら死んでいる
-        if (hp <= 0)
+        // インターバルを更新
+        IntervalUpdate();
+
+        switch (state)
         {
-            if (!isDead)
-            {
-                isDead = true;
-                if (anim != null)
+            case State.Normal:
+
+                // 回避入力
+                if (Input.GetKeyDown(KeyCode.LeftShift) && slidingTimer <= 0)
                 {
-                    anim.SetTrigger("DeadTrigger");
-                    Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
+                    state = State.Sliding;
+                    audio.PlayOneShot(SE_Sliding);      // 効果音を鳴らす
+                    anim.SetTrigger("SlidingTrigger");  // アニメーションを再生
                 }
-            }
+
+                // 攻撃入力
+                if (Input.GetMouseButtonDown(0) && attackTimer <= 0)
+                {
+                    state = State.Attack;
+                    anim.SetTrigger("AttackTrigger");  // アニメーションを再生
+
+                    //var cs_LookCollision = GetComponentInChildren<CS_LookCollision>();
+                    //if(cs_LookCollision.IsHit)
+                    //{
+                    //    var pos = Vector3.Scale(cs_LookCollision.EnemyPos, new Vector3(1, 0, 1));
+                    //    transform.rotation = Quaternion.LookRotation(pos);
+                    //}
+                }
+
+                // 防御入力
+                if (Input.GetMouseButtonDown(1) && difenceTimer <= 0)
+                {
+                    state = State.Difence;
+                    anim.SetTrigger("GuardTrigger");  // アニメーションを再生
+                }
+
+                // 必殺入力
+                if(Input.GetKeyDown(KeyCode.Space) && ultTimer <= 0)
+                {
+                    state = State.Ult;
+                    anim.SetTrigger("UltTrigger");
+                }
+                
+                // 移動処理
+                Move();
+                break;
+            case State.Sliding:
+                // 回避処理
+                Sliding();
+                break;
+            case State.Attack:
+
+                // 攻撃2の入力
+                if (Input.GetMouseButtonDown(0) && attack2Ok)
+                {
+                    attack2Ok = false;
+                    anim.SetTrigger("AttackTrigger");  // アニメーションを再生
+                }
+                break;
         }
-        // 無敵時間になったら減らす
-        if (invincibleTimer > 0)
-        {
-            invincibleTimer -= Time.deltaTime;
-        }
-
-        // 移動処理
-        Move();
-
-        // 回避処理
-        Sliding();
-
-        // 攻撃処理
-        Attack();
-
-        // 防御処理
-        Guard();
-
-        // 必殺処理
-        Ult();
     }
+
+    /// <summary>
+    /// インターバル処理
+    /// </summary>
+    private void IntervalUpdate()
+    {
+        // スライディングのインターバルタイマーを減らす
+        if(slidingInterval > 0)
+        {
+            slidingTimer -= Time.deltaTime;
+        }
+
+        // ディフェンスのインターバルタイマーを減らす
+        if(difenceTimer > 0)
+        {
+            difenceTimer -= Time.deltaTime;
+        }
+
+        // 必殺のインターバルタイマーを減らす
+        if(ultTimer > 0)
+        {
+            ultTimer -= Time.deltaTime;
+        }
+    }
+
+    #region 移動
 
     /// <summary>
     /// 移動関数
     /// </summary>
     private void Move()
     {
-        if (slidingNow)
+        if (!moveOK && state != State.Normal)
         {
-            return;
-        }
-        if (attackNow || guardNow || ultNow)
-        {
-            rb.velocity = Vector3.zero;
-            return;
+            return; // 移動不可
         }
         // 移動入力を取得
         Vector2 inputAxis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -230,63 +318,52 @@ public class CS_Player : MonoBehaviour
             // アニメーションを再生
             anim.SetFloat("Speed", speed);
         }
-        // Playerの向いている方向に進む
-        rb.velocity = moveForward.normalized * moveSpeed;
+        if (isWaterOnThe)
+        {
+            rb.velocity = moveForward.normalized * (moveSpeed * waterOnTheMoveSpeedCut);
+        }
+        else
+        {
+            // Playerの向いている方向に進む
+            rb.velocity = moveForward.normalized * moveSpeed;
+        }
     }
 
-    #region 回避
+    /// <summary>
+    /// 足音をながす
+    /// </summary>
+    private void AnimMoveAudio()
+    {
+        audio.PlayOneShot(SE_Move);
+    }
+
+    #endregion
+
+    #region スライディング
 
     /// <summary>
-    /// 回避関数
+    /// スライディング関数
     /// </summary>
     private void Sliding()
     {
-        // スライディングインターバルがあるとき減らす
-        if (slidingTimer > 0)
+        if (isWaterOnThe)
         {
-            slidingTimer -= Time.deltaTime;
+            rb.velocity = transform.forward * (slidingSpeed * waterOnTheMoveSpeedCut);
         }
-
-        // 他の行動中は何もしない
-        if (attackNow || guardNow || ultNow)
-        {
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !slidingNow && slidingTimer <= 0)
-        {
-            // スライディング中
-            slidingNow = true;
-            if (anim != null)
-            {
-                // スライディング再生
-                anim.SetTrigger("SlidingTrigger");
-            }
-            if (audio != null)
-            {
-                // スライディング音声
-                audio[0].PlayOneShot(SE_PlayerEscape);
-            }
-        }
-
-        // スライディング中
-        if (slidingNow)
+        else
         {
             rb.velocity = transform.forward * slidingSpeed;
         }
     }
 
     /// <summary>
-    /// スライディングアニメーションの終了処理
+    /// スライディングアニメーション終了の時に呼び出す
     /// </summary>
-    private void AnimSlidingFiled()
+    private void AnimSlidingFailed()
     {
-        // 速度をなくす
-        rb.velocity = Vector3.zero;
-        // インターバル
+        state = State.Normal;
         slidingTimer = slidingInterval;
-        // スライディングを終了
-        slidingNow = false;
+        //rb.velocity = Vector3.zero;
     }
 
     #endregion
@@ -294,224 +371,185 @@ public class CS_Player : MonoBehaviour
     #region 攻撃
 
     /// <summary>
-    /// 攻撃処理
+    /// 攻撃1の威力設定
     /// </summary>
-    private void Attack()
+    private void AnimAttackSetPower()
     {
-        if (attackTimer > 0)
-        {
-            attackTimer -= Time.deltaTime;
-        }
-        // 他の行動中ならなにもしない
-        if (slidingNow || guardNow || ultNow)
-        {
-            return;
-        }
-        if (Input.GetMouseButtonDown(0) && attackOk && attackTimer <= 0)
-        {
-            attackOk = false;
-            attackNow = true;
-            if (anim != null)
-            {
-                // 攻撃トリガー
-                anim.SetTrigger("AttackTrigger");
-            }
-        }
-
+        attackDamage = attackDamage == 0 ? attack1Power : 0;
     }
 
     /// <summary>
-    /// 攻撃アニメーション1
+    /// 攻撃アニメーション終了の時に呼び出す
     /// </summary>
-    private void AnimAttack1()
+    private void AnimAttack1Failied()
     {
-        isAttack = false;
-        damage = attack1Power;
-    }
-
-    /// <summary>
-    /// 攻撃アニメーションOk
-    /// </summary>
-    private void AnimAttackOk()
-    {
-        attackOk = true;
-    }
-
-    /// <summary>
-    /// 攻撃アニメーションの終了処理
-    /// </summary>
-    private void AnimAttack1Faild()
-    {
-        damage = 0;
+        state = State.Normal;
         attackTimer = attack1Interval;
-        attackNow = false;
-        isAttack = false;
+        attack2Ok = false;
     }
 
     /// <summary>
-    /// 攻撃アニメーション２
+    /// 攻撃２を発動可能にする
     /// </summary>
-    private void AnimAttack2()
+    private void AnimAttack2OK()
     {
-        isAttack = false;
-        damage = attack2Power;
+        attack2Ok = true;
     }
 
     /// <summary>
-    /// 攻撃2アニメーションの終了処理
+    /// 攻撃サウンドを鳴らす
     /// </summary>
-    private void AnimAttack2Faild()
+    private void AnimAttackAudio()
     {
-        damage = 0;
+        audio.PlayOneShot(SE_Attack);      // 効果音を鳴らす
+    }
+
+    /// <summary>
+    /// 攻撃2の威力設定
+    /// </summary>
+    private void AnimAttack2SetPower()
+    {
+        attackDamage = attackDamage == 0 ? attack2Power : 0;
+    }
+
+    /// <summary>
+    /// 攻撃2アニメーション終了の時に呼び出す
+    /// </summary>
+    private void AnimAttack2Failied()
+    {
+        state = State.Normal;
         attackTimer = attack2Interval;
-        attackNow = false;
-        attackOk = true;
-        isAttack = false;
     }
+
 
     #endregion
 
     #region 防御
 
-    /// <summary>
-    ///  防御処理
-    /// </summary>
-    private void Guard()
+    private void AnimDifenceStart()
     {
-        // ガードインターバルを減らす
-        if (gurdTimer > 0)
-        {
-            gurdTimer -= Time.deltaTime;
-        }
-        // 他の行動してたら何もしない
-        if (attackNow || slidingNow || ultNow)
-        {
-            return;
-        }
-        if (Input.GetMouseButtonDown(1) && !guardNow && gurdTimer <= 0)
-        {
-            // ガード中
-            guardNow = true;
-            if (anim != null)
-            {
-                // ガードアニメーション再生
-                anim.SetTrigger("GuardTrigger");
-            }
-        }
+        audio.PlayOneShot(SE_DifenceStart);
     }
 
     /// <summary>
-    /// ガードアニメーション終了処理
+    /// 防御中の設定
     /// </summary>
-    private void AnimGuardFailed()
+    private void SetDifence()
     {
-        guardNow = false;
-        gurdTimer = gurdInterval;
+        isDifence = isDifence == true ? false : true;
     }
+
+    private void AnimDifenceFailed()
+    {
+        difenceTimer = difenceInterval;
+        state = State.Normal;
+    }
+
     #endregion
 
     #region 必殺
 
     /// <summary>
-    /// 必殺処理
+    /// 必殺の威力設定
     /// </summary>
-    private void Ult()
+    private void AnimUltAttackSetPower()
     {
-        // インターバルがあった場合減らす
-        if (ultTimer > 0 && !ultNow)
-        {
-            ultTimer -= Time.deltaTime;
-        }
-
-        // 他の行動していた場合何もしない
-        if (slidingNow || attackNow || guardNow)
-        {
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && !ultNow && ultTimer <= 0)
-        {
-            // 必殺中
-            ultNow = true;
-            ultTimer = ultInterval;
-            if (anim != null)
-            {
-                anim.SetTrigger("UltTrigger");
-            }
-        }
+        attackDamage = attackDamage == 0 ? ultPower : 0;
     }
 
     /// <summary>
-    /// アニメーション必殺処理
-    /// </summary>
-    private void AnimUlt()
-    {
-        isAttack = false;
-        damage = ultPower;
-    }
-
-    /// <summary>
-    /// アニメーション必殺終了処理
+    /// 必殺アニメーション終了の時に呼び出す
     /// </summary>
     private void AnimUltFailed()
     {
-        damage = 0;
-        ultNow = false;
-        isAttack = false;
+        state = State.Normal;
+        ultTimer = ultInterval;
     }
+
     #endregion
+
+    // 後で消すエラー対策
+    public void Damage(float damage)
+    {
+
+    }
 
     /// <summary>
     /// ダメージ処理
     /// 攻撃した人に読んでもらう
     /// </summary>
     /// <param name="_damage">与えるダメージ</param>
-    public void Damage(float _damage)
+    public void ReceiveDamage(float _damage)
     {
-        // 無敵状態の場合無効
-        if (invincibleTimer > 0)
+        // 無敵だったら何もしない
+        if(isInvisible)
         {
             return;
         }
-        if (!guardNow)
-        {
-            if (audio != null || SE_PlayerReceiveDamage != null)
-            {
-                audio[0].PlayOneShot(SE_PlayerReceiveDamage);
-            }
 
-            // damage分Hpを減らす
-            hp -= _damage;
+        if (isDifence)
+        {
+            audio.PlayOneShot(SE_Difence);
+            // ガード中ダメージ半減
+            hp -= _damage * difenceDamageCut;
         }
         else
         {
-            if (audio != null || SE_PlayerGuard != null)
-            {
-                audio[0].PlayOneShot(SE_PlayerGuard);
-            }
-            hp -= _damage * defDamgeCut;
+            audio.PlayOneShot(SE_Damage);
+            isInvisible = true;
+            hp -= _damage;
         }
-        // 無敵時間を入れる
-        invincibleTimer = invincibleTime;
 
-        if (guardNow || ultNow)
+        if(hp <= 0)
+        {
+            hp = 0;
+        }
+
+        if(state == State.Difence || state == State.Ult)
         {
             return;
         }
+        state = State.Damage;
+        rb.velocity = Vector3.zero;
+        anim.SetTrigger("DamageTrigger");
+    }
 
-        if (anim != null)
+    /// <summary>
+    /// ダメージアニメーション終了の時に呼び出す
+    /// </summary>
+    private void AnimDamageFailed()
+    {
+        state = State.Normal;
+        isInvisible = false;
+        attack2Ok = false;
+        attackDamage = 0;
+    }
+
+
+    /// <summary>
+    /// コリジョンと接触したとき
+    /// </summary>
+    /// <param name="other"></param>
+    private void OnTriggerEnter(Collider other)
+    {
+        // 水たまり
+        if(other.gameObject.tag == "")
         {
-            // アニメーションを再生
-            anim.SetTrigger("HitTrigger");
+            isWaterOnThe = true;
         }
     }
 
-    private void AnimDamgeFailed()
+    /// <summary>
+    /// コリジョンと離れたとき
+    /// </summary>
+    /// <param name="other"></param>
+    private void OnTriggerExit(Collider other)
     {
-        slidingNow = false;
-        attackNow = false;
-        guardNow = false;
-        ultNow = false;
-        attackOk = true;
+        // 水たまり
+        if (other.gameObject.tag == "")
+        {
+            isWaterOnThe = false;
+        }
     }
 }
+
