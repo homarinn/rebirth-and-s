@@ -5,8 +5,14 @@ using UnityEngine;
 
 public class CS_Enemy1Puddle : MonoBehaviour
 {
-    [Header("水たまり表面のコライダー")]
-    [SerializeField] BoxCollider surfaceCollider;
+    //[Header("水たまり表面のコライダー")]
+    //[SerializeField] BoxCollider surfaceCollider;
+
+    [Header("水溜まりを生成するY座標")]
+    [SerializeField] float createPositionY;
+
+    [Header("水溜まり判定を取るプレイヤーの最大Y座標")]
+    [SerializeField] float maxCollisionY;
 
     [Header("存在できる時間（秒）")]
     [SerializeField] float existTime;
@@ -37,22 +43,25 @@ public class CS_Enemy1Puddle : MonoBehaviour
     //実験用2
     Material material;
     int renderQueue;
-    float boundaryCircleRadius;
 
     //セッター
     public int SetRenderQueue
     {
         set { renderQueue = value; }
     }
-    public float SetBoundaryCircleRadius
+
+    private void Awake()
     {
-        set { boundaryCircleRadius = value; }
+        //生成位置(Y)を設定
+        transform.position = new Vector3(
+            transform.position.x,
+            createPositionY,
+            transform.position.z);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
         elapsed = 0.0f;
         elapsedForDisappear = 0.0f;
         isDisappearing = false;
@@ -70,57 +79,6 @@ public class CS_Enemy1Puddle : MonoBehaviour
         elapsedForExpansion = 0.0f;
 
         material = GetComponent<MeshRenderer>().material;
-
-        //実験用2
-        Vector2 direction = new Vector2(
-            transform.position.x,
-            transform.position.z);
-        float distance = direction.sqrMagnitude;
-        Debug.Log(distance);
-
-        Vector3 newPos = new Vector3(transform.position.x, 0.0f, transform.position.z);
-        float radiusDistance = boundaryCircleRadius * boundaryCircleRadius;
-        Debug.Log("RadiusDistance = " + radiusDistance);
-        if (distance > radiusDistance * 0.65f)
-        {
-            newPos.y = 0.35f;
-        }
-        else if(distance > radiusDistance * 0.3f)
-        {
-            newPos.y = 0.25f;
-        }
-        else if(distance > radiusDistance * 0.15f)
-        {
-            newPos.y = 0.22f;
-        }
-        //else if(distance > radiusDistance * 0.4f)
-        //{
-        //    newPos.y = 0.2f;
-        //}
-        //else if(distance > radiusDistance * 0.3f)
-        //{
-        //    newPos.y = 0.2f;
-        //}
-        //else if(distance > radiusDistance * 0.2f)
-        //{
-        //    newPos.y = 0.15f;
-        //}
-        else
-        {
-            newPos.y = 0.12f;
-            //newPos.y = 0.08f;
-        }
-        transform.position = newPos;
-        //if (distance > 480.0f)
-        //{
-        //    newPos.y = 0.35f;
-        //    //Vector3 newPos = new Vector3(transform.position.x, 0.35f, transform.position.z);
-        //}
-        //else if(distance > 300.0f)
-        //{
-        //    newPos.y = 0.27f;
-        //}
-        //transform.position = newPos;
     }
 
     // Update is called once per frame
@@ -142,6 +100,7 @@ public class CS_Enemy1Puddle : MonoBehaviour
         //半透明オブジェクトのちらつきを無くすためにRenderQueueを個別に設定
         if (renderQueue != 0 && material.renderQueue != renderQueue)
         {
+            //material.renderQueue = 3000;
             material.renderQueue = renderQueue;
         }
     }
@@ -199,10 +158,17 @@ public class CS_Enemy1Puddle : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player")
-        {
-            Debug.Log("プレイヤー侵入");
-        }
+        //プレイヤー以外は判定しない
+        if(other.gameObject.tag != "Player") { return; }
+
+        //Debug.Log("プレイヤー侵入");
+
+        //プレイヤーの高さが一定以下だと判定を取る
+        //if (other.gameObject.transform.position.y <= maxCollisionY)
+        //{
+        //    Debug.Log("プレイヤー侵入");
+        //    //Debug.Log(other.gameObject.transform.position.y);
+        //}
     }
 
     //private void OnTriggerStay(Collider other)

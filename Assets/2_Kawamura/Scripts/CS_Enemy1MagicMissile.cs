@@ -21,6 +21,9 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     [Header("着弾するまでの時間（秒、曲線軌道用）")]
     [SerializeField] float period;
 
+    //[Header("水溜まりを生成するY座標")]
+    //[SerializeField] float puddleCreatePositionY;
+
 
     CS_Enemy1Puddle puddleObject;    //水溜り
     Transform playerTransform;
@@ -46,17 +49,31 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     //実験用2
     int magicMissileCount;
     Vector3[] curveDirection = new Vector3[3];
-    float rotateSpeed;
+    //float rotateSpeed;
 
     //実験用3
     int puddleRenderQueue;
 
-    float boudaryCircleRadius;
-
     float addAngle;
 
-    float scaleRatioBasedOnY;
-    
+    Vector3 scaleRatioBasedOnY;
+
+    bool canCreatePuddle;  //水溜まりを生成できるか？
+
+    //float hitBackTime = 0.0f;
+
+    Transform enemyTransform;
+
+    //スケール大きくする用
+    Vector3 targetScaleForCreate;
+    float elapsedTimeForScaleUp;
+    float timeScaleUpCompletely;
+    bool isFinishScaleUp;
+
+    bool isCollisionPlayer;
+
+    string magicMissileType;  //弾の種類
+
 
     //ゲッターセッター
     public bool GetSetIsCanFire
@@ -85,13 +102,36 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     {
         set { puddleRenderQueue = value; }
     }
-    public float SetBoundaryCircleRadius
-    {
-        set { boudaryCircleRadius = value; }
-    }
-    public float SetScaleRatioBasedOnY
+    public Vector3 SetScaleRatioBasedOnY
     {
         set { scaleRatioBasedOnY = value; }
+    }
+
+    public bool SetCanCreatePuddle
+    {
+        set { canCreatePuddle = value; }
+    }
+    public Vector3 SetTargetScaleForCreate
+    {
+        set { targetScaleForCreate = value; }
+    }
+    public float SetTimeScaleUpCompletely
+    {
+        set { timeScaleUpCompletely = value; }
+    }
+    public string SetMagicMissileType
+    {
+        set
+        {
+            if(magicMissileType == null)
+            {
+                magicMissileType = value;
+            }
+        }
+    }
+    public string GetMagicMissileType
+    {
+        get { return magicMissileType; }
     }
 
     // Start is called before the first frame update
@@ -110,7 +150,7 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
         //実験用
         isMove = false;
         isHitBack = false;
-        rotateSpeed = 10.0f;
+        //rotateSpeed = 10.0f;
 
         curveDirection[0] = new Vector3(0, 15.0f, 0);
         curveDirection[1] = new Vector3(0.0f, 5.0f, -20.0f);
@@ -121,27 +161,57 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
         //float randomZ = Random.Range(-20.0f, 20.0f);
         //velocity = new Vector3(randomX, randomY, randomZ);
 
-        //親のスケールを反映しない
-        Vector3 parentLossyScale = transform.parent.lossyScale;
-        float scaleY = transform.localScale.y / parentLossyScale.y;
-        float newScaleXZ = scaleY * (scaleRatioBasedOnY * 2.0f);  //2.0 = 調整
-        transform.localScale = new Vector3(
-            newScaleXZ,
-            scaleY,
-            newScaleXZ);
+        ////親のスケールを反映しないYを計算
+        //Vector3 parentLossyScale = transform.parent.lossyScale;
+        //float scaleY = transform.localScale.y / parentLossyScale.y;
+        ////XZが同じ比率になるようにYを基準とした比率をYにかけて代入
+        //float newScaleX = scaleY * (scaleRatioBasedOnY.x);  //2.0 = 調整
+        //float newScaleZ = scaleY * (scaleRatioBasedOnY.z);  //2.0 = 調整
+        //transform.localScale = new Vector3(
+        //    newScaleX,
+        //    scaleY,
+        //    newScaleZ);
+
+
+        //Vector3 parentLossyScale = transform.parent.lossyScale;
+        //float scaleY = transform.localScale.y / parentLossyScale.y;
+        ////XZが同じ比率になるようにYを基準とした比率をYにかけて代入
+        //float newScaleXZ = scaleY * (scaleRatioBasedOnY * 2.0f);  //2.0 = 調整
+        //transform.localScale = new Vector3(
+        //    newScaleXZ,
+        //    scaleY,
+        //    newScaleXZ);
 
         //弾の先端を前にする
         Transform parent = transform.parent;
         addAngle = 360.0f - transform.parent.transform.localEulerAngles.y;
-        transform.rotation = Quaternion.Euler(90f, 0f, addAngle);
+        transform.rotation = Quaternion.Euler(90f, -90.0f, addAngle);
+        //transform.rotation = Quaternion.Euler(90f, 0f, addAngle);  //元のMagicMissile用
 
 
+
+        canCreatePuddle = true;
         //transform.rotation = Quaternion.Euler(0f, 0f, 90.0f);
+
+        enemyTransform = parent;
+
+        elapsedTimeForScaleUp = 0.0f;
+        isFinishScaleUp = false;
+
+        isCollisionPlayer = false;
+
+        Debug.Log("type = " + magicMissileType);
     }
 
     // Update is called once per frame
     void Update()
     {
+        //スケールを徐々に大きくする
+        if (!isFinishScaleUp)
+        {
+            ScaleUp();
+        }
+
         //プレイヤーに向けて弾を発射する
         if (isCanFire)
         {
@@ -164,10 +234,18 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             //プレイヤーに向けて発射（直線軌道）
             else
             {
-                direction = playerTransform.position - transform.position;
+                Vector3 target = new Vector3(
+                    playerTransform.position.x,
+                    playerTransform.position.y + 0.2f,
+                    playerTransform.position.z);
+
+                direction = target - transform.position;
+                //direction = playerTransform.position - transform.position;
                 direction.Normalize();
                 velocity = direction * moveSpeed;
                 myRigidbody.velocity = velocity;
+
+                transform.right = velocity;
 
                 isCanFire = false;
                 isMove = true;
@@ -199,15 +277,52 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
                 }
             }
 
+            //hitBackTime += Time.deltaTime;
+            //if (!isHitBack && hitBackTime > 0.5f)
+            //{
+            //    Vector3 to = new Vector3(
+            //        enemyTransform.position.x,
+            //        enemyTransform.position.y + 3.0f,
+            //        enemyTransform.position.z);
+
+            //    direction = to - transform.position;
+            //    direction.Normalize();
+            //    velocity = direction * moveSpeed;
+            //    myRigidbody.velocity = velocity;
+
+            //    Debug.Log("跳ね返し");
+            //    //myRigidbody.velocity *= -1.0f;
+            //    isHitBack = true;
+            //    //transform.right = myRigidbody.velocity;
+            //}
+
             //進行方向を向いていないときだけ進行方向を向かせる
-            if(transform.up != velocity)
-            //if(transform.forward != velocity)
+            //if(transform.up != velocity)
+            if (transform.right != myRigidbody.velocity)
             {
-                transform.up =
-                    Vector3.Slerp(transform.up, velocity, Time.deltaTime * rotateSpeed);
-                //transform.forward =
-                //    Vector3.Slerp(transform.forward, velocity, Time.deltaTime * rotateSpeed);
+                transform.right = myRigidbody.velocity;
+
+                //transform.right =
+                //    Vector3.Slerp(transform.right, myRigidbody.velocity, Time.deltaTime * rotateSpeed);
             }
+            //if (transform.right != velocity)
+            //{
+            //    //transform.up =
+            //    //    Vector3.Slerp(transform.up, velocity, Time.deltaTime * rotateSpeed);
+            //    transform.right =
+            //        Vector3.Slerp(transform.right, velocity, Time.deltaTime * rotateSpeed);
+            //}
+
+
+            ////進行方向を向いていないときだけ進行方向を向かせる
+            //if(transform.up != velocity)
+            ////if(transform.forward != velocity)
+            //{
+            //    transform.up =
+            //        Vector3.Slerp(transform.up, velocity, Time.deltaTime * rotateSpeed);
+            //    //transform.forward =
+            //    //    Vector3.Slerp(transform.forward, velocity, Time.deltaTime * rotateSpeed);
+            //}
         }
 
 
@@ -220,7 +335,7 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             //puddleObject.transform.localScale = Vector3.Lerp(puddleStartScale, puddleTargetScale, t);
 
             //弾の消去
-            if(t == 1)
+            if (t == 1)
             {
                 Destroy(gameObject);
             }
@@ -234,19 +349,34 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     }
 
     /// <summary>
+    /// 弾を徐々に大きくする
+    /// </summary>
+    void ScaleUp()
+    {
+        elapsedTimeForScaleUp += Time.deltaTime;
+        float t = Mathf.Clamp01(elapsedTimeForScaleUp / timeScaleUpCompletely);
+        transform.localScale = Vector3.Lerp(Vector3.zero, targetScaleForCreate, t);
+
+        if(t >= 1)
+        {
+            transform.localScale = targetScaleForCreate;
+            isFinishScaleUp = true;
+        }
+    }
+
+    /// <summary>
     /// 水溜りを生成する
     /// </summary>
     void CreatePuddle()
     {
-        startScale = transform.localScale;
-        Vector3 position = new Vector3(transform.position.x, 0.34f, transform.position.z);
+        //startScale = transform.localScale;
+        Vector3 position = new Vector3(
+            transform.position.x, 0.0f, transform.position.z);
         puddleObject = Instantiate(puddle, position, Quaternion.identity);
         //puddleTargetScale = puddleObject.transform.localScale;
         //puddleObject.transform.localScale = new Vector3(0, 0, 0);
 
         puddleObject.SetRenderQueue = puddleRenderQueue;
-        puddleObject.SetBoundaryCircleRadius = boudaryCircleRadius;
-        //Debug.Log(puddleRenderQueue);
     }
 
     void InitializeVelocity()
@@ -267,18 +397,39 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        //if (isCollisionStage) { return; }
+
+        //発射するまで当たり判定しない
+        if (!isMove)
         {
-            Destroy(gameObject);
+            return;
         }
 
-        if(other.gameObject.tag == "Puddle")
+        //プレイヤーに当たっていたら判定しない(2回当たるバグ対策)
+        if (isCollisionPlayer)
         {
+            return;
+        }
+
+        //水溜まり生成可能ならプレイヤーとの当たり判定しない
+        //プレイヤーに当たったらHPを減らして弾を消す
+        if (!isCollisionStage && other.gameObject.tag == "Player")
+        {
+            //HP減らす
+            //var script = other.gameObject.GetComponent<CS_Player>();
+            //script.ReceiveDamage(attackPower);
+            Debug.Log("プレイヤーへのダメージ");
+            isCollisionPlayer = true;
+
+            //エフェクト出す？
+
+
+            //消す
             Destroy(gameObject);
         }
 
         //敵に接触したら敵のHPを減らす（プレイヤーが跳ね返したときのみ）
-        if(isHitBack && other.gameObject.tag == "Enemy")
+        if (isHitBack && other.gameObject.tag == "Enemy")
         {
             var script = other.gameObject.GetComponent<CS_Enemy1>();
             script.ReduceHp(attackPower);
@@ -286,20 +437,93 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //ステージに接触したら水溜りを生成
-        if (!isCollisionStage && other.gameObject.tag == "Stage")
+        //水溜まり外でステージに接触したら水溜りを生成
+        if (!isCollisionStage && canCreatePuddle && 
+            other.gameObject.tag == "Stage")
         {
             if (puddleObject == null)
             {
                 isCollisionStage = true;
+                startScale = transform.localScale;
                 CreatePuddle();
+                Debug.Log("ステージに当たった");
             }
-            //isCollisionStage = true;
-            //startScale = transform.localScale;
-            //Vector3 position = new Vector3(transform.position.x, 0.2f, transform.position.z);
-            //puddleObject = Instantiate(puddle, position, Quaternion.identity);
-            //puddleTargetScale = puddleObject.transform.localScale;
-            //puddleObject.transform.localScale = new Vector3(0, 0, 0);
         }
+
+        //水溜まり内でステージに接触したら水溜まりは生成しない
+        if (!isCollisionStage && !canCreatePuddle &&
+            other.gameObject.tag == "Stage")
+        {
+            isCollisionStage = true;
+            startScale = transform.localScale;
+            Debug.Log("水溜まりに当たった");
+        }
+
     }
+
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if(other.gameObject.tag == "Puddle")
+    //    {
+    //        Debug.Log("水溜まりを出た");
+    //        isExitPuddleRange = true;
+    //    }
+    //}
+
+
+
+
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    //if (isCollisionStage) { return; }
+
+    //    if (other.gameObject.tag == "Player")
+    //    {
+    //        Destroy(gameObject);
+    //    }
+
+    //    if (isExitPuddleRange && other.gameObject.tag == "Puddle")
+    //    {
+    //        isExitPuddleRange = false;
+    //        //Destroy(gameObject);
+    //    }
+
+    //    //敵に接触したら敵のHPを減らす（プレイヤーが跳ね返したときのみ）
+    //    if (isHitBack && other.gameObject.tag == "Enemy")
+    //    {
+    //        var script = other.gameObject.GetComponent<CS_Enemy1>();
+    //        script.ReduceHp(attackPower);
+
+    //        Destroy(gameObject);
+    //    }
+
+    //    //水溜まり外でステージに接触したら水溜りを生成
+    //    if (!isCollisionStage && isExitPuddleRange && 
+    //        other.gameObject.tag == "Stage")
+    //    {
+    //        if (puddleObject == null)
+    //        {
+    //            isCollisionStage = true;
+    //            startScale = transform.localScale;
+    //            CreatePuddle();
+    //        }
+    //    }
+
+    //    if (!isCollisionStage && other.gameObject.tag == "Stage")
+    //    {
+    //        Debug.Log("水溜まり範囲内で当たった");
+    //        isCollisionStage = true;
+    //        startScale = transform.localScale;
+    //    }
+    //}
+
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if(other.gameObject.tag == "Puddle")
+    //    {
+    //        Debug.Log("水溜まりを出た");
+    //        isExitPuddleRange = true;
+    //    }
+    //}
 }
