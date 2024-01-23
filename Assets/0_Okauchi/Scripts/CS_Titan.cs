@@ -155,6 +155,22 @@ public class CS_Titan : MonoBehaviour
     [SerializeField, Header("SE：突進の衝突")]
     private AudioSource clashSE;
 
+    //--------------------
+    //エフェクト
+    //--------------------
+    [SerializeField, Header("溜めエフェクト（地面から出てるやつ）")]
+    private GameObject chargeEffectGround;
+    [SerializeField, Header("溜めエフェクト（シールドっぽいやつ）")]
+    private GameObject chargeEffectShield;
+    [SerializeField, Header("突進エフェクト（衝撃波っぽいやつ）")]
+    private GameObject rushEffect;
+    [SerializeField, Header("突進エフェクトの生成y座標")]
+    private float rushEffectPositionY;
+    [SerializeField, Header("突進エフェクトの生成時間間隔")]
+    private float rushEffectGeneratingSpan;
+    private float rushEffectTimeCount;
+
+
     private void Awake()
     {
         hp = hpMax;
@@ -272,6 +288,8 @@ public class CS_Titan : MonoBehaviour
         //突進の威力と速度を元に戻しておく
         rushPower = rushDefaultPower;
         rushSpeedLimit = rushDefaultSpeed;
+        //エフェクト生成
+        GenerateChargeEffect(chargeTime);
     }
     private void Charge()
     {
@@ -317,6 +335,7 @@ public class CS_Titan : MonoBehaviour
         //速度をリセット
         rushSpeed = 0.0f;
         rushState = RushState.SPEED_UP;
+        rushEffectTimeCount = 0;
     }
     private void Rush()
     {
@@ -340,6 +359,13 @@ public class CS_Titan : MonoBehaviour
                     float speedDownTime = Mathf.Pow(rushSpeed / rushSpeedDownCoefficient, 1.0f / 3.0f);
                     rushTimeCount = -speedDownTime;
                     rushState = RushState.SPEED_DOWN;
+                }
+                //エフェクト生成
+                rushEffectTimeCount -= Time.deltaTime;
+                if (rushEffectTimeCount <= 0.0f)
+                {
+                    GenerateRushEffect();
+                    rushEffectTimeCount = rushEffectGeneratingSpan;
                 }
                 break;
             case RushState.SPEED_DOWN:
@@ -365,7 +391,6 @@ public class CS_Titan : MonoBehaviour
             {
                 //停止する
                 StartStop();
-                return;
             }
             else
             {
@@ -518,6 +543,72 @@ public class CS_Titan : MonoBehaviour
         }
     }
 
+    //----------------------------------
+    //エフェクトを生成する
+    //----------------------------------
+    private void GenerateChargeEffect(float _chargeTime)
+    {
+        //地面から出てるやつ
+        //生成
+        GameObject effectGround = Instantiate(chargeEffectGround, transform.position, Quaternion.identity) as GameObject;
+        //子供取得
+        int childCount = effectGround.transform.childCount;
+        ParticleSystem[] psGround = new ParticleSystem[childCount];
+        //時間変更
+        for(int i = 0; i < childCount; i++)
+        {
+            psGround[i] = effectGround.transform.GetChild(i).gameObject.GetComponent<ParticleSystem>();
+            psGround[i].Stop();
+            var main = psGround[i].main;
+            main.duration = _chargeTime;
+            psGround[i].Play();
+        }
+
+        //シールドっぽいやつ
+        GameObject effectShield = Instantiate(chargeEffectShield, transform.position, Quaternion.identity) as GameObject;
+        childCount = effectShield.transform.childCount;
+        ParticleSystem[] psShield = new ParticleSystem[childCount + 1];
+        psShield[0] = effectShield.GetComponent<ParticleSystem>();
+        for (int i = 1; i < childCount + 1; i++)
+        {
+            psShield[i] = effectShield.transform.GetChild(i - 1).gameObject.GetComponent<ParticleSystem>();
+        }
+        //時間変更
+        for (int i = 0; i < childCount + 1; i++)
+        {
+            psShield[i].Stop();
+            var main = psShield[i].main;
+            if(i == 0)
+            {
+                main.startLifetime = _chargeTime - 0.2f;
+            }
+            else if(i == childCount)
+            {
+                main.duration = _chargeTime - 1.0f;
+            }
+            else
+            {
+                main.startLifetime = _chargeTime;
+            }
+            psShield[i].Play();
+        }
+    }
+
+    private void GenerateRushEffect()
+    {
+        //生成
+        Vector3 generatingPosition = new Vector3(transform.position.x, rushEffectPositionY, transform.position.z);
+        float generatingRotationY = transform.rotation.eulerAngles.y;
+        GameObject effect = Instantiate(rushEffect, generatingPosition, Quaternion.identity) as GameObject;
+        //角度調整
+        ParticleSystem ps = effect.GetComponent<ParticleSystem>();
+        ps.Stop();
+        var main = ps.main;
+        main.startRotationY = generatingRotationY;
+        main.startRotationYMultiplier = generatingRotationY;
+        ps.Play();
+    }
+
     //---------------------------------
     //プレイヤーに衝突した際の処理
     //---------------------------------
@@ -531,7 +622,6 @@ public class CS_Titan : MonoBehaviour
             clashSE.Play();
         }
     }
-
 
     //--------------------------------------
     //その他の関数

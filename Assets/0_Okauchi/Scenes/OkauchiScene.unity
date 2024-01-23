@@ -860,6 +860,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
+      propertyPath: rushEffect
+      value: 
+      objectReference: {fileID: 2893964678148829097, guid: 429e197ccc3dcd64d9881db8740cfbee,
+        type: 3}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
       propertyPath: rushCountMax
       value: 6
       objectReference: {fileID: 0}
@@ -885,8 +891,25 @@ PrefabInstance:
       objectReference: {fileID: 1728908368}
     - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
+      propertyPath: chargeEffectGround
+      value: 
+      objectReference: {fileID: 1369818264248206858, guid: 32b34a20c23a2f6459b88867179b29ce,
+        type: 3}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: chargeEffectShield
+      value: 
+      objectReference: {fileID: 8049982260223953395, guid: 4d3dc4ee01cfce2488a0f7d184f8c001,
+        type: 3}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
       propertyPath: damageCutPercentage
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: rushEffectPositionY
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
@@ -897,6 +920,11 @@ PrefabInstance:
         type: 3}
       propertyPath: rushSpeedUpCoefficient
       value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
+        type: 3}
+      propertyPath: rushEffectGeneratingSpan
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4760256126741868373, guid: a1de378714d8efb4eb4b48f7b213b0db,
         type: 3}
