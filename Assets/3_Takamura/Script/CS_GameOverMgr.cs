@@ -22,6 +22,9 @@ public class CS_GameOverMgr : MonoBehaviour
     [Header("フェード時間(秒)")]
     float fadeSpeed = 1.5f;
 
+    [SerializeField, Header("GameOverBGM")]
+    AudioSource gameoverBGM;
+
     //! @brief 次のシーン名
     string nextScene = "";
 
