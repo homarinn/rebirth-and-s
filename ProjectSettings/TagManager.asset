@@ -9,6 +9,7 @@ TagManager:
   - PlayerCamera
   - Stage
   - Puddle
+  - MagicMissile
   layers:
   - Default
   - TransparentFX
