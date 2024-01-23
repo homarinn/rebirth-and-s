@@ -21,6 +21,11 @@ public class CS_StageBoundary : MonoBehaviour
 
     private const int characterNumber = 2;  //§ŒÀ‚·‚é‘ÎÛ‚Ì”
 
+    public float GetBoundaryCircleRadius
+    {
+        get { return boundaryCircleRadius; }
+    }
+
     // Start is called before the first frame update
     void Start()
     {

@@ -20,14 +20,16 @@ public class CS_UIControl : MonoBehaviour
     [SerializeField, Header("EnemyHPバー")]
     Image cpEnemyHP;
     //! @brief 敵のMaxHP
-    float enemyHpMax;
+    [SerializeField]float enemyHpMax;
     //! @brief 敵のHP
-    float enemyHp;
+    [SerializeField]float enemyHp;
 
     //! @brief 巨人のスクリプト格納
     CS_Titan csTitan = null;
     //! @brief シヴァ
+    CS_Enemy1 csEnemy01 = null;
     //! @brief Playerミラー
+    CS_EnemyPlayer csEnPlayer = null;
 
 
     void Start()
@@ -44,7 +46,17 @@ public class CS_UIControl : MonoBehaviour
         if(csTitan != null)
         {
             enemyHpMax = csTitan.Hp;
-        }       
+        }
+        csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
+        if (csEnemy01 != null)
+        {
+            enemyHpMax = csEnemy01.GetHp;
+        }
+        csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
+        if(csEnPlayer != null)
+        {
+            enemyHpMax = 100;
+        }
     }
 
     // Update is called once per frame
@@ -71,6 +83,14 @@ public class CS_UIControl : MonoBehaviour
         if (csTitan != null)
         {
             enemyHp = csTitan.Hp;
+        }
+        if(csEnemy01 != null)
+        {
+            enemyHp = csEnemy01.GetHp;
+        }
+        if(csEnPlayer != null)
+        {
+            enemyHp = 100;
         }
     }
     //! @brief PlayerHPバー操作
