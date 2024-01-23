@@ -21,6 +21,9 @@ public class CS_GameMgr : MonoBehaviour
     [SerializeField, Header("フェード時間(秒)")]
     float fadeSpeed = 1.5f;
 
+    [SerializeField, Header("セリフのゲームオブジェクト")]
+    GameObject goDialogue;
+
     [SerializeField,Header("Playerスクリプト")]
     CS_Player csPlayer;
     [SerializeField, Header("EnemyのPrefab")]
@@ -71,6 +74,7 @@ public class CS_GameMgr : MonoBehaviour
             case eState.Game:
                 if(stageBGM != null) stageBGM.Play();
                 if(csTitan != null)csTitan.StartMoving();
+                goDialogue.GetComponent<CS_Dialogue>().BActive = true;
                 break;
             case eState.FadeShow:
                 if (stageBGM != null) stageBGM.Stop();
