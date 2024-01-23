@@ -17,6 +17,7 @@ public partial class CS_Player : MonoBehaviour
         Sliding,
         Attack,
         Difence,
+        Damage,
         Ult
     }
     State state;
@@ -43,12 +44,32 @@ public partial class CS_Player : MonoBehaviour
     // 攻撃威力
     [SerializeField, Header("攻撃１の威力")]
     private float attack1Power = 0;
+    public float Attack1Power
+    {
+        get
+        {
+            return attack1Power;
+        }
+    }
     [SerializeField, Header("攻撃2の威力")]
     private float attack2Power = 0;
+    public float Attack2Power
+    { 
+        get
+        {
+            return attack2Power;
+        }
+    }    
     private float attackDamage = 0;
+    public float AttackDamage
+    {
+        get
+        {
+            return attackDamage;
+        }
+    }
 
-    // 攻撃インターバル
-    [SerializeField,Header("攻撃１インターバル")]
+    [SerializeField, Header("攻撃1インターバル")]
     private float attack1Interval = 0;
     [SerializeField, Header("攻撃2インターバル")]
     private float attack2Interval = 0;
@@ -58,8 +79,18 @@ public partial class CS_Player : MonoBehaviour
     private bool attack2Ok = false;
 
     // 必殺
-    [SerializeField, Header("必殺技の威力(0～1)")]
+    [SerializeField, Header("必殺技の威力")]
     private float ultPower = 0;
+    public float UltPower
+    {
+        get
+        {
+            return ultPower;
+        }
+    }
+    [SerializeField, Header("必殺技のインターバル")]
+    private float ultInterval = 0;
+    private float ultTimer = 0;
 
     // 防御
     [SerializeField, Header("防御インターバル")]
@@ -70,13 +101,12 @@ public partial class CS_Player : MonoBehaviour
     [SerializeField]
     private bool isDifence = false;
 
-    private float ultTimer = 0;
 
     [SerializeField, Header("HPの最大値")]
     private float maxHP = 0;    // 最大HP
     private float hp;           // 現在のHP
     private bool isInvisible = false;
-
+    
     private Transform cameraTransform = null;       // カメラの位置
 
     // コンポーネント
@@ -150,7 +180,7 @@ public partial class CS_Player : MonoBehaviour
         // HPを設定
         hp = maxHP;
         // 必殺インターバル設定
-        //ultTimer = ultInterval;
+        ultTimer = ultInterval;
     }
 
     /// <summary>
@@ -192,6 +222,13 @@ public partial class CS_Player : MonoBehaviour
                 {
                     state = State.Attack;
                     anim.SetTrigger("AttackTrigger");  // アニメーションを再生
+
+                    //var cs_LookCollision = GetComponentInChildren<CS_LookCollision>();
+                    //if(cs_LookCollision.IsHit)
+                    //{
+                    //    var pos = Vector3.Scale(cs_LookCollision.EnemyPos, new Vector3(1, 0, 1));
+                    //    transform.rotation = Quaternion.LookRotation(pos);
+                    //}
                 }
 
                 // 防御入力
@@ -201,6 +238,13 @@ public partial class CS_Player : MonoBehaviour
                     anim.SetTrigger("GuardTrigger");  // アニメーションを再生
                 }
 
+                // 必殺入力
+                if(Input.GetKeyDown(KeyCode.Space) && ultTimer <= 0)
+                {
+                    state = State.Ult;
+                    anim.SetTrigger("UltTrigger");
+                }
+                
                 // 移動処理
                 Move();
                 break;
@@ -231,9 +275,16 @@ public partial class CS_Player : MonoBehaviour
             slidingTimer -= Time.deltaTime;
         }
 
+        // ディフェンスのインターバルタイマーを減らす
         if(difenceTimer > 0)
         {
             difenceTimer -= Time.deltaTime;
+        }
+
+        // 必殺のインターバルタイマーを減らす
+        if(ultTimer > 0)
+        {
+            ultTimer -= Time.deltaTime;
         }
     }
 
@@ -312,7 +363,7 @@ public partial class CS_Player : MonoBehaviour
     {
         state = State.Normal;
         slidingTimer = slidingInterval;
-        rb.velocity = Vector3.zero;
+        //rb.velocity = Vector3.zero;
     }
 
     #endregion
@@ -396,6 +447,33 @@ public partial class CS_Player : MonoBehaviour
 
     #endregion
 
+    #region 必殺
+
+    /// <summary>
+    /// 必殺の威力設定
+    /// </summary>
+    private void AnimUltAttackSetPower()
+    {
+        attackDamage = attackDamage == 0 ? ultPower : 0;
+    }
+
+    /// <summary>
+    /// 必殺アニメーション終了の時に呼び出す
+    /// </summary>
+    private void AnimUltFailed()
+    {
+        state = State.Normal;
+        ultTimer = ultInterval;
+    }
+
+    #endregion
+
+    // 後で消すエラー対策
+    public void Damage(float damage)
+    {
+
+    }
+
     /// <summary>
     /// ダメージ処理
     /// 攻撃した人に読んでもらう
@@ -431,6 +509,8 @@ public partial class CS_Player : MonoBehaviour
         {
             return;
         }
+        state = State.Damage;
+        rb.velocity = Vector3.zero;
         anim.SetTrigger("DamageTrigger");
     }
 
@@ -441,6 +521,35 @@ public partial class CS_Player : MonoBehaviour
     {
         state = State.Normal;
         isInvisible = false;
+        attack2Ok = false;
+        attackDamage = 0;
+    }
+
+
+    /// <summary>
+    /// コリジョンと接触したとき
+    /// </summary>
+    /// <param name="other"></param>
+    private void OnTriggerEnter(Collider other)
+    {
+        // 水たまり
+        if(other.gameObject.tag == "")
+        {
+            isWaterOnThe = true;
+        }
+    }
+
+    /// <summary>
+    /// コリジョンと離れたとき
+    /// </summary>
+    /// <param name="other"></param>
+    private void OnTriggerExit(Collider other)
+    {
+        // 水たまり
+        if (other.gameObject.tag == "")
+        {
+            isWaterOnThe = false;
+        }
     }
 }
 
