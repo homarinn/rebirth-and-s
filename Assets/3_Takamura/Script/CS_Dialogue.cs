@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Text.RegularExpressions;
 
 public class CS_Dialogue : MonoBehaviour
 {
@@ -22,10 +23,24 @@ public class CS_Dialogue : MonoBehaviour
 
     [SerializeField, Header("次の文字を表示するまでの時間(秒)")]
     float delayDuration;
+    [SerializeField, Header("1文表示完了後の待機時間(秒)")]
+    float waitSecond;
     //! @brief コルーチン
     Coroutine showCoroutine;
     //! @brief 一文表示終了フラグ
     bool bFinishString;
+    [SerializeField, Header("自動送り機能")]
+    bool bAuto;
+
+    //! @brief セリフ表示開始フラグ
+    bool bActive;
+    public bool BActive
+    {
+        get { return bActive; }
+        set { bActive = true; }
+    }
+    //! @brief 一度だけ処理を行うフラグ
+    bool bOnce = false;
 
     // Start is called before the first frame update
     void Start()
@@ -38,9 +53,16 @@ public class CS_Dialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && bFinishString == true)
+        if (bActive == false) return;
+        bool tmp = bAuto ? (bFinishString == true) : ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && (bFinishString == true));
+        if(bOnce == false)
         {
-            if(textIndex < splitText.Length)
+            tmp = true;
+            bOnce = true;
+        }
+        if (tmp)
+        {
+            if(textIndex < splitText.Length - 1)
             {
                 if (!string.IsNullOrEmpty(splitText[textIndex]))
                 {
@@ -49,7 +71,7 @@ public class CS_Dialogue : MonoBehaviour
                     if(index != -1)
                     {
                         //! 名前更新
-                        talkernameText.text = splitText[textIndex];
+                        talkernameText.text = splitText[textIndex].Replace("/","");
 
                         //! セリフ表示
                         dialogueText.text = splitText[++textIndex];
@@ -65,14 +87,11 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                     }
-
                 }
-
-                //! test：最後の文章まで行くと最初に戻る
-                if (textIndex >= splitText.Length)
-                {
-                    textIndex = 0;
-                }
+            }
+            else
+            {
+                this.gameObject.SetActive(false);
             }
 
         }
@@ -92,7 +111,7 @@ public class CS_Dialogue : MonoBehaviour
     //! @brief 改行で分割する
     void SplitString()
     {
-        splitText = pBuffer.Split(char.Parse("\n"));
+        splitText = Regex.Split(pBuffer, @"\r?\n\r?\n"); ;
     }
 
     //! @brief 文字送り演出表示
@@ -114,14 +133,18 @@ public class CS_Dialogue : MonoBehaviour
         int length = dialogueText.text.Length;
 
         //! 1文字ずつ表示
-        for(int i = 0; i < length; i++)
+        for(int i = 0; i <= length; i++)
         {
             dialogueText.maxVisibleCharacters = i;
             //! 一定時間待機
             yield return delay;
         }
+
+        yield return new WaitForSeconds(waitSecond);
+        
         //! 演出が終わったらすべての文字を表示
         dialogueText.maxVisibleCharacters = length;
+
         bFinishString = true;
 
         showCoroutine = null;
