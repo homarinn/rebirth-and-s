@@ -12,19 +12,21 @@ public class CS_Test : MonoBehaviour
     void Start()
     {
         enemyPlayer = enemy.GetComponent<CS_EnemyPlayer>();
+        //Debug.Log(enemyPlayer.Hp);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!enemyPlayer)
+        if (!enemyPlayer)
         {
             return;
         }
 
-        if(Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            //enemyPlayer.ReceiveDamage(10);
+            enemyPlayer.ReceiveDamage(2);
+            //Debug.Log(enemyPlayer.Hp);
         }
     }
 }
