@@ -153,6 +153,12 @@ public class CS_Enemy1 : MonoBehaviour
     [Header("ダウン時、一時停止する時間(秒)")]
     [SerializeField] float timeStopMotion;
 
+    [Header("弾を放つ最中のアニメーション速度倍率(弱)")]
+    [SerializeField] float weakAnimationSpeedRatio;
+
+    [Header("弾を放つ最中のアニメーション速度倍率(強)")]
+    [SerializeField] float strongAnimationSpeedRatio;
+
     float blowOffCount;
     float blowOffDuration;
     bool isBlowingOff;
@@ -336,6 +342,7 @@ public class CS_Enemy1 : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
         {
+            //ReduceHp(20);
             hp = 0.0f;
         }
 
@@ -405,11 +412,13 @@ public class CS_Enemy1 : MonoBehaviour
     {
         if(type == AttackType.Weak)
         {
-            shootInterval[iteration] = weakShootInterval * (iteration + 1);
+            shootInterval[iteration] = weakShootInterval * iteration;
+            //shootInterval[iteration] = weakShootInterval * (iteration + 1);
         }
         else
         {
-            shootInterval[iteration] = strongShootInterval * (iteration + 1);
+            shootInterval[iteration] = strongShootInterval * iteration;
+            //shootInterval[iteration] = strongShootInterval * (iteration + 1);
         }
     }
 
@@ -762,22 +771,29 @@ public class CS_Enemy1 : MonoBehaviour
     /// </summary>
     void AttackEventShoot()
     {
-        if(attackType == AttackType.Weak ||
-            attackType == AttackType.Strong)
+        //吹き飛ばし用ではないので処理しない
+        if(attackType == AttackType.BlowOff)
         {
-            canShoot = true;  //発射可能
+            return;
         }
 
-        //switch (attackType)
+        //アニメーション速度を変える
+        if(attackType == AttackType.Weak)
+        {
+            myAnimator.SetFloat("AnimationSpeed", weakAnimationSpeedRatio);
+        }
+        if(attackType == AttackType.Strong)
+        {
+            myAnimator.SetFloat("AnimationSpeed", strongAnimationSpeedRatio);
+        }
+
+        //発射可能
+        canShoot = true;  
+
+        //if(attackType == AttackType.Weak ||
+        //    attackType == AttackType.Strong)
         //{
-        //    case AttackType.Weak:
-        //    case AttackType.Strong:
-        //        canShoot = true;  //発射可能
-        //        break;
-        //    case AttackType.BlowOff:
-        //        canBlowOff = true;//吹き飛ばし可能
-        //        //BlowOff();
-        //        break;
+        //    canShoot = true;  //発射可能
         //}
     }
 
@@ -848,8 +864,9 @@ public class CS_Enemy1 : MonoBehaviour
                 //一定距離離れていたら発射とモーション中止
                 else
                 {
-                    canShoot = false; 
-                    myAnimator.SetBool("Attack", false); 
+                    canShoot = false;
+                    myAnimator.SetBool("Attack", false);
+                    myAnimator.SetFloat("AnimationSpeed", 1);  //速度を戻す
                 }
 
                 //if (isShooting) 
@@ -909,6 +926,7 @@ public class CS_Enemy1 : MonoBehaviour
                 continue;
             }
 
+
             //発射時間になったら発射
             shootInterval[i] -= Time.deltaTime;
             if (shootInterval[i] < 0.0f)
@@ -932,6 +950,12 @@ public class CS_Enemy1 : MonoBehaviour
                 //音
                 shotAudioSource.PlayOneShot(shotSE);
                 //shotAudioSource.PlayOneShot(shotAudioSource.clip);
+
+                //最後より一つ前の弾が放たれたらアニメーション速度を元に戻す
+                if (i == magicMissileNumber[num] - 2)
+                {
+                    myAnimator.SetFloat("AnimationSpeed", 1);
+                }
 
                 //最後の弾を撃ったら攻撃終了
                 if (i == magicMissileNumber[num] - 1)
@@ -1109,6 +1133,7 @@ public class CS_Enemy1 : MonoBehaviour
             //降下アニメーション再生
             myAnimator.SetBool("Fall", true);
             myAnimator.SetBool("Attack", false);
+            myAnimator.SetFloat("AnimationSpeed", 1);  //速度を戻す
 
             //地面に下ろす
             //目標までの距離から割合を算出してtimeArriveGroundの数値を変える

@@ -29056,7 +29056,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puddle: {fileID: 4317912990116398507, guid: 9c2f8c263766c764380855e5ec072bc7, type: 3}
-  moveSpeed: 50
+  hitEffect: {fileID: 3276742099768398204, guid: 7ff03c58f31b1c84382fcbecdb533193,
+    type: 3}
+  moveSpeed: 30
   attackPower: 20
   disappearTime: 0.15
   period: 1

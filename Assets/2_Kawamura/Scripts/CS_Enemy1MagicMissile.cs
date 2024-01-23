@@ -9,6 +9,9 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     [Header("水溜り")]
     [SerializeField] CS_Enemy1Puddle puddle;
 
+    [Header("ヒットエフェクト")]
+    [SerializeField] GameObject hitEffect;
+
     [Header("移動速度（直線軌道）")]
     [SerializeField] float moveSpeed;
 
@@ -73,6 +76,8 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     bool isCollisionPlayer;
 
     string magicMissileType;  //弾の種類
+
+    const float adjustPositionY = 0.33f;
 
 
     //ゲッターセッター
@@ -236,7 +241,7 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             {
                 Vector3 target = new Vector3(
                     playerTransform.position.x,
-                    playerTransform.position.y + 0.2f,
+                    playerTransform.position.y + adjustPositionY,
                     playerTransform.position.z);
 
                 direction = target - transform.position;
@@ -421,8 +426,10 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             Debug.Log("プレイヤーへのダメージ");
             isCollisionPlayer = true;
 
-            //エフェクト出す？
-
+            //エフェクト出す
+            Vector3 instancePosition = other.transform.position;
+            instancePosition.y += adjustPositionY;
+            Instantiate(hitEffect, instancePosition, Quaternion.identity);
 
             //消す
             Destroy(gameObject);
