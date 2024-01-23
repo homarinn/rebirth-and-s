@@ -134,7 +134,7 @@ public class CS_GameMgr : MonoBehaviour
         csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
         if(csEnPlayer != null)
         {
-            enemyHp = 100;
+            enemyHp = csEnPlayer.Hp;
         }
     }
 
