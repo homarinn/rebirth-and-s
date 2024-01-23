@@ -11,14 +11,15 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
     [Header("風エフェクトのコライダー")]
     [SerializeField] SphereCollider effectCollider;
 
-    [Header("吹き飛ばす力の強さ")]
-    [SerializeField] float blowOffPower;
+    //[Header("吹き飛ばす力の強さ")]
+    //[SerializeField] float blowOffPower;
 
     [Header("吹き飛ばしSE")]
     [SerializeField] AudioClip blowOffSE;
 
     float radiusMax;    //風の最大半径
     float radiusMaxTime;//風の半径が最大になる秒数
+    float blowOffPower;
     float startRadius;
     float elapsed;
     bool isPlayEffect;
@@ -29,6 +30,11 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
     public float GetEffectDuration
     {
         get { return radiusMaxTime; }
+    }
+
+    public float SetBlowOffPower
+    {
+        set { blowOffPower = value; }
     }
 
     private void Awake()
@@ -97,16 +103,16 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
         //Player以外は吹き飛ばさない
         if (other.tag != "Player") return;
 
-        //Rigidbodyがついてないなら吹き飛ばないの終わり
+        //Rigidbodyがついていないオブジェクトは吹き飛ばさない
         var rigidBody = other.GetComponentInParent<Rigidbody>();
         if (rigidBody == null) return;
 
-        //爆風によって爆発中央から吹き飛ぶ方向のベクトルを作る
+        //風によって中央から吹き飛ぶ方向のベクトルを作る
         var direction = (other.transform.position - transform.position).normalized;
 
         //吹き飛ばす
         //ForceModeを変えると挙動が変わる（今回は質量無視）
-        rigidBody.AddForce(direction * blowOffPower, ForceMode.VelocityChange);
+        rigidBody.AddForce(direction * blowOffPower, ForceMode.Impulse);
 
         //Colliderを無効化して複数回Playerを吹き飛ばさないようにする
         effectCollider.enabled = false;

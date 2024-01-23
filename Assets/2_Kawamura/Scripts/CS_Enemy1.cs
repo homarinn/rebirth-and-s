@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
@@ -27,6 +28,9 @@ public class CS_Enemy1 : MonoBehaviour
 
     [Header("吹き飛ばしエフェクト")]
     [SerializeField] CS_Enemy1BlowOffEffect blowOffEffect;
+
+    [Header("ステージ境界円スクリプト")]
+    [SerializeField] CS_StageBoundary boundary;
 
     [Header("最大HP")]
     [SerializeField] float maxHp;
@@ -75,6 +79,9 @@ public class CS_Enemy1 : MonoBehaviour
 
     [Header("弾の発射間隔（強攻撃、秒)")]
     [SerializeField] float strongShootInterval;
+
+    [Header("吹き飛ばす力")]
+    [SerializeField] float blowOffPower;
 
     [Header("ダウンさせるために必要なダメージ量")]
     [SerializeField] float downedDamageAmount;
@@ -131,10 +138,22 @@ public class CS_Enemy1 : MonoBehaviour
     float blowOffDuration;
     bool isBlowingOff;
 
+    const int defaultPuddleRenderQueue = 3000;
+    int addPuddleRenderQueue;
+    float boundaryCircleRadius;
+
+    float scaleRatioBasedOnY;
+
+    float shotCount = 0;
+
     //ゲッター
     public float GetHp
     {
         get { return hp; }
+    }
+    public Vector3 GetLocalEulerAngle
+    {
+        get { return transform.localEulerAngles; }
     }
 
     private void Awake()
@@ -220,12 +239,24 @@ public class CS_Enemy1 : MonoBehaviour
         blowOffCount = maxBlowOffCount;
         isBlowingOff = false;
         blowOffDuration = 0.0f;
+
+        addPuddleRenderQueue = 0;
+
+        boundaryCircleRadius = boundary.GetBoundaryCircleRadius;
+
+        Vector3 localScale = strongMagicMissile.transform.localScale;
+        scaleRatioBasedOnY = localScale.x / localScale.y;
     }
 
     // Update is called once per frame
     void Update()
     {
-        ReduceHp(Time.deltaTime);
+        if (shotCount > 0)
+        {
+            return;
+        }
+
+        //ReduceHp(Time.deltaTime);
         //Debug.Log("damageAmount = " + damageAmount);
 
         //死亡
@@ -426,16 +457,34 @@ public class CS_Enemy1 : MonoBehaviour
             magicMissileSpawnPos.x + Mathf.Cos(angle * Mathf.Deg2Rad) * halfCircleRadius,
             magicMissileSpawnPos.y + Mathf.Sin(angle * Mathf.Deg2Rad) * halfCircleRadius,
             magicMissileSpawnPos.z);
-        magicMissilePos = transform.TransformPoint(magicMissilePos);
+        //magicMissilePos = transform.TransformPoint(magicMissilePos);  //弾の先端を前に向かせるときは消す
+
+        //Quaternion spawnRotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+        //Quaternion spawnRotation = Quaternion.Euler(0f, 0f, angle) * transform.rotation;
+        //Quaternion spawnRotation = Quaternion.Euler(transform.localEulerAngles.y, -45.0f, -90.0f);
 
         //生成
         //magicMissileCountは1から始まるため-1
         createdMagicMissile[magicMissileCount - 1] =
             Instantiate(magicMissile[num], magicMissilePos, Quaternion.identity);
+
+
         //敵と弾を親子関係に
-        createdMagicMissile[magicMissileCount - 1].transform.SetParent(gameObject.transform);  
+        createdMagicMissile[magicMissileCount - 1].transform.SetParent(gameObject.transform, false);
+
         script[magicMissileCount - 1] =
             createdMagicMissile[magicMissileCount - 1].GetComponent<CS_Enemy1MagicMissile>();
+
+        //実験用
+        script[magicMissileCount - 1].SetMagicMissileCount = magicMissileCount;
+        script[magicMissileCount - 1].SetPuddleRenderQueue = defaultPuddleRenderQueue + addPuddleRenderQueue;
+        script[magicMissileCount - 1].SetPlayerTransform = player.transform;
+        script[magicMissileCount - 1].SetBoundaryCircleRadius = boundaryCircleRadius;
+
+        //実験用2
+        Vector3 localScale = strongMagicMissile.transform.localScale;
+        script[magicMissileCount - 1].SetScaleRatioBasedOnY = scaleRatioBasedOnY;
+
 
         //各変数の更新
         SetShootInterval(type, magicMissileCount - 1);
@@ -448,6 +497,9 @@ public class CS_Enemy1 : MonoBehaviour
         {
             creationInterval[num] = strongCreationInterval;
         }
+        //実験用
+        addPuddleRenderQueue++;
+        if(addPuddleRenderQueue >= 15) { addPuddleRenderQueue = 0; }
 
         //全て生成したら生成を止め、攻撃に移る
         if (magicMissileCount > magicMissileNumber[num])
@@ -458,6 +510,85 @@ public class CS_Enemy1 : MonoBehaviour
             creationInterval[num] = 0.0f;  
         }
     }
+
+    //void CreateMagicMissile(AttackType type)
+    //{
+    //    int num = (int)type;  //要素番号指定用変数
+
+    //    float angleSpace = 160.0f / magicMissileNumber[num];  //半円の中での弾同士の間隔
+    //    const float baseAngle = 90.0f;  //1つ目の弾の配置角度を半円の真ん中にする
+    //    float angle = 0.0f;
+
+    //    //半円のどこに配置するか決定
+    //    if (magicMissileCount == 1)  //1発目
+    //    {
+    //        angle = baseAngle;
+    //    }
+    //    else if (magicMissileCount % 2 == 0)  //偶数発目
+    //    {
+    //        evenCount++;
+    //        angle = baseAngle - evenCount * angleSpace;  //敵からみて左に順に配置
+    //    }
+    //    else  //奇数発目
+    //    {
+    //        oddCount++;
+    //        angle = baseAngle + oddCount * angleSpace;   //敵から見て右に順に配置
+    //    }
+
+    //    //敵1の回転を考慮して座標決定
+    //    Vector3 magicMissilePos = new Vector3(
+    //        magicMissileSpawnPos.x + Mathf.Cos(angle * Mathf.Deg2Rad) * halfCircleRadius,
+    //        magicMissileSpawnPos.y + Mathf.Sin(angle * Mathf.Deg2Rad) * halfCircleRadius,
+    //        magicMissileSpawnPos.z);
+    //    magicMissilePos = transform.TransformPoint(magicMissilePos);  //弾の先端を前に向かせるときは消す
+
+    //    //生成
+    //    //magicMissileCountは1から始まるため-1
+    //    createdMagicMissile[magicMissileCount - 1] =
+    //        Instantiate(magicMissile[num], magicMissilePos, Quaternion.identity);
+
+
+    //    //敵と弾を親子関係に
+    //    createdMagicMissile[magicMissileCount - 1].transform.SetParent(gameObject.transform);
+
+    //    ////弾の回転値設定
+    //    //Vector3 localEulerAngles = createdMagicMissile[magicMissileCount - 1].transform.localEulerAngles;
+    //    //localEulerAngles.y += transform.localEulerAngles.y;
+    //    //createdMagicMissile[magicMissileCount - 1].transform.localEulerAngles = localEulerAngles;
+    //    //Debug.Log(createdMagicMissile[magicMissileCount - 1].transform.localEulerAngles);
+
+    //    script[magicMissileCount - 1] =
+    //        createdMagicMissile[magicMissileCount - 1].GetComponent<CS_Enemy1MagicMissile>();
+
+    //    //実験用
+    //    script[magicMissileCount - 1].SetMagicMissileCount = magicMissileCount;
+    //    script[magicMissileCount - 1].SetPuddleRenderQueue = defaultPuddleRenderQueue + addPuddleRenderQueue;
+    //    script[magicMissileCount - 1].SetPlayerTransform = player.transform;
+
+    //    //各変数の更新
+    //    SetShootInterval(type, magicMissileCount - 1);
+    //    magicMissileCount++;
+    //    if(type == AttackType.Weak)
+    //    {
+    //        creationInterval[num] = weakCreationInterval;
+    //    }
+    //    else
+    //    {
+    //        creationInterval[num] = strongCreationInterval;
+    //    }
+    //    //実験用
+    //    addPuddleRenderQueue++;
+    //    if(addPuddleRenderQueue >= 15) { addPuddleRenderQueue = 0; }
+
+    //    //全て生成したら生成を止め、攻撃に移る
+    //    if (magicMissileCount > magicMissileNumber[num])
+    //    {
+    //        isAttack = true;
+    //        magicMissileCount = 1;
+    //        evenCount = oddCount = 0;
+    //        creationInterval[num] = 0.0f;  
+    //    }
+    //}
 
     /// <summary>
     /// 吹き飛ばし攻撃の準備
@@ -508,7 +639,7 @@ public class CS_Enemy1 : MonoBehaviour
             if (shootInterval[i] < 0.0f)
             {
                 script[i].GetSetIsCanFire = true;  //発射
-                script[i].SetPlayerTransform = player.transform;
+                //script[i].SetPlayerTransform = player.transform;
                 //実験用
                 if(type == AttackType.Weak)
                 {
@@ -532,6 +663,8 @@ public class CS_Enemy1 : MonoBehaviour
                 {
                     isAttack = false;
                     attackInterval = maxAttackInterval;
+
+                    shotCount++;
                 }
             }
         }
@@ -570,6 +703,7 @@ public class CS_Enemy1 : MonoBehaviour
         if (!isBlowingOff)
         {
             var effect = Instantiate(blowOffEffect, transform.position, Quaternion.identity);
+            effect.SetBlowOffPower = blowOffPower;
             effect.PlayEffect();
 
             isBlowingOff = true;
