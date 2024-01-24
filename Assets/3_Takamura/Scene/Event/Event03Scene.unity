@@ -396,7 +396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &363262052
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1394,9 +1394,9 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1864147053}
   - {fileID: 992018161}
   - {fileID: 176774701}
   - {fileID: 426488872}
-  - {fileID: 1864147053}
   - {fileID: 622530829}
   - {fileID: 949645578}
