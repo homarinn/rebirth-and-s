@@ -153,6 +153,7 @@ public class CS_Enemy1 : MonoBehaviour
     bool isAttack;                                 //UŒ‚’†‚©H
     bool isReturningNormalPos;                     //’èˆÊ’u‚É–ß‚Á‚Ä‚¢‚é“r’†‚©H
     bool isDowned;                                 //ƒ_ƒEƒ“ó‘Ô‚©H
+    bool canFight;                                   //í“¬‰Â”\‚©H
     bool isDead;                                   //€–S‚µ‚½‚©H
 
     AudioSource shotAudioSource;                   //’e‚ğŒ‚‚Â—p‚ÌAudioSource
@@ -213,6 +214,10 @@ public class CS_Enemy1 : MonoBehaviour
     public float GetHp
     {
         get { return hp; }
+    }
+    public bool GetIsDead
+    {
+        get { return isDead; }
     }
     public Vector3 GetLocalEulerAngle
     {
@@ -282,6 +287,7 @@ public class CS_Enemy1 : MonoBehaviour
         isAttack = false;
         isReturningNormalPos = false;
         isDowned = false;
+        canFight = false;
         isDead = false;
 
         //Å‰‚ÌUŒ‚‚ğİ’è
@@ -355,11 +361,13 @@ public class CS_Enemy1 : MonoBehaviour
         //ReduceHp(damage);
         ////Debug.Log("HP = " + hp);
 
-        //if (Input.GetKeyDown(KeyCode.G))
-        //{
-        //    //ReduceHp(20);
-        //    hp = 0.0f;
-        //}
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            //ReduceHp(20);
+            hp = 0.0f;
+        }
+
+        Debug.Log("isDead = " + isDead);
 
         //€–S
         if (hp <= 0.0f)
@@ -880,6 +888,14 @@ public class CS_Enemy1 : MonoBehaviour
     }
 
     /// <summary>
+    /// AnimationEvent—p‚ÌŠÖ”(Š®‘S€–S—p)
+    /// </summary>
+    void DeathEventIsDead()
+    {
+        isDead = true;
+    }
+
+    /// <summary>
     /// UŒ‚‚·‚é
     /// </summary>
     /// <param name="type">UŒ‚‚Ìí—Ş</param>
@@ -1069,10 +1085,10 @@ public class CS_Enemy1 : MonoBehaviour
     /// </summary>
     void Death()
     {
-        if (!isDead)
+        if (!canFight)
         {
             //€–S
-            isDead = true;
+            canFight = true;
             Debug.Log("€–S");
 
             //•Ï”‚Ì‰Šú‰»
@@ -1313,7 +1329,7 @@ public class CS_Enemy1 : MonoBehaviour
     public void ReduceHp(float attackPower)
     {
         //€–S‚µ‚Ä‚¢‚½‚çˆ—‚µ‚È‚¢
-        if (isDead)
+        if (canFight)
         {
             return;
         }
