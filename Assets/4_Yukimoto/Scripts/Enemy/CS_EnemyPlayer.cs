@@ -61,6 +61,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     [Header("プレイヤー取得")]
     [SerializeField] private Transform player;
 
+    /// <summary> プレイヤー管理用(与ダメージで使う) </summary>
+    private CS_Player playerManager;
+
     // ---------------------------
     // HP
     // ---------------------------
@@ -96,14 +99,18 @@ public class CS_EnemyPlayer : MonoBehaviour
     // 攻撃
     // --------------------------
 
+    /// <summary> 攻撃力 </summary>
+    [Header("攻撃力")]
+    [SerializeField] private float attackPower;
+
     /// <summary> 
     /// 攻撃のトリガーとなるプレイヤーとの距離
     /// </summary>
     [Header("攻撃のトリガーとなるプレイヤーとの距離")]
     [SerializeField] private float triggerDistance;
 
-    /// <summary> 攻撃待機時間 </summary>
-    [Header("攻撃待機時間")]
+    /// <summary> 攻撃待機時間(秒) </summary>
+    [Header("攻撃待機時間(秒)")]
     [SerializeField] private float attackInterval;
 
     /// <summary> 攻撃する確率(%) </summary>
@@ -123,11 +130,15 @@ public class CS_EnemyPlayer : MonoBehaviour
     // 必殺技
     // ------------------------------
 
-    /// <summary> 必殺技のインターバル時間 </summary>
-    [Header("必殺技のインターバル時間")]
+    [Header("必殺技の威力")]
+    [SerializeField] private float ultPower;
+
+    /// <summary> 必殺技のインターバル時間(秒) </summary>
+    [Header("必殺技のインターバル時間(秒)")]
     [SerializeField] private float ultInterval;
 
     [Header("必殺技の速度")]
+    [Range(1.0f, 5.0f)]
     [SerializeField] private float ultSpeed;
 
     /// <summary> 必殺技が使用可能ならtrue </summary>
@@ -137,8 +148,8 @@ public class CS_EnemyPlayer : MonoBehaviour
     // 回避
     // ------------------------------
 
-    /// <summary> 回避インターバル時間 </summary>
-    [Header("回避インターバル時間")]
+    /// <summary> 回避インターバル時間(秒) </summary>
+    [Header("回避インターバル時間(秒)")]
     [SerializeField] private float slidingInterval;
 
     /// <summary> 回避可能ならtrue </summary> 
@@ -148,8 +159,12 @@ public class CS_EnemyPlayer : MonoBehaviour
     // 防御
     // ------------------------------
 
-    /// <summary> 防御インターバル時間 </summary>
-    [Header("防御インターバル")]
+    /// <summary> 防御時のカット率 </summary>
+    [Header("防御時のカット率(%)")]
+    [SerializeField] private float damageCutRatio;
+
+    /// <summary> 防御インターバル時間(秒) </summary>
+    [Header("防御インターバル時間(秒)")]
     [SerializeField] private float guardInterval;
 
     /// <summary> 防御可能ならtrue </summary>
@@ -160,29 +175,46 @@ public class CS_EnemyPlayer : MonoBehaviour
     // ----------------------------
 
     /// <summary> trueのとき、武器が当たるようになる(多段防止) </summary>
-    [NonSerialized] public bool canWeaponHit = false;
+    private bool canWeaponHit = false;
+
+    /// <summary>
+    /// 武器が当たるかどうか
+    /// </summary>
+    public bool CanWeaponHit { get { return canWeaponHit; } }
 
     // ----------------------------
     // 被ダメージ
     // ----------------------------
 
-    /// <summary> 被ダメージからの無敵時間 </summary>
-    [Header("被ダメージからの無敵時間")]
+    /// <summary> 被ダメージからの無敵時間(秒) </summary>
+    [Header("被ダメージからの無敵時間(秒)")]
     [SerializeField] private float invincibleTime;
 
     /// <summary> 無敵中ならtrue </summary>
     private bool isInvincible = false;
 
     // ----------------------------
+    // 死亡
+    // ----------------------------
+
+    /// <summary> 死亡モーションが終了したらtrue </summary>
+    private bool isDead = false;
+
+    /// <summary>
+    /// 死亡したかどうか
+    /// </summary>
+    public bool IsDead { get { return isDead; } }
+
+    // ----------------------------
     // 攻撃検知用
     // ----------------------------
 
-    /// <summary> 攻撃を検知できる時間 </summary>
-    [Header("攻撃を検知できる時間")]
+    /// <summary> 攻撃を検知できる時間(秒) </summary>
+    [Header("攻撃を検知できる時間(秒)")]
     [SerializeField] private float attackReceptionTime;
 
-    /// <summary> 必殺技を検知できる時間 </summary>
-    [Header("必殺技を検知できる時間")]
+    /// <summary> 必殺技を検知できる時間(秒) </summary>
+    [Header("必殺技を検知できる時間(秒)")]
     [SerializeField] private float ultReceptionTime;
 
     // --------------------
@@ -277,6 +309,9 @@ public class CS_EnemyPlayer : MonoBehaviour
         // アニメーション制御用コンポーネントを取得
         enemyAnimator = gameObject.GetComponent<Animator>();
 
+        // プレイヤー管理用コンポーネントを取得
+        playerManager = player.GetComponent<CS_Player>();
+
         // プレイヤーの
         // アニメーション制御用コンポーネントを取得
         playerAnimator = player.GetComponent<Animator>();
@@ -302,6 +337,19 @@ public class CS_EnemyPlayer : MonoBehaviour
         // -------------------------------
 
         TimerCount();
+
+        // ------------------------------
+        // 死亡確認
+        // ------------------------------
+
+        // HPが0になっているのに
+        // 死亡状態になってないなら移行する
+        if (hp <= 0 &&
+            currentState != State.Dead)
+        {
+            ChangeState(State.Dead);
+            return;
+        }
 
         // -------------------------------
         // 状態に合わせて行動
@@ -536,6 +584,8 @@ public class CS_EnemyPlayer : MonoBehaviour
 
     #endregion
 
+    #region アニメーションイベント
+
     #region 攻撃イベント
 
     private void AnimAttackOk()
@@ -641,9 +691,6 @@ public class CS_EnemyPlayer : MonoBehaviour
         // タイマーリセット
         ultTimer = 0;
 
-        // アニメーション速度を初期化
-        enemyAnimator.speed = 1;
-
         // 待機状態に移行
         ChangeState(State.Idle);
     }
@@ -691,6 +738,17 @@ public class CS_EnemyPlayer : MonoBehaviour
 
     #endregion
 
+    #region 死亡イベント
+
+    private void AnimDeadFailed()
+    {
+        isDead = true;
+    }
+
+    #endregion
+
+    #endregion
+
     #region 被ダメージ
 
     /// <summary>
@@ -729,13 +787,15 @@ public class CS_EnemyPlayer : MonoBehaviour
         // 防御中
         if (isGuard)
         {
-            // 与ダメージを軽減
+            // ダメージの軽減値
+            float cut = damage * (damageCutRatio / 100);
+            damage -= cut;
+            hp -= damage;
         }
         else
         {
-            // 与ダメージ分HPを減らす
+            // ダメージ分HPを減らす
             hp -= damage;
-            Debug.Log("ダメージ");
         }
 
         // HPが無くなったら死亡
@@ -764,6 +824,33 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // HPが残っているので被ダメージ状態に移行
         ChangeState(State.ReceiveDamage);
+    }
+
+    #endregion
+
+    #region 与ダメージ
+
+    /// <summary>
+    /// プレイヤーにダメージを与える
+    /// </summary>
+    public void PlayerDamage()
+    {
+        // 多段防止で攻撃が当たらないようにする
+        canWeaponHit = false;
+
+        // 通常の攻撃
+        if (currentState == State.Attack)
+        {
+            // 通常の攻撃力を参照
+            playerManager.ReceiveDamage(attackPower);
+        }
+
+        // 必殺技
+        if (currentState == State.Ult)
+        {
+            // 必殺技の威力を参照
+            playerManager.ReceiveDamage(ultPower);
+        }
     }
 
     #endregion
@@ -909,18 +996,6 @@ public class CS_EnemyPlayer : MonoBehaviour
     #region アニメーション
 
     /// <summary>
-    /// 再生中のアニメーションを取得する
-    /// </summary>
-    /// <param name="animator"> アニメーター </param>
-    /// <returns> 再生中のアニメーション </returns>
-    private AnimatorStateInfo GetCurrentAnim(
-        Animator animator, int layerIndex = 0)
-    {
-        // 再生中のアニメーション
-        return animator.GetCurrentAnimatorStateInfo(layerIndex);
-    }
-
-    /// <summary>
     /// アニメーションの経過時間を取得する
     /// </summary>
     /// <param name="animator"> アニメーター </param>
@@ -933,6 +1008,18 @@ public class CS_EnemyPlayer : MonoBehaviour
         // アニメーションの再生時間に掛けて
         // 経過時間を求める
         return playerUltAnim.length * currentTimeRatio;
+    }
+
+    /// <summary>
+    /// 再生中のアニメーションを取得する
+    /// </summary>
+    /// <param name="animator"> アニメーター </param>
+    /// <returns> 再生中のアニメーション </returns>
+    private AnimatorStateInfo GetCurrentAnim(
+        Animator animator, int layerIndex = 0)
+    {
+        // 再生中のアニメーション
+        return animator.GetCurrentAnimatorStateInfo(layerIndex);
     }
 
     /// <summary>
@@ -997,6 +1084,9 @@ public class CS_EnemyPlayer : MonoBehaviour
             // -------------------------
             case State.Idle:
 
+                // アニメーション速度を初期化
+                enemyAnimator.speed = 1;
+
                 // ダッシュモーション終了
                 enemyAnimator.SetBool(isRun, false);
 
@@ -1040,9 +1130,6 @@ public class CS_EnemyPlayer : MonoBehaviour
             // -----------------------
             case State.Attack:
 
-                // 移動しないようにする
-                //enemyAi.speed = 0;
-
                 // 攻撃アニメーション開始
                 enemyAnimator.SetBool(isAttack, true);
 
@@ -1053,11 +1140,8 @@ public class CS_EnemyPlayer : MonoBehaviour
 
             case State.Ult:
 
-                // 移動しないようにする
-                //enemyAi.speed = 0;
-
-                // 必殺技の速度を設定(0にならないようにする)
-                enemyAnimator.speed = Mathf.Max(ultSpeed, 0.1f);
+                // 必殺技の速度を設定
+                enemyAnimator.speed = ultSpeed;
 
                 // 必殺技アニメーション開始
                 enemyAnimator.SetTrigger(ultTirgger);
@@ -1113,6 +1197,9 @@ public class CS_EnemyPlayer : MonoBehaviour
             // 死亡状態に移行
             // ------------------------
             case State.Dead:
+
+                // 移動しないようにする
+                enemyAi.speed = 0;
 
                 // 死亡アニメーション開始
                 enemyAnimator.SetTrigger(deadTrigger);
