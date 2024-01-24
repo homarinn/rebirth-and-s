@@ -1648,17 +1648,17 @@ PrefabInstance:
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: ultInterval
-      value: 100
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: attackPercent
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: guardInterval
-      value: 100
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
@@ -1678,7 +1678,7 @@ PrefabInstance:
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: slidingInterval
-      value: 100
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}

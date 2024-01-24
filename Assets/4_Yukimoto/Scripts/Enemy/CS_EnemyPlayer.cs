@@ -428,6 +428,12 @@ public class CS_EnemyPlayer : MonoBehaviour
 
                 break;
         }
+
+        // ƒeƒXƒg
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            Debug.Log(canWeaponHit);
+        }
     }
 
     #region ó‘Ô•Ê‚Ìˆ—
