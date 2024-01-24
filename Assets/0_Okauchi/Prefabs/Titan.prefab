@@ -130,6 +130,7 @@ MonoBehaviour:
   downTime: 6
   weakPointDamageIncrement: 20
   afterDownTime: 1
+  dieTime: 4
   moveSE: {fileID: 4888862678878637672}
   chargeSE: {fileID: 1403551164744738637}
   clashSE: {fileID: 1169020781980542164}
@@ -139,7 +140,7 @@ MonoBehaviour:
     type: 3}
   rushEffect: {fileID: 2893964678148829097, guid: 429e197ccc3dcd64d9881db8740cfbee,
     type: 3}
-  rushEffectPositionY: 0.5
+  rushEffectPositionY: 0.7
   rushEffectGeneratingSpan: 0.15
   hitEffect: {fileID: 6519204570333860391, guid: 162ac94be8abaaf4faa3c3edf9a5d215,
     type: 3}

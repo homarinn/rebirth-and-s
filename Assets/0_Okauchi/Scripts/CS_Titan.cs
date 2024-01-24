@@ -145,6 +145,8 @@ public class CS_Titan : MonoBehaviour
     //€–S
     //--------------------
     private float dieTimeCount = 0.0f;
+    [SerializeField, Header("€–S”»’è‚É‚·‚é‚Ü‚Å‚ÌŠÔ")]
+    private float dieTime = 0.0f; 
 
     //--------------------
     //SE
@@ -516,9 +518,10 @@ public class CS_Titan : MonoBehaviour
         {
             SetDownColliderParameter();
         }
-        if(!IsPlayingAnim(animator, dieClip))
+        if(dieTimeCount >= dieTime)
         {
             isDead = true;
+            UnityEditor.EditorApplication.isPaused = true;
         }
     }
     //ªªªªªªªªªªªªª
