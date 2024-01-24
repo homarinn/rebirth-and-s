@@ -82,6 +82,8 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
 
     float rotateSpeed;
 
+    bool isCollisionWeapon;
+
 
     //ゲッターセッター
     public float SetMoveSpeed
@@ -220,6 +222,8 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
         Debug.Log("type = " + magicMissileType);
 
         isCurve = false;
+
+        isCollisionWeapon = false;
     }
 
     // Update is called once per frame
@@ -430,6 +434,19 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             return;
         }
 
+        //武器に当たったら消す
+        if(!isCollisionStage && other.gameObject.tag == "PlayerWeapon")
+        {
+            isCollisionWeapon = true;
+            Destroy(gameObject);
+        }
+
+        //武器に当たっていたら判定しない
+        if (isCollisionWeapon)
+        {
+            return;
+        }
+
         //水溜まり生成可能ならプレイヤーとの当たり判定しない
         //プレイヤーに当たったらHPを減らして弾を消す
         if (!isCollisionStage && other.gameObject.tag == "Player")
@@ -449,14 +466,14 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //敵に接触したら敵のHPを減らす（プレイヤーが跳ね返したときのみ）
-        if (isHitBack && other.gameObject.tag == "Enemy")
-        {
-            var script = other.gameObject.GetComponent<CS_Enemy1>();
-            script.ReduceHp(attackPower);
+        ////敵に接触したら敵のHPを減らす（プレイヤーが跳ね返したときのみ）
+        //if (isHitBack && other.gameObject.tag == "Enemy")
+        //{
+        //    var script = other.gameObject.GetComponent<CS_Enemy1>();
+        //    script.ReduceHp(attackPower);
 
-            Destroy(gameObject);
-        }
+        //    Destroy(gameObject);
+        //}
 
         //水溜まり外でステージに接触したら水溜りを生成
         if (!isCollisionStage && canCreatePuddle && 

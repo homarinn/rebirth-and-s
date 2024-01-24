@@ -361,11 +361,11 @@ public class CS_Enemy1 : MonoBehaviour
         //ReduceHp(damage);
         ////Debug.Log("HP = " + hp);
 
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            //ReduceHp(20);
-            hp = 0.0f;
-        }
+        //if (Input.GetKeyDown(KeyCode.G))
+        //{
+        //    ReduceHp(30);
+        //    //hp = 0.0f;
+        //}
 
         Debug.Log("isDead = " + isDead);
 
