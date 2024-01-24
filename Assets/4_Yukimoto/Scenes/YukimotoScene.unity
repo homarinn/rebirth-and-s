@@ -1647,8 +1647,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
+      propertyPath: ultInterval
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: attackPercent
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: guardInterval
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: hasSuperArmor
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: attackInterval
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
       propertyPath: damageCutRatio
       value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: slidingInterval
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
@@ -3296,6 +3326,9 @@ MonoBehaviour:
   SE_DifenceStart: {fileID: 8300000, guid: 624398e7378681b459a204fd1fc324eb, type: 3}
   SE_Difence: {fileID: 8300000, guid: 5af6f6e90cfb8714db6f413030a3e112, type: 3}
   SE_Damage: {fileID: 8300000, guid: 776151ead8eabe14189a292b1877484c, type: 3}
+  SE_Ult: {fileID: 0}
+  SE_Jump: {fileID: 0}
+  Eff_Difence: {fileID: 0}
 --- !u!4 &5089187584763634527
 Transform:
   m_ObjectHideFlags: 0
