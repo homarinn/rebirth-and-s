@@ -350,16 +350,16 @@ public class CS_Enemy1 : MonoBehaviour
         //    return;
         //}
 
-        float damage = Time.deltaTime;
-        if (downCount % 2 != 0) { damage *= 3.0f; }
-        ReduceHp(damage);
-        //Debug.Log("HP = " + hp);
+        //float damage = Time.deltaTime;
+        //if (downCount % 2 != 0) { damage *= 3.0f; }
+        //ReduceHp(damage);
+        ////Debug.Log("HP = " + hp);
 
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            //ReduceHp(20);
-            hp = 0.0f;
-        }
+        //if (Input.GetKeyDown(KeyCode.G))
+        //{
+        //    //ReduceHp(20);
+        //    hp = 0.0f;
+        //}
 
         //Ž€–S
         if (hp <= 0.0f)
