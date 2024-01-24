@@ -104,8 +104,6 @@ public class CS_GameMgr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetEnemyDeathFlag();
-
         SetGameFlag();
         SetNextSceneName();
 
