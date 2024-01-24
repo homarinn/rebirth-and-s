@@ -18,7 +18,8 @@ public partial class CS_Player : MonoBehaviour
         Attack,
         Difence,
         Damage,
-        Ult
+        Ult,
+        Death
     }
     State state;
 
@@ -106,6 +107,14 @@ public partial class CS_Player : MonoBehaviour
     private float maxHP = 0;    // 最大HP
     private float hp;           // 現在のHP
     private bool isInvisible = false;
+    private bool isDeath = false;
+    public bool IsDeath
+    {
+        get
+        {
+            return isDeath;
+        }
+    }
     
     private Transform cameraTransform = null;       // カメラの位置
 
@@ -127,6 +136,14 @@ public partial class CS_Player : MonoBehaviour
     private AudioClip SE_Difence;
     [SerializeField, Header("ダメージSE")]
     private AudioClip SE_Damage;
+    [SerializeField, Header("必殺SE")]
+    private AudioClip SE_Ult;
+    [SerializeField, Header("必殺ジャンプSE")]
+    private AudioClip SE_Jump;
+
+    // Effect
+    [SerializeField, Header("防御エフェクト")]
+    private GameObject Eff_Difence;
 
     // =======================
     //
@@ -222,13 +239,6 @@ public partial class CS_Player : MonoBehaviour
                 {
                     state = State.Attack;
                     anim.SetTrigger("AttackTrigger");  // アニメーションを再生
-
-                    //var cs_LookCollision = GetComponentInChildren<CS_LookCollision>();
-                    //if(cs_LookCollision.IsHit)
-                    //{
-                    //    var pos = Vector3.Scale(cs_LookCollision.EnemyPos, new Vector3(1, 0, 1));
-                    //    transform.rotation = Quaternion.LookRotation(pos);
-                    //}
                 }
 
                 // 防御入力
@@ -243,6 +253,12 @@ public partial class CS_Player : MonoBehaviour
                 {
                     state = State.Ult;
                     anim.SetTrigger("UltTrigger");
+                }
+                if(hp <= 0)
+                {
+                    state = State.Death;
+                    anim.SetTrigger("DeadTrigger");
+                    hp = 0;
                 }
                 
                 // 移動処理
@@ -456,6 +472,16 @@ public partial class CS_Player : MonoBehaviour
     {
         attackDamage = attackDamage == 0 ? ultPower : 0;
     }
+    
+    private void AnimUltAudioJump()
+    {
+        audio.PlayOneShot(SE_Jump);
+    }
+
+    private void AnimUltAudio()
+    {
+        audio.PlayOneShot(SE_Ult);
+    }
 
     /// <summary>
     /// 必殺アニメーション終了の時に呼び出す
@@ -468,6 +494,10 @@ public partial class CS_Player : MonoBehaviour
 
     #endregion
 
+    public void Damage(float damage)
+    {
+
+    }
 
     /// <summary>
     /// ダメージ処理
@@ -484,6 +514,7 @@ public partial class CS_Player : MonoBehaviour
 
         if (isDifence)
         {
+            Instantiate(Eff_Difence,transform);
             audio.PlayOneShot(SE_Difence);
             // ガード中ダメージ半減
             hp -= _damage * difenceDamageCut;
