@@ -44,7 +44,7 @@ public class CS_PlayerWeapon : MonoBehaviour
             // •Ê‚ÌŽ©•ª
             else if(other.GetComponent<CS_EnemyPlayer>() != null)
             {
-
+                other.GetComponent<CS_EnemyPlayer>().ReceiveDamage(attackDamage);
             }
             else
             {

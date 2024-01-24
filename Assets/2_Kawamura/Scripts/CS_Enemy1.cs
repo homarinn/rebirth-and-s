@@ -20,11 +20,13 @@ public class CS_Enemy1 : MonoBehaviour
     [Header("プレイヤー")]
     [SerializeField] GameObject player;
 
-    [Header("弾（弱攻撃）")]
+    [Header("<=====弾=====>")]
+    [Header("弱")]
     [SerializeField] GameObject weakMagicMissile;
 
-    [Header("弾（強攻撃）")]
+    [Header("強")]
     [SerializeField] GameObject strongMagicMissile;
+    [Header("==========")]
 
     [Header("吹き飛ばしエフェクト")]
     [SerializeField] CS_Enemy1BlowOffEffect blowOffEffect;
@@ -38,66 +40,91 @@ public class CS_Enemy1 : MonoBehaviour
     [Header("回転速度")]
     [SerializeField] float rotateSpeed;
 
-    [Header("攻撃間のインターバル（秒）")]
+    [Header("攻撃インターバル（秒）")]
     [SerializeField] float maxAttackInterval;
 
-    [Header("弱攻撃の発生確率（%）")]
-    [SerializeField] float weakAttackProbability;   
-
-    [Header("強攻撃の発生確率（%）")]
-    [SerializeField] float strongAttackProbability; 
-
-    [Header("吹き飛ばし攻撃の発生確率（%）")]
-    [SerializeField] float blowOffAttackProbability;
-
-    [Header("半円状に弾を生成する時の半円の半径")]
+    [Header("弾生成時の半円半径")]
     [SerializeField] float halfCircleRadius;
 
-    [Header("敵の位置を基準とした弾の生成位置")]
+    [Header("弾の生成位置（自分基準）")]
     [SerializeField] Vector3 magicMissileSpawnPos = new Vector3(0.0f, 0.1f, 1.0f);
 
-    [Header("曲線軌道にするか？（弱攻撃）")]
-    [SerializeField] bool isCurveWeakMagicMissile;
+    [Header("<=====攻撃発生確率（%）=====>")]
+    [Header("弱")]
+    [SerializeField] float weakAttackProbability;   
 
-    [Header("曲線軌道にするか？（強攻撃）")]
-    [SerializeField] bool isCurveStrongMagicMissile;
+    [Header("強")]
+    [SerializeField] float strongAttackProbability; 
 
-    [Header("1回の攻撃で生成する弾の数（弱攻撃）")]
+    [Header("吹き飛ばし")]
+    [SerializeField] float blowOffAttackProbability;
+
+    [Header("<=====弾の移動速度=====>")]
+    [Header("弱")]
+    [SerializeField] float weakMoveSpeed;
+
+    [Header("強")]
+    [SerializeField] float strongMoveSpeed;
+
+    [Header("<=====弾の威力=====>")]
+    [Header("弱")]
+    [SerializeField] float weakAttackPower;
+
+    [Header("強")]
+    [SerializeField] float strongAttackPower;
+
+    [Header("<=====生成弾数（※奇数のみ）=====>")]
+    [Header("弱")]
     [SerializeField] int weakMagicMissileNumber;
 
-    [Header("1回の攻撃で生成する弾の数（強攻撃）")]
+    [Header("強")]
     [SerializeField] int strongMagicMissileNumber;
 
-    [Header("弾を生成する間隔（弱攻撃、秒）")]
+    [Header("<=====生成間隔（秒）=====>")]
+    [Header("弱")]
     [SerializeField] float weakCreationInterval;  
 
-    [Header("弾を生成する間隔（強攻撃、秒）")]
+    [Header("強")]
     [SerializeField] float strongCreationInterval;
 
-    [Header("弾の発射間隔（弱攻撃、秒)")]
+    [Header("<=====発射間隔（秒）=====>")]
+    [Header("弱")]
     [SerializeField] float weakShootInterval;   
 
-    [Header("弾の発射間隔（強攻撃、秒)")]
+    [Header("強")]
     [SerializeField] float strongShootInterval;
+
+    [Header("<=====弾発射時のアニメーション速度倍率（0~1）=====>")]
+    [Header("弱")]
+    [SerializeField] float weakAnimationSpeedRatio;
+
+    [Header("強")]
+    [SerializeField] float strongAnimationSpeedRatio;
+    [Header("==========")]
+
+    [Header("生成した弾が完全に大きくなるためにかかる時間(秒)")]
+    [SerializeField] float timeScaleUpMagicMissileCompletely;
+
+    [Header("弾発射可能な距離割合(プレイヤーの最大移動範囲に対する割合（0~1))")]
+    [SerializeField] float maxDistanceRatio;
 
     [Header("吹き飛ばす力")]
     [SerializeField] float blowOffPower;
 
-    [Header("ダウンさせるために必要なダメージ量")]
-    [SerializeField] float downedDamageAmount;
+    [Header("吹き飛ばし攻撃の生成位置(自分の位置との差)")]
+    [SerializeField] Vector3 blowOffEffectPosition;
 
     [Header("ダウン時間")]
     [SerializeField] float downedTime;
 
-    [Header("ダウン終了後、定位置に戻るまでの速さ（秒）")]
+    [Header("ダウンさせるために必要なダメージ量")]
+    [SerializeField] float downedDamageAmount;
+
+    [Header("ダウン時、アニメーションを一時停止する時間(秒)")]
+    [SerializeField] float timeStopMotion;
+
+    [Header("ダウン終了後、定位置に戻るまでの速さ(秒)")]
     [SerializeField] float timeReturnNormalPos;
-
-    [Header("弾を撃つSE")]
-    [SerializeField] private AudioClip shotSE;
-
-    //[Header("吹き飛ばし攻撃のSE")]
-    //[SerializeField] private AudioClip blowOffSE;
-
 
     //このコード内で使用するための変数
     Rigidbody myRigidbody;                         //自分のRigidbody
@@ -129,33 +156,28 @@ public class CS_Enemy1 : MonoBehaviour
     bool isDead;                                   //死亡したか？
 
     AudioSource shotAudioSource;                   //弾を撃つ用のAudioSource
-    //AudioSource blowOffAudioSource;              //吹き飛ばし攻撃用のAudioSource
 
-    //実験用
-    [Header("吹き飛ばし攻撃するまでの時間（実験用）")]
-    [SerializeField] float maxBlowOffCount;
-
-    [Header("弱・強攻撃の弾を発射することができるプレイヤーとの最大距離(最大移動可能範囲に対する割合)")]
-    [SerializeField] float maxDistanceRatio;
-
-    [Header("ダウン時、降下するスピード(秒)")]
+    [Header("<=====降下時間（秒）=====>")]
+    [Header("ダウン時")]
     [SerializeField] float timeFallToGroundByDown;
 
-    [Header("死亡時、降下するスピード(秒)")]
-    [SerializeField] float timeFallToGroundByDeath;
+    //[Header("死亡時")]
+    //[SerializeField] float timeFallToGroundByDeath;
+    //[Header("==========")]
 
-    [Header("吹き飛ばし攻撃の生成位置(プレイヤー位置との差)")]
-    [SerializeField] Vector3 blowOffEffectPosition;
+    [Header("弾を撃つSE")]
+    [SerializeField] private AudioClip shotSE;
 
-    [Header("生成した弾が完全に大きくなるのにかかる時間(秒)")]
-    [SerializeField] float timeScaleUpMagicMissileCompletely;
+    //[Header("曲線軌道にするか？（弱攻撃）")]
+    //[SerializeField] bool isCurveWeakMagicMissile;
 
-    [Header("ダウン時、一時停止する時間(秒)")]
-    [SerializeField] float timeStopMotion;
+    //[Header("曲線軌道にするか？（強攻撃）")]
+    //[SerializeField] bool isCurveStrongMagicMissile;
 
-    float blowOffCount;
-    float blowOffDuration;
-    bool isBlowingOff;
+    //float blowOffCount;
+
+    //float blowOffDuration;
+    //bool isBlowingOff;
 
     const int defaultPuddleRenderQueue = 2980;
     int addPuddleRenderQueue;
@@ -177,14 +199,13 @@ public class CS_Enemy1 : MonoBehaviour
     //攻撃アニメーション対応用
     bool canShoot;  //発射可能か？
     bool canBlowOff;//吹き飛ばし攻撃可能か？
-    bool canFallByDeath;       //死亡によって落下できるか？
+    //bool canFallByDeath;       //死亡によって落下できるか？
 
     int downCount = 0;
 
     bool canFall;  //アニメーション一時停止用
 
     bool isWaitRise;  //LookAtが作動してしまうため
-
 
     //float shotCount = 0;
 
@@ -271,7 +292,8 @@ public class CS_Enemy1 : MonoBehaviour
         {
             totalProbability += probability[i];
         }
-        ChooseAttackType();
+        SetAttackType(0);  //最初は弱攻撃
+        //ChooseAttackType();
 
         //AudioSourceの取得
         shotAudioSource = GetComponent<AudioSource>();
@@ -284,9 +306,8 @@ public class CS_Enemy1 : MonoBehaviour
 
 
         //実験用変数の初期化
-        blowOffCount = maxBlowOffCount;
-        isBlowingOff = false;
-        blowOffDuration = 0.0f;
+        //isBlowingOff = false;
+        //blowOffDuration = 0.0f;
 
         addPuddleRenderQueue = 0;
 
@@ -312,7 +333,7 @@ public class CS_Enemy1 : MonoBehaviour
         //攻撃アニメーション対応用
         canShoot = false;
         canBlowOff = false;
-        canFallByDeath = false;
+        //canFallByDeath = false;
 
         //アニメーション一時停止用
         canFall = false;
@@ -329,15 +350,16 @@ public class CS_Enemy1 : MonoBehaviour
         //    return;
         //}
 
-        float damage = Time.deltaTime;
+        //float damage = Time.deltaTime;
         //if (downCount % 2 != 0) { damage *= 3.0f; }
-        ReduceHp(damage);
-        //Debug.Log("HP = " + hp);
+        //ReduceHp(damage);
+        ////Debug.Log("HP = " + hp);
 
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            hp = 0.0f;
-        }
+        //if (Input.GetKeyDown(KeyCode.G))
+        //{
+        //    //ReduceHp(20);
+        //    hp = 0.0f;
+        //}
 
         //死亡
         if (hp <= 0.0f)
@@ -405,11 +427,13 @@ public class CS_Enemy1 : MonoBehaviour
     {
         if(type == AttackType.Weak)
         {
-            shootInterval[iteration] = weakShootInterval * (iteration + 1);
+            shootInterval[iteration] = weakShootInterval * iteration;
+            //shootInterval[iteration] = weakShootInterval * (iteration + 1);
         }
         else
         {
-            shootInterval[iteration] = strongShootInterval * (iteration + 1);
+            shootInterval[iteration] = strongShootInterval * iteration;
+            //shootInterval[iteration] = strongShootInterval * (iteration + 1);
         }
     }
 
@@ -566,6 +590,10 @@ public class CS_Enemy1 : MonoBehaviour
         script[magicMissileCount - 1] =
             createdMagicMissile[magicMissileCount - 1].GetComponent<CS_Enemy1MagicMissile>();
 
+        //弾のパラメータ設定
+        SetMoveSpeed(type, magicMissileCount - 1);
+        SetAttackPower(type, magicMissileCount - 1);
+
         //実験用
         script[magicMissileCount - 1].SetMagicMissileCount = magicMissileCount;
         script[magicMissileCount - 1].SetPuddleRenderQueue = defaultPuddleRenderQueue + addPuddleRenderQueue;
@@ -713,6 +741,29 @@ public class CS_Enemy1 : MonoBehaviour
     //    }
     //}
 
+    void SetMoveSpeed(AttackType type, int iteration)
+    {
+        if(type == AttackType.Weak)
+        {
+            script[iteration].SetMoveSpeed = weakMoveSpeed;
+        }
+        else if(type == AttackType.Strong)
+        {
+            script[iteration].SetMoveSpeed = strongMoveSpeed;
+        }
+    }
+    void SetAttackPower(AttackType type, int iteration)
+    {
+        if(type == AttackType.Weak)
+        {
+            script[iteration].SetAttackPower = weakAttackPower;
+        }
+        else if(type == AttackType.Strong)
+        {
+            script[iteration].SetAttackPower = strongAttackPower;
+        }
+    }
+
     /// <summary>
     /// 弾の種類を設定する
     /// </summary>
@@ -762,22 +813,29 @@ public class CS_Enemy1 : MonoBehaviour
     /// </summary>
     void AttackEventShoot()
     {
-        if(attackType == AttackType.Weak ||
-            attackType == AttackType.Strong)
+        //吹き飛ばし用ではないので処理しない
+        if(attackType == AttackType.BlowOff)
         {
-            canShoot = true;  //発射可能
+            return;
         }
 
-        //switch (attackType)
+        //アニメーション速度を変える
+        if(attackType == AttackType.Weak)
+        {
+            myAnimator.SetFloat("AnimationSpeed", weakAnimationSpeedRatio);
+        }
+        if(attackType == AttackType.Strong)
+        {
+            myAnimator.SetFloat("AnimationSpeed", strongAnimationSpeedRatio);
+        }
+
+        //発射可能
+        canShoot = true;  
+
+        //if(attackType == AttackType.Weak ||
+        //    attackType == AttackType.Strong)
         //{
-        //    case AttackType.Weak:
-        //    case AttackType.Strong:
-        //        canShoot = true;  //発射可能
-        //        break;
-        //    case AttackType.BlowOff:
-        //        canBlowOff = true;//吹き飛ばし可能
-        //        //BlowOff();
-        //        break;
+        //    canShoot = true;  //発射可能
         //}
     }
 
@@ -848,8 +906,9 @@ public class CS_Enemy1 : MonoBehaviour
                 //一定距離離れていたら発射とモーション中止
                 else
                 {
-                    canShoot = false; 
-                    myAnimator.SetBool("Attack", false); 
+                    canShoot = false;
+                    myAnimator.SetBool("Attack", false);
+                    myAnimator.SetFloat("AnimationSpeed", 1);  //速度を戻す
                 }
 
                 //if (isShooting) 
@@ -909,21 +968,23 @@ public class CS_Enemy1 : MonoBehaviour
                 continue;
             }
 
+
             //発射時間になったら発射
             shootInterval[i] -= Time.deltaTime;
             if (shootInterval[i] < 0.0f)
             {
                 script[i].GetSetIsCanFire = true;  //発射
                 //script[i].SetPlayerTransform = player.transform;
+
                 //実験用
-                if(type == AttackType.Weak)
-                {
-                    script[i].SetIsCurve = isCurveWeakMagicMissile;
-                }
-                else
-                {
-                    script[i].SetIsCurve = isCurveStrongMagicMissile;
-                }
+                //if(type == AttackType.Weak)
+                //{
+                //    script[i].SetIsCurve = isCurveWeakMagicMissile;
+                //}
+                //else
+                //{
+                //    script[i].SetIsCurve = isCurveStrongMagicMissile;
+                //}
 
                 //初期化
                 createdMagicMissile[i] = null;
@@ -932,6 +993,12 @@ public class CS_Enemy1 : MonoBehaviour
                 //音
                 shotAudioSource.PlayOneShot(shotSE);
                 //shotAudioSource.PlayOneShot(shotAudioSource.clip);
+
+                //最後より一つ前の弾が放たれたらアニメーション速度を元に戻す
+                if (i == magicMissileNumber[num] - 2)
+                {
+                    myAnimator.SetFloat("AnimationSpeed", 1);
+                }
 
                 //最後の弾を撃ったら攻撃終了
                 if (i == magicMissileNumber[num] - 1)
@@ -984,40 +1051,17 @@ public class CS_Enemy1 : MonoBehaviour
         effect.SetBlowOffPower = blowOffPower;
         effect.PlayEffect();
         //isBlowingOff = true;
-        blowOffDuration = effect.GetEffectDuration;
+
+        //blowOffDuration = effect.GetEffectDuration;
 
         //変数初期化
         isAttack = false;
-        isBlowingOff = false;
+        //isBlowingOff = false;
         attackInterval = maxAttackInterval;
-        blowOffCount = maxBlowOffCount;
 
         //アニメーション用変数初期化
         canBlowOff = false;
         myAnimator.SetBool("Attack", false);  //モーション停止
-
-
-        ////エフェクト発生
-        //if (!isBlowingOff)
-        //{
-        //    var effect = Instantiate(blowOffEffect, transform.position, Quaternion.identity);
-        //    effect.SetBlowOffPower = blowOffPower;
-        //    effect.PlayEffect();
-
-        //    isBlowingOff = true;
-        //    blowOffDuration = effect.GetEffectDuration;
-        //    //myAnimator.SetBool("Attack", false);  //モーション停止
-        //}
-
-        ////攻撃が終わったら変数を初期化
-        //blowOffDuration -= Time.deltaTime;
-        //if(blowOffDuration < 0.0f)
-        //{
-        //    isAttack = false;
-        //    isBlowingOff = false;
-        //    attackInterval = maxAttackInterval;
-        //    blowOffCount = maxBlowOffCount;
-        //}
     }
 
     /// <summary>
@@ -1054,10 +1098,10 @@ public class CS_Enemy1 : MonoBehaviour
             //地面に下ろす(重力落下にしたので要らない)
             //目標までの距離から割合を算出してtimeArriveGroundの数値を変える
             // = 降下スピードが変わらない
-            isGround = false;
-            totalFallTime = 0.0f;  //初期化
-            timeArriveGround = timeFallToGroundByDeath * DistanceRatioToGround();
-            currentPosition = transform.position;
+            //isGround = false;
+            //totalFallTime = 0.0f;  //初期化
+            //timeArriveGround = timeFallToGroundByDeath * DistanceRatioToGround();
+            //currentPosition = transform.position;
 
             //myRigidbody.useGravity = true;
         }
@@ -1100,8 +1144,6 @@ public class CS_Enemy1 : MonoBehaviour
             {
                 creationInterval[i] = 0.0f;
             }
-            //吹き飛ばし攻撃
-            blowOffCount = maxBlowOffCount;
 
             //弾を消す
             DestroyMagicMissile();
@@ -1109,6 +1151,7 @@ public class CS_Enemy1 : MonoBehaviour
             //降下アニメーション再生
             myAnimator.SetBool("Fall", true);
             myAnimator.SetBool("Attack", false);
+            myAnimator.SetFloat("AnimationSpeed", 1);  //速度を戻す
 
             //地面に下ろす
             //目標までの距離から割合を算出してtimeArriveGroundの数値を変える
@@ -1214,10 +1257,10 @@ public class CS_Enemy1 : MonoBehaviour
                 myAnimator.SetBool("Rise", false);  //上昇中にダウンしたときのため
             }
             //死亡していたらすべての処理をしないようにする
-            else
-            {
-                canFallByDeath = false;
-            }
+            //else
+            //{
+            //    canFallByDeath = false;
+            //}
         }
     }
 
