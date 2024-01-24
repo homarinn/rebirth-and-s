@@ -145,12 +145,14 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
             Debug.Log("吹き飛ばす方向(通常) = " + direction);
         }
 
-        ////吹き飛ばす
-        ////ForceModeを変えると挙動が変わる（今回は質量無視）
-        //rigidBody.AddForce(direction * blowOffPower, ForceMode.Impulse);
+        //吹き飛ばす
+        //ForceModeを変えると挙動が変わる（今回は質量無視）
+        rigidBody.AddForce(direction * blowOffPower, ForceMode.Impulse);
 
-        //吹き飛ばす(プレイヤー関数に渡す)
-        
+        //アニメーション停止
+        var script = other.gameObject.GetComponent<CS_Player>();
+        script.ReceiveDamage(0);
+
         Debug.Log("吹き飛ばした");
 
         //Colliderを無効化して複数回Playerを吹き飛ばさないようにする

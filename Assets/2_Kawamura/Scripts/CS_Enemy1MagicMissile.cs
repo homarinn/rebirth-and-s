@@ -9,20 +9,20 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     [Header("水溜り")]
     [SerializeField] CS_Enemy1Puddle puddle;
 
-    [Header("移動速度（直線軌道）")]
-    [SerializeField] float moveSpeed;
+    [Header("ヒットエフェクト")]
+    [SerializeField] GameObject hitEffect;
 
-    [Header("攻撃力")]
-    [SerializeField] float attackPower;
+    //[Header("移動速度")]
+    //[SerializeField] float moveSpeed;
+
+    //[Header("威力")]
+    //[SerializeField] float attackPower;
 
     [Header("ステージに接触して消滅するまでの速さ（秒）")]
     [SerializeField] float disappearTime;
 
-    [Header("着弾するまでの時間（秒、曲線軌道用）")]
-    [SerializeField] float period;
-
-    //[Header("水溜まりを生成するY座標")]
-    //[SerializeField] float puddleCreatePositionY;
+    //[Header("着弾するまでの時間（秒、曲線軌道用）")]
+    //[SerializeField] float period;
 
 
     CS_Enemy1Puddle puddleObject;    //水溜り
@@ -32,6 +32,9 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
     float elapsedTime;
     bool isCanFire;             //射出可能か？
     bool isCollisionStage;      //ステージに当たったか？
+
+    float moveSpeed;
+    float attackPower;
 
     //弾と水溜りのスケール変化に使用
     Vector3 startScale;                    
@@ -74,8 +77,24 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
 
     string magicMissileType;  //弾の種類
 
+    const float adjustPositionY = 0.3f;
+    //const float adjustPositionY = 0.33f;
+
+    float rotateSpeed;
+
+    bool isCollisionWeapon;
+
 
     //ゲッターセッター
+    public float SetMoveSpeed
+    {
+        set { moveSpeed = value; }
+    }
+    public float SetAttackPower
+    {
+        set { attackPower = value; }
+    }
+
     public bool GetSetIsCanFire
     {
         get { return isCanFire; }
@@ -150,7 +169,7 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
         //実験用
         isMove = false;
         isHitBack = false;
-        //rotateSpeed = 10.0f;
+        rotateSpeed = 12.5f;
 
         curveDirection[0] = new Vector3(0, 15.0f, 0);
         curveDirection[1] = new Vector3(0.0f, 5.0f, -20.0f);
@@ -201,6 +220,10 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
         isCollisionPlayer = false;
 
         Debug.Log("type = " + magicMissileType);
+
+        isCurve = false;
+
+        isCollisionWeapon = false;
     }
 
     // Update is called once per frame
@@ -225,18 +248,18 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             //プレイヤーに向けて発射（曲線軌道）
             if (isCurve)
             {
-                targetPosition = playerTransform.position;
-                InitializeVelocity();
+                //targetPosition = playerTransform.position;
+                //InitializeVelocity();
 
-                isCanFire = false;
-                isMove = true;
+                //isCanFire = false;
+                //isMove = true;
             }
             //プレイヤーに向けて発射（直線軌道）
             else
             {
                 Vector3 target = new Vector3(
                     playerTransform.position.x,
-                    playerTransform.position.y + 0.2f,
+                    playerTransform.position.y + adjustPositionY,
                     playerTransform.position.z);
 
                 direction = target - transform.position;
@@ -245,7 +268,7 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
                 velocity = direction * moveSpeed;
                 myRigidbody.velocity = velocity;
 
-                transform.right = velocity;
+                //transform.right = velocity;
 
                 isCanFire = false;
                 isMove = true;
@@ -259,22 +282,22 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             //直線軌道は発射時に力を与えるだけなので処理しない
             if (isCurve)
             {
-                Vector3 acceleration = Vector3.zero;
+                //Vector3 acceleration = Vector3.zero;
 
-                direction = targetPosition - transform.position;
-                acceleration += (direction - velocity * period) * 2.0f / (period * period);
+                //direction = targetPosition - transform.position;
+                //acceleration += (direction - velocity * period) * 2.0f / (period * period);
 
-                period -= Time.deltaTime;
-                if (period >= 0)
-                {
-                    velocity += acceleration * Time.deltaTime;
-                    transform.position += velocity * Time.deltaTime;
-                }
-                else
-                {
-                    myRigidbody.velocity = velocity;
-                    isMove = false;
-                }
+                //period -= Time.deltaTime;
+                //if (period >= 0)
+                //{
+                //    velocity += acceleration * Time.deltaTime;
+                //    transform.position += velocity * Time.deltaTime;
+                //}
+                //else
+                //{
+                //    myRigidbody.velocity = velocity;
+                //    isMove = false;
+                //}
             }
 
             //hitBackTime += Time.deltaTime;
@@ -300,10 +323,10 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             //if(transform.up != velocity)
             if (transform.right != myRigidbody.velocity)
             {
-                transform.right = myRigidbody.velocity;
+                //transform.right = myRigidbody.velocity;
 
-                //transform.right =
-                //    Vector3.Slerp(transform.right, myRigidbody.velocity, Time.deltaTime * rotateSpeed);
+                transform.right =
+                    Vector3.Slerp(transform.right, myRigidbody.velocity, Time.deltaTime * rotateSpeed);
             }
             //if (transform.right != velocity)
             //{
@@ -411,31 +434,46 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
             return;
         }
 
+        //武器に当たったら消す
+        if(!isCollisionStage && other.gameObject.tag == "PlayerWeapon")
+        {
+            isCollisionWeapon = true;
+            Destroy(gameObject);
+        }
+
+        //武器に当たっていたら判定しない
+        if (isCollisionWeapon)
+        {
+            return;
+        }
+
         //水溜まり生成可能ならプレイヤーとの当たり判定しない
         //プレイヤーに当たったらHPを減らして弾を消す
         if (!isCollisionStage && other.gameObject.tag == "Player")
         {
             //HP減らす
-            //var script = other.gameObject.GetComponent<CS_Player>();
-            //script.ReceiveDamage(attackPower);
-            Debug.Log("プレイヤーへのダメージ");
+            var script = other.gameObject.GetComponent<CS_Player>();
+            script.ReceiveDamage(attackPower);
+            //Debug.Log("プレイヤーへのダメージ");
             isCollisionPlayer = true;
 
-            //エフェクト出す？
-
+            //エフェクト出す
+            Vector3 instancePosition = other.transform.position;
+            instancePosition.y += adjustPositionY * 2.5f;
+            Instantiate(hitEffect, instancePosition, Quaternion.identity);
 
             //消す
             Destroy(gameObject);
         }
 
-        //敵に接触したら敵のHPを減らす（プレイヤーが跳ね返したときのみ）
-        if (isHitBack && other.gameObject.tag == "Enemy")
-        {
-            var script = other.gameObject.GetComponent<CS_Enemy1>();
-            script.ReduceHp(attackPower);
+        ////敵に接触したら敵のHPを減らす（プレイヤーが跳ね返したときのみ）
+        //if (isHitBack && other.gameObject.tag == "Enemy")
+        //{
+        //    var script = other.gameObject.GetComponent<CS_Enemy1>();
+        //    script.ReduceHp(attackPower);
 
-            Destroy(gameObject);
-        }
+        //    Destroy(gameObject);
+        //}
 
         //水溜まり外でステージに接触したら水溜りを生成
         if (!isCollisionStage && canCreatePuddle && 
@@ -446,7 +484,7 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
                 isCollisionStage = true;
                 startScale = transform.localScale;
                 CreatePuddle();
-                Debug.Log("ステージに当たった");
+                //Debug.Log("ステージに当たった");
             }
         }
 
@@ -456,7 +494,7 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
         {
             isCollisionStage = true;
             startScale = transform.localScale;
-            Debug.Log("水溜まりに当たった");
+            //Debug.Log("水溜まりに当たった");
         }
 
     }

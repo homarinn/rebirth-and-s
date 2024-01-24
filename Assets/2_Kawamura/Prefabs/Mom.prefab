@@ -822,7 +822,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2.5, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4228503617981104931}
@@ -924,32 +924,34 @@ MonoBehaviour:
   stageBoundary: {fileID: 0}
   maxHp: 100
   rotateSpeed: 80
-  maxAttackInterval: 3
-  weakAttackProbability: 40
-  strongAttackProbability: 30
-  blowOffAttackProbability: 30
-  halfCircleRadius: 1.5
+  maxAttackInterval: 2.5
+  halfCircleRadius: 2
   magicMissileSpawnPos: {x: 0, y: 2, z: 0}
-  isCurveWeakMagicMissile: 0
-  isCurveStrongMagicMissile: 0
+  weakAttackProbability: 45
+  strongAttackProbability: 35
+  blowOffAttackProbability: 20
+  weakMoveSpeed: 20
+  strongMoveSpeed: 25
+  weakAttackPower: 10
+  strongAttackPower: 20
   weakMagicMissileNumber: 5
   strongMagicMissileNumber: 7
-  weakCreationInterval: 2
-  strongCreationInterval: 1
-  weakShootInterval: 0.5
-  strongShootInterval: 0.25
-  blowOffPower: 100
-  downedDamageAmount: 35
-  downedTime: 10
-  timeReturnNormalPos: 3
-  shotSE: {fileID: 8300000, guid: 7052a61263230f94fa6e4a35f38ea463, type: 3}
-  maxBlowOffCount: 1
-  maxDistanceRatio: 0.95
-  timeFallToGroundByDown: 2.5
-  timeFallToGroundByDeath: 0.75
-  blowOffEffectPosition: {x: 0, y: 2, z: 0}
+  weakCreationInterval: 0.9
+  strongCreationInterval: 0.8
+  weakShootInterval: 0.75
+  strongShootInterval: 0.5
+  weakAnimationSpeedRatio: 0.6
+  strongAnimationSpeedRatio: 0.5
   timeScaleUpMagicMissileCompletely: 0.7
+  maxDistanceRatio: 0.9
+  blowOffPower: 15
+  blowOffEffectPosition: {x: 0, y: 2, z: 0}
+  downedTime: 10
+  downedDamageAmount: 30
   timeStopMotion: 1.3
+  timeReturnNormalPos: 2.5
+  timeFallToGroundByDown: 2.5
+  shotSE: {fileID: 8300000, guid: 7052a61263230f94fa6e4a35f38ea463, type: 3}
 --- !u!82 &5020254554967174505
 AudioSource:
   m_ObjectHideFlags: 0
@@ -963,7 +965,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 7052a61263230f94fa6e4a35f38ea463, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 0.8
   Loop: 0
   Mute: 0
   Spatialize: 0

@@ -104,7 +104,7 @@ public class CS_GameMgr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetEnemyHP();
+        SetEnemyDeathFlag();
 
         SetGameFlag();
         SetNextSceneName();
@@ -119,37 +119,40 @@ public class CS_GameMgr : MonoBehaviour
     }
 
     //! @brief Stage‚É‡‚Á‚½Enemy‚ÌHP‚ğİ’è
-    void SetEnemyHP()
+    bool SetEnemyDeathFlag()
     {
-        csTitan = goEnemy.GetComponent<CS_Titan>();
-        if (csTitan != null)
-        {
-            enemyHp = csTitan.Hp;
-        }
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if(csEnemy01 != null)
         {
             enemyHp = csEnemy01.GetHp;
         }
+        csTitan = goEnemy.GetComponent<CS_Titan>();
+        if (csTitan != null)
+        {
+            return csTitan.isDead;
+        }
         csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
         if(csEnPlayer != null)
         {
-            enemyHp = csEnPlayer.Hp;
+            return  csEnPlayer.IsDead;
         }
+        return false;
     }
 
     //! @brief GameClear/GameOver‚Ìƒtƒ‰ƒOİ’è
     void SetGameFlag()
     {
         //! PlayerScript‚©‚çHPæ“¾
-        if (csPlayer.Hp <= 0.0f) 
+        if (csPlayer.IsDeath) 
         {
             bGameOver = true;
             if(csTitan != null)csTitan.StopMoving();
             ChangeState(eState.FadeShow);
         }
         //! EnemyScript‚©‚çHPæ“¾
-        if (enemyHp <= 0.0f)
+
+        bool isDeath = SetEnemyDeathFlag();
+        if (isDeath)
         {
             bGameClear = true;
             ChangeState(eState.FadeShow);
