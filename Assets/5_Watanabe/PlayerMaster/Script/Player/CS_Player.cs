@@ -238,6 +238,7 @@ public partial class CS_Player : MonoBehaviour
                 if (Input.GetMouseButtonDown(0) && attackTimer <= 0)
                 {
                     state = State.Attack;
+                    rb.velocity = Vector3.zero;
                     anim.SetTrigger("AttackTrigger");  // アニメーションを再生
                 }
 
@@ -245,6 +246,7 @@ public partial class CS_Player : MonoBehaviour
                 if (Input.GetMouseButtonDown(1) && difenceTimer <= 0)
                 {
                     state = State.Difence;
+                    rb.velocity = Vector3.zero;
                     anim.SetTrigger("GuardTrigger");  // アニメーションを再生
                 }
 
@@ -252,6 +254,7 @@ public partial class CS_Player : MonoBehaviour
                 if(Input.GetKeyDown(KeyCode.Space) && ultTimer <= 0)
                 {
                     state = State.Ult;
+                    rb.velocity = Vector3.zero;
                     anim.SetTrigger("UltTrigger");
                 }
                 if(hp <= 0)
