@@ -468,11 +468,6 @@ public partial class CS_Player : MonoBehaviour
 
     #endregion
 
-    // 後で消すエラー対策
-    public void Damage(float damage)
-    {
-
-    }
 
     /// <summary>
     /// ダメージ処理
@@ -512,6 +507,22 @@ public partial class CS_Player : MonoBehaviour
         state = State.Damage;
         rb.velocity = Vector3.zero;
         anim.SetTrigger("DamageTrigger");
+    }
+
+    /// <summary>
+    /// 吹き飛ばす
+    /// </summary>
+    /// <param name="direcion">飛ばす方向</param>
+    /// <param name="power">飛ばす威力</param>
+    public void BlowOff(Vector3 direcion, float power)
+    {
+        rb.AddForce(direcion * power, ForceMode.Impulse);
+        if(state == State.Difence)
+        {
+            return;
+        }
+        state = State.Damage;
+        anim.SetTrigger("BlowOffTrigger");
     }
 
     /// <summary>
