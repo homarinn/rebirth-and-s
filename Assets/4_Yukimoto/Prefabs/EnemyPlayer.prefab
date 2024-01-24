@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5137595960111253558}
   - component: {fileID: 3398034125425779506}
   - component: {fileID: 3459512118508614079}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: bukiCollision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1088611939331834815}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hiza_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1228350655081120749}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: oya1_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6758742414484275735}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ashikubi_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1966448584282411804}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: oul_model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -218,7 +218,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 149895615151099491}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: naka4_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 692759444576146718}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -283,7 +283,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5179072307680140202}
   - component: {fileID: 2541777293624920338}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: PlayeCollision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -337,7 +337,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2549315223290296026}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: oya2_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +369,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4704931660883208713}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ko1_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -404,6 +404,7 @@ GameObject:
   - component: {fileID: 5155727150018060087}
   - component: {fileID: 6545941894283809608}
   - component: {fileID: 3466569981927529051}
+  - component: {fileID: 4117776049064388840}
   - component: {fileID: 2571286890000043425}
   m_Layer: 7
   m_Name: EnemyPlayer
@@ -499,6 +500,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &4117776049064388840
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271042575669801200}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.21
+  m_Height: 1.6540359
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.827982, z: 0}
 --- !u!114 &2571286890000043425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -512,18 +536,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  maxHp: 20
+  maxHp: 1000
   chaseSpeed: 5
   chaseAcceleration: 10
   moveSpeed: 2
-  attackPower: 10
-  triggerDistance: 2
+  attackPower: 20
+  triggerDistance: 3
   attackInterval: 2
   attackPercent: 10
   hasSuperArmor: 1
+  ultPower: 50
   ultInterval: 5
   ultSpeed: 1.5
   slidingInterval: 2
+  damageCutRatio: 80
   guardInterval: 2
   invincibleTime: 3
   attackReceptionTime: 1
@@ -540,7 +566,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7151769563351963577}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -573,7 +599,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4745734546322580034}
   - component: {fileID: 2085767767253774795}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: eyebrows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -663,7 +689,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5634197099760015820}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: tekubi_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -699,7 +725,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1268930750820896402}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: naka2_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -732,7 +758,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2580130773087599946}
   - component: {fileID: 8184066863344776203}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: eyemodel_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -818,7 +844,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9021984281838793543}
   - component: {fileID: 6458439004457631707}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: eyelash_u
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -908,7 +934,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8472713795474304434}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hiji_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -941,7 +967,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1320995509769035471}
   - component: {fileID: 9198508089701900179}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1089,7 +1115,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2568946749328257375}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: oya3_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1121,7 +1147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2458623233060836276}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hito1_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1153,7 +1179,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5663374597964022201}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kusuri3_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1185,7 +1211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7604680602821796009}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kata_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1217,7 +1243,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4881021307583575257}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: naka4_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1248,7 +1274,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7109487940770199772}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kusuri1_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1280,7 +1306,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3720780663772584943}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: naka2_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1312,7 +1338,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8514083025147570463}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kata_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1344,7 +1370,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 190999126445582151}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ko1_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1377,7 +1403,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6755867588414409688}
   - component: {fileID: 3239201105018344425}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: face
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1525,7 +1551,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8564086042569997519}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hito1_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1557,7 +1583,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7007475635794297442}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: momo_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1589,7 +1615,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2065071040412475174}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ko2_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1622,7 +1648,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5398195796687345496}
   - component: {fileID: 5097707590515295585}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: eyelids
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1708,7 +1734,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9034575125417029910}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: eye_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1739,7 +1765,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1039444424456152955}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kusuri1_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1772,7 +1798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 362506694782691129}
   - component: {fileID: 6031742592026962098}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: vest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1920,7 +1946,7 @@ GameObject:
   m_Component:
   - component: {fileID: 863904927653606001}
   - component: {fileID: 9072521216851231661}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: eyelash_t
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2010,7 +2036,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1555302310243035341}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: zentai
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2044,7 +2070,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8058128794209585167}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kusuri2_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2076,7 +2102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4079717088981206436}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ko3_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2108,7 +2134,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1252012886801066648}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: oya4_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2139,7 +2165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5514992354942852623}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: koshi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2172,7 +2198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7454164013359404546}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ko4_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2203,7 +2229,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 299140446848913175}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: oya1_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2235,7 +2261,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3199146762167040825}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hito4_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2266,7 +2292,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7212866048275917473}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: oya4_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2297,7 +2323,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9108629766610237250}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: naka3_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2329,7 +2355,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5774534144378865653}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kusuri2_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2361,7 +2387,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6737672686843512089}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ko4_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2392,7 +2418,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5812119163406568847}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: tekubi_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2428,7 +2454,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5667520951894985668}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: sakotsu_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2460,7 +2486,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7963315223300445409}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hiza_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2492,7 +2518,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5312266186603183057}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: tsumasaki_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2523,7 +2549,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3568157514801464534}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: oya3_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2555,7 +2581,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6364897374765057375}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hito4_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2586,7 +2612,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7549948363345523570}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: buki:sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2619,7 +2645,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6203401870595384876}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: naka3_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2651,7 +2677,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2238317522206066854}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kusuri4_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2682,7 +2708,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4459523212576702759}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: oya2_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2714,7 +2740,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8838870435860938668}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: tsumasaki_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2745,7 +2771,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7790100244662817275}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hito3_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2777,7 +2803,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7112989219660059987}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hito2_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2809,7 +2835,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 64816519663783126}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: naka1_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2841,7 +2867,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3935892152743464999}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: eye_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2873,7 +2899,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3638415241363722319}
   - component: {fileID: 7575088726674769351}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: eyelash_s
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2963,7 +2989,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2653872078684728220}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: naka1_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2996,7 +3022,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8854650458426096003}
   - component: {fileID: 5932257916436762550}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hands
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3143,7 +3169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8152656524773083303}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: rokkotsu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3177,7 +3203,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7962101630245809595}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hito2_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3209,7 +3235,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2186628619180971922}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ashikubi_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3242,7 +3268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5801288667124924183}
   - component: {fileID: 1474061660586392086}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: pants
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3389,7 +3415,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8267593983667165170}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ko3_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3422,7 +3448,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5101047970959119535}
   - component: {fileID: 5390085711334977599}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: eyemodel_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3507,7 +3533,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7453391491769506993}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hito3_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3539,7 +3565,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4106681752142311711}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: momo_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3571,7 +3597,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8167800422313836769}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kusuri3_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3603,7 +3629,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1709547367385237619}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: hiji_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3635,7 +3661,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2117995942758874449}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ko2_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3668,7 +3694,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9018223104160704793}
   - component: {fileID: 7930140083739168412}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: shoes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3815,7 +3841,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8154619221006909804}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: kusuri4_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3846,7 +3872,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9058348932408468632}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: sakotsu_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3880,7 +3906,7 @@ PrefabInstance:
     - target: {fileID: -9109647004312545438, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
@@ -3940,12 +3966,12 @@ PrefabInstance:
     - target: {fileID: -5925281229340165526, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: -3863637620469851325, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: -3032589091742529754, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
@@ -3955,7 +3981,7 @@ PrefabInstance:
     - target: {fileID: -2604452373672197971, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
@@ -3965,7 +3991,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
@@ -3980,7 +4006,7 @@ PrefabInstance:
     - target: {fileID: 2190323613238652384, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3290969751256347304, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
@@ -3990,7 +4016,7 @@ PrefabInstance:
     - target: {fileID: 3391879141751367425, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4690687285692785044, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
@@ -4005,7 +4031,7 @@ PrefabInstance:
     - target: {fileID: 7582378148284662605, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8505294037077489748, guid: 38466e931d7b39b45985061afc0721a9,
         type: 3}
