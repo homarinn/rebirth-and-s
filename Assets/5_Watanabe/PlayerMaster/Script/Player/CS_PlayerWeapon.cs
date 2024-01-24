@@ -34,7 +34,7 @@ public class CS_PlayerWeapon : MonoBehaviour
             // •ê
             if(other.GetComponent<CS_Enemy1>() != null)
             {
-            
+                other.GetComponent<CS_Enemy1>().ReduceHp(attackDamage);
             }
             // •ƒ
             else if (other.GetComponent<CS_Titan>() != null)

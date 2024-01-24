@@ -288,6 +288,11 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void IntervalUpdate()
     {
+        if(attackTimer > 0)
+        {
+            attackTimer -= Time.deltaTime;
+        }
+
         // スライディングのインターバルタイマーを減らす
         if(slidingInterval > 0)
         {

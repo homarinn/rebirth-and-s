@@ -569,23 +569,23 @@ public class CS_Titan : MonoBehaviour
     {
         //地面から出てるやつ
         //生成
-        GameObject effectGround = Instantiate(chargeEffectGround, transform.position, Quaternion.identity) as GameObject;
-        //子供取得
-        int childCount = effectGround.transform.childCount;
-        ParticleSystem[] psGround = new ParticleSystem[childCount];
-        //時間変更
-        for(int i = 0; i < childCount; i++)
-        {
-            psGround[i] = effectGround.transform.GetChild(i).gameObject.GetComponent<ParticleSystem>();
-            psGround[i].Stop();
-            var main = psGround[i].main;
-            main.duration = _chargeTime;
-            psGround[i].Play();
-        }
+        //GameObject effectGround = Instantiate(chargeEffectGround, transform.position, Quaternion.identity) as GameObject;
+        ////子供取得
+        //int childCount = effectGround.transform.childCount;
+        //ParticleSystem[] psGround = new ParticleSystem[childCount];
+        ////時間変更
+        //for(int i = 0; i < childCount; i++)
+        //{
+        //    psGround[i] = effectGround.transform.GetChild(i).gameObject.GetComponent<ParticleSystem>();
+        //    psGround[i].Stop();
+        //    var main = psGround[i].main;
+        //    main.duration = _chargeTime;
+        //    psGround[i].Play();
+        //}
 
         //シールドっぽいやつ
         GameObject effectShield = Instantiate(chargeEffectShield, transform.position, Quaternion.identity) as GameObject;
-        childCount = effectShield.transform.childCount;
+        int childCount = effectShield.transform.childCount;
         ParticleSystem[] psShield = new ParticleSystem[childCount + 1];
         psShield[0] = effectShield.GetComponent<ParticleSystem>();
         for (int i = 1; i < childCount + 1; i++)
