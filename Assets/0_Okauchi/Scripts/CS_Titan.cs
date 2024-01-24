@@ -22,6 +22,8 @@ public class CS_Titan : MonoBehaviour
     //アニメーター
     [SerializeField, Header("アニメーター")]
     private Animator animator;
+    [SerializeField, Header("死亡アニメーションクリップ")]
+    private AnimationClip dieClip;
 
     //HP
     [SerializeField, Header("Hpの最大値")] 
@@ -169,6 +171,15 @@ public class CS_Titan : MonoBehaviour
     [SerializeField, Header("突進エフェクトの生成時間間隔")]
     private float rushEffectGeneratingSpan;
     private float rushEffectTimeCount;
+    [SerializeField, Header("プレイヤーに対するヒットエフェクト")]
+    private GameObject hitEffect;
+    [SerializeField, Header("弱点に攻撃された時のヒットエフェクト")]
+    private GameObject weaknessEffect;
+    [SerializeField, Header("弱点のコライダー座標")]
+    private Transform weaknessTransform;
+
+    //死亡しました
+    public bool isDead = false;
 
 
     private void Awake()
@@ -455,6 +466,7 @@ public class CS_Titan : MonoBehaviour
         animator.SetTrigger("triggerDown");
         //ダウン時間のリセット
         downTimeCount = downTime;
+        moveSE.Stop();
     }
     private void Down()
     {
@@ -495,6 +507,7 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.DIE;
         animator.SetTrigger("triggerDie");
+        moveSE.Stop();
     }
     private void Die()
     {
@@ -502,6 +515,10 @@ public class CS_Titan : MonoBehaviour
         if (dieTimeCount >= colliderChangingTime)
         {
             SetDownColliderParameter();
+        }
+        if(!IsPlayingAnim(animator, dieClip))
+        {
+            isDead = true;
         }
     }
     //↑↑↑↑↑↑↑↑↑↑↑↑↑
@@ -534,6 +551,8 @@ public class CS_Titan : MonoBehaviour
     {
         if (state == State.CHARGE) return;
         ReceiveDamage(weakPointDamageIncrement);
+        //エフェクト
+        GameObject effect = Instantiate(weaknessEffect, weaknessTransform.position, Quaternion.identity);
 
         //ダウン中or死亡中でない場合は
         if (state != State.DOWN && state != State.DIE)
@@ -598,7 +617,7 @@ public class CS_Titan : MonoBehaviour
     {
         //生成
         Vector3 generatingPosition = new Vector3(transform.position.x, rushEffectPositionY, transform.position.z);
-        float generatingRotationY = transform.rotation.eulerAngles.y;
+        float generatingRotationY = -1.0f * transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
         GameObject effect = Instantiate(rushEffect, generatingPosition, Quaternion.identity) as GameObject;
         //角度調整
         ParticleSystem ps = effect.GetComponent<ParticleSystem>();
@@ -617,11 +636,17 @@ public class CS_Titan : MonoBehaviour
         //突進中にプレイヤーに衝突した場合
         if(collision.gameObject.CompareTag("Player") && state == State.RUSH)
         {
-            collision.gameObject.GetComponent<CS_Player>().Damage((int)rushPower);
+            collision.gameObject.GetComponent<CS_Player>().ReceiveDamage((int)rushPower);
             //衝突した際のSEを再生
             clashSE.Play();
+            //エフェクト
+            if(collision.contacts[0].point != null)
+            {
+                GameObject effect = Instantiate(hitEffect, collision.contacts[0].point, Quaternion.identity);
+            }
         }
     }
+
 
     //--------------------------------------
     //その他の関数
@@ -674,5 +699,35 @@ public class CS_Titan : MonoBehaviour
         collider.center = downColliderCenter;
         collider.radius = downColliderRadius;
         collider.height = downColliderHeight;
+    }
+
+    /// <summary>
+    /// 再生中のアニメーションを取得する
+    /// </summary>
+    /// <param name="animator"> アニメーター </param>
+    /// <returns> 再生中のアニメーション </returns>
+    private AnimatorStateInfo GetCurrentAnim(Animator animator, int layerIndex = 0)
+    {
+        // 再生中のアニメーション
+        return animator.GetCurrentAnimatorStateInfo(layerIndex);
+    }
+
+    /// <summary>
+    /// 指定したアニメーションが再生中か確認する
+    /// </summary>
+    /// <param name="animator"> アニメーター </param>
+    /// <param name="anim"> 確認するアニメーション </param>
+    /// <returns>
+    /// <para> true : 再生中 </para>
+    /// <para> false : 再生していない </para>
+    /// </returns>
+    private bool IsPlayingAnim(Animator animator, AnimationClip anim)
+    {
+        // 再生中のアニメーション
+        var currentAnim = GetCurrentAnim(animator);
+
+        // 再生中のアニメーションの名前が
+        // 指定した名前と一致するならtrue
+        return currentAnim.IsName(anim.name);
     }
 }
