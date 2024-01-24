@@ -186,6 +186,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameMgr
       objectReference: {fileID: 0}
+    - target: {fileID: 1087999330061287681, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: e28f1df9f8cfe164095626128f5bbc9c, type: 3}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: state
@@ -208,6 +213,11 @@ PrefabInstance:
       objectReference: {fileID: 686374641}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
+      propertyPath: stageBGM
+      value: 
+      objectReference: {fileID: 14568961}
+    - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
       propertyPath: nextStage
       value: Event02Scene
       objectReference: {fileID: 0}
@@ -221,6 +231,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b466077f633f26469db791f7106095b, type: 3}
+--- !u!82 &14568961 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1087999330061287681, guid: 8b466077f633f26469db791f7106095b,
+    type: 3}
+  m_PrefabInstance: {fileID: 14568960}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &608803283
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -239,6 +255,11 @@ PrefabInstance:
       propertyPath: goPlayer
       value: 
       objectReference: {fileID: 686374636}
+    - target: {fileID: 767292631817329978, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: goDialogue
+      value: 
+      objectReference: {fileID: 1505086956}
     - target: {fileID: 3154834446831600572, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_IsActive
@@ -290,6 +311,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Camera
       value: 
+      objectReference: {fileID: 1990289614}
+    - target: {fileID: 5784708299847025064, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5784708299847025064, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_PlaneDistance
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6477440857290170815, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
@@ -299,13 +330,13 @@ PrefabInstance:
     - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_text
-      value: "Enemy(\u30B7\u30F4\u30A1)"
+      value: "\u30DE\u30DF\u30FC"
       objectReference: {fileID: 0}
     - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 5ba97ac1fe5836e4e93350c7022a834d,
+      objectReference: {fileID: 11400000, guid: b461f37458de3434a916ce25772672da,
         type: 2}
     - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
@@ -336,7 +367,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 2220465314334752200, guid: 5ba97ac1fe5836e4e93350c7022a834d,
+      objectReference: {fileID: -3313772920169313949, guid: b461f37458de3434a916ce25772672da,
         type: 2}
     - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
@@ -695,6 +726,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
+      propertyPath: maxHp
+      value: 207
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 686374636}
@@ -772,10 +808,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a9986dda408171946b68ebd184dfeadc,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5d8687343e2d9d44e8c23eebb09fe6b9, type: 2}
     - target: {fileID: 919132149155446097, guid: a9986dda408171946b68ebd184dfeadc,
         type: 3}
       propertyPath: m_Name
       value: stage
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a9986dda408171946b68ebd184dfeadc,
+        type: 3}
+      propertyPath: m_TagString
+      value: Stage
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1075,6 +1121,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!20 &1990289614 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 1839967511998124424, guid: ed4f576053ab8d14784403b9b7a76853,
+    type: 3}
+  m_PrefabInstance: {fileID: 2059818515}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2059818515
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1096,7 +1148,7 @@ PrefabInstance:
     - target: {fileID: 3286177031333464908, guid: ed4f576053ab8d14784403b9b7a76853,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 3286177031333464908, guid: ed4f576053ab8d14784403b9b7a76853,
         type: 3}
@@ -1160,7 +1212,7 @@ SceneRoots:
   - {fileID: 1755531049}
   - {fileID: 608803283}
   - {fileID: 924401467}
-  - {fileID: 2059818515}
-  - {fileID: 998474941}
-  - {fileID: 1730844322}
   - {fileID: 1003560641}
+  - {fileID: 2059818515}
+  - {fileID: 1730844322}
+  - {fileID: 998474941}
