@@ -468,11 +468,6 @@ public partial class CS_Player : MonoBehaviour
 
     #endregion
 
-    // 後で消すエラー対策
-    public void Damage(float damage)
-    {
-
-    }
 
     /// <summary>
     /// ダメージ処理
