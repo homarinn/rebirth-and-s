@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CS_Titan : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class CS_Titan : MonoBehaviour
     //アニメーター
     [SerializeField, Header("アニメーター")]
     private Animator animator;
+    [SerializeField, Header("死亡アニメーションクリップ")]
+    private AnimationClip dieClip;
 
     //HP
     [SerializeField, Header("Hpの最大値")] 
@@ -56,11 +59,18 @@ public class CS_Titan : MonoBehaviour
     //--------------------
     //溜め
     //--------------------
-    [SerializeField, Header("最小溜め時間")] 
+    [SerializeField, Header("最小溜め時間（2秒未満はバグるかも）")] 
     private int chargeTimeMin = 0;
     [SerializeField, Header("最大溜め時間")] 
     private int chargeTimeMax = 0;
     private float chargeTimeCount = 0.0f;
+    private float chargeTime = 0.0f;
+    [SerializeField, Header("溜め中のダメージカット率（0.0～1.0）")]
+    private float damageCutPercentage = 0.0f;
+    //アニメーション速度の調整
+    private const float animationSpeedChangingTime = 0.3f;
+    private const float animationSpeedResetRemainingTime = 0.633f;
+    private bool changedAnimationSpeed = false;
 
     //突進中は若干追尾するのか突進開始時のプレイヤーの位置に突っ込むか
     //追尾無し
@@ -69,9 +79,17 @@ public class CS_Titan : MonoBehaviour
     //--------------------
     //突進
     //--------------------
+    private enum RushState
+    {
+        SPEED_UP,    //速度上昇
+        SPEED_MAX,   //速度最大
+        SPEED_DOWN,  //速度減少
+        FINISH,      //終了
+    }
+    private RushState rushState = RushState.FINISH;
     [SerializeField, Header("突進一回のインターバル")] 
     private float rushInterval = 0.0f;
-    [SerializeField, Header("突進一回の時間")] 
+    [SerializeField, Header("突進の持続時間（最大速度の時間）")] 
     private float rushTime = 0.0f;
     [SerializeField, Header("突進の初期威力")] 
     private float rushDefaultPower = 0.0f;
@@ -90,6 +108,11 @@ public class CS_Titan : MonoBehaviour
     private float rushPower = 0.0f;
     private float rushSpeed = 0.0f;
     private float rushIntervalCount = 0.0f;
+    [SerializeField, Header("速度の係数（速度上昇時）")]
+    private float rushSpeedUpCoefficient = 0.0f;
+    [SerializeField, Header("速度の係数（速度減少時）")]
+    private float rushSpeedDownCoefficient = 0.0f;
+    private float rushSpeedLimit = 0.0f;
 
     //--------------------
     //停止
@@ -109,6 +132,19 @@ public class CS_Titan : MonoBehaviour
     [SerializeField, Header("ダウン後から歩き始めるまでの時間")]
     private float afterDownTime = 0.0f;
     private float afterDownTimeCount = 0.0f;
+    //コライダーいじる用
+    private CapsuleCollider collider;
+    private const float colliderChangingTime = 1.0f;
+    private float colliderRadius = 0.0f;
+    private float colliderHeight = 0.0f;
+    private Vector3 downColliderCenter = new Vector3(0.4f, 0.44f, 0.05f);
+    private const float downColliderRadius = 0.44f;
+    private const float downColliderHeight = 0.5f;
+
+    //--------------------
+    //死亡
+    //--------------------
+    private float dieTimeCount = 0.0f;
 
     //--------------------
     //SE
@@ -117,8 +153,34 @@ public class CS_Titan : MonoBehaviour
     private AudioSource moveSE;
     [SerializeField, Header("SE：溜め")]
     private AudioSource chargeSE;
+    private const float chargeSETime = 4.3f;
     [SerializeField, Header("SE：突進の衝突")]
     private AudioSource clashSE;
+
+    //--------------------
+    //エフェクト
+    //--------------------
+    [SerializeField, Header("溜めエフェクト（地面から出てるやつ）")]
+    private GameObject chargeEffectGround;
+    [SerializeField, Header("溜めエフェクト（シールドっぽいやつ）")]
+    private GameObject chargeEffectShield;
+    [SerializeField, Header("突進エフェクト（衝撃波っぽいやつ）")]
+    private GameObject rushEffect;
+    [SerializeField, Header("突進エフェクトの生成y座標")]
+    private float rushEffectPositionY;
+    [SerializeField, Header("突進エフェクトの生成時間間隔")]
+    private float rushEffectGeneratingSpan;
+    private float rushEffectTimeCount;
+    [SerializeField, Header("プレイヤーに対するヒットエフェクト")]
+    private GameObject hitEffect;
+    [SerializeField, Header("弱点に攻撃された時のヒットエフェクト")]
+    private GameObject weaknessEffect;
+    [SerializeField, Header("弱点のコライダー座標")]
+    private Transform weaknessTransform;
+
+    //死亡しました
+    public bool isDead = false;
+
 
     private void Awake()
     {
@@ -128,7 +190,15 @@ public class CS_Titan : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
+        collider = GetComponent<CapsuleCollider>();
+
+        if(SceneManager.GetActiveScene().name == "OkauchiScene")
+        {
+            StartMoving();  //テスト用（最終的にはシーンを管理するスクリプトから呼び出してもらう）
+        }
+
+        colliderRadius = collider.radius;
+        colliderHeight = collider.height;
     }
 
     // Update is called once per frame
@@ -149,7 +219,7 @@ public class CS_Titan : MonoBehaviour
             case State.TURN:   Turn();   break;   //突進時の方向転換
             case State.STOP:   Stop();   break;   //突進後の停止
             case State.DOWN:   Down();   break;   //ダウン
-            case State.DIE:    break;
+            case State.DIE:    Die();    break;
             default: 
                 break;
         }
@@ -220,13 +290,17 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.CHARGE;
         animator.SetTrigger("triggerCharge");
-        //溜め用のSEを再生
-        chargeSE.Play();
         //溜め時間をランダムで決定
-        chargeTimeCount = (float)Random.Range(chargeTimeMin, chargeTimeMax);
+        chargeTime = (float)Random.Range(chargeTimeMin, chargeTimeMax);
+        chargeTimeCount = chargeTime;
+        //溜め用のSEを再生
+        chargeSE.pitch = chargeSETime / chargeTime;
+        chargeSE.Play();
         //突進の威力と速度を元に戻しておく
         rushPower = rushDefaultPower;
-        rushSpeed = rushDefaultSpeed;
+        rushSpeedLimit = rushDefaultSpeed;
+        //エフェクト生成
+        GenerateChargeEffect(chargeTime);
     }
     private void Charge()
     {
@@ -236,7 +310,20 @@ public class CS_Titan : MonoBehaviour
         chargeTimeCount -= Time.deltaTime;
         //溜め時間に合わせて威力と速度を上げる
         rushPower += rushPowerChargingIncrement * Time.deltaTime;
-        rushSpeed += rushSpeedChargingIncrement * Time.deltaTime;
+        rushSpeedLimit += rushSpeedChargingIncrement * Time.deltaTime;
+        //アニメーション速度を調整
+        if(chargeTime - chargeTimeCount >= animationSpeedChangingTime && chargeTime - chargeTimeCount < 1.0f && !changedAnimationSpeed)
+        {
+            float chargeRemainingTime = chargeTimeCount - animationSpeedResetRemainingTime;
+            float animationChargeRemainingTime = 1.0f - animationSpeedChangingTime;
+            animator.speed = animationChargeRemainingTime / chargeRemainingTime;
+            changedAnimationSpeed = true;
+        }
+        if(chargeTimeCount <= animationSpeedResetRemainingTime && changedAnimationSpeed)
+        {
+            animator.speed = 1.0f;
+            changedAnimationSpeed = false;
+        }
         //溜めが終了したら
         if (chargeTimeCount <= 0.0f)
         {
@@ -255,16 +342,58 @@ public class CS_Titan : MonoBehaviour
         state = State.RUSH;
         animator.SetTrigger("triggerRush");
         //突進時間をリセット
-        rushTimeCount = rushTime;
+        rushTimeCount = 0.0f;
+        //速度をリセット
+        rushSpeed = 0.0f;
+        rushState = RushState.SPEED_UP;
+        rushEffectTimeCount = 0;
     }
     private void Rush()
     {
+        //突進時間をカウント
+        rushTimeCount += Time.deltaTime;
+        //突進時の速度を調整
+        switch(rushState)
+        {
+            case RushState.SPEED_UP:
+                rushSpeed = rushSpeedUpCoefficient * Mathf.Pow(rushTimeCount, 3.0f);
+                if (rushSpeed > rushSpeedLimit)
+                {
+                    rushSpeed = rushSpeedLimit;
+                    rushTimeCount = 0.0f;
+                    rushState = RushState.SPEED_MAX;
+                }
+                break;
+            case RushState.SPEED_MAX:
+                if(rushTimeCount >= rushTime)
+                {
+                    float speedDownTime = Mathf.Pow(rushSpeed / rushSpeedDownCoefficient, 1.0f / 3.0f);
+                    rushTimeCount = -speedDownTime;
+                    rushState = RushState.SPEED_DOWN;
+                }
+                //エフェクト生成
+                rushEffectTimeCount -= Time.deltaTime;
+                if (rushEffectTimeCount <= 0.0f)
+                {
+                    GenerateRushEffect();
+                    rushEffectTimeCount = rushEffectGeneratingSpan;
+                }
+                break;
+            case RushState.SPEED_DOWN:
+                rushSpeed = -1.0f * rushSpeedDownCoefficient * Mathf.Pow(rushTimeCount, 3.0f);
+                if (rushTimeCount >= 0.0f)
+                {
+                    rushSpeed = 0.0f;
+                    rushState = RushState.FINISH;
+                }
+                break;
+            default: 
+                break;
+        }
         //移動
         Transfer(rushSpeed);
-        //突進時間をカウント
-        rushTimeCount -= Time.deltaTime;
-        //一回の突進が終了したら
-        if (rushTimeCount <= 0.0f)
+        //突進一回分が終了したときの処理
+        if (rushState == RushState.FINISH)
         {
             //突進回数をカウント
             rushCount--;
@@ -273,7 +402,6 @@ public class CS_Titan : MonoBehaviour
             {
                 //停止する
                 StartStop();
-                return;
             }
             else
             {
@@ -338,6 +466,7 @@ public class CS_Titan : MonoBehaviour
         animator.SetTrigger("triggerDown");
         //ダウン時間のリセット
         downTimeCount = downTime;
+        moveSE.Stop();
     }
     private void Down()
     {
@@ -345,11 +474,19 @@ public class CS_Titan : MonoBehaviour
         {
             //ダウン時間のカウント
             downTimeCount -= Time.deltaTime;
+            //colliderの調整
+            if (downTime - downTimeCount >= colliderChangingTime)
+            {
+                SetDownColliderParameter();
+            }
             //ダウン時間が終了したら
             if (downTimeCount < 0.0f)
             {
                 animator.SetTrigger("triggerIdle");
                 afterDownTimeCount = afterDownTime;
+
+                //collider戻す
+                SetDefaultColliderParameter();
             }
         }
         else
@@ -370,6 +507,19 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.DIE;
         animator.SetTrigger("triggerDie");
+        moveSE.Stop();
+    }
+    private void Die()
+    {
+        dieTimeCount += Time.deltaTime;
+        if (dieTimeCount >= colliderChangingTime)
+        {
+            SetDownColliderParameter();
+        }
+        if(!IsPlayingAnim(animator, dieClip))
+        {
+            isDead = true;
+        }
     }
     //↑↑↑↑↑↑↑↑↑↑↑↑↑
     //------------------------------------------------
@@ -382,6 +532,10 @@ public class CS_Titan : MonoBehaviour
     //シンプルにダメージを受ける
     public void ReceiveDamage(float damage)
     {
+        if(state == State.CHARGE)
+        {
+            damage *= 1.0f - damageCutPercentage;
+        }
         hp -= damage;
         if (hp <= 0.0f)
         {
@@ -395,14 +549,83 @@ public class CS_Titan : MonoBehaviour
     //弱点にダメージを受けた時の処理
     public void ReceiveDamageOnWeakPoint()
     {
+        if (state == State.CHARGE) return;
         ReceiveDamage(weakPointDamageIncrement);
+        //エフェクト
+        GameObject effect = Instantiate(weaknessEffect, weaknessTransform.position, Quaternion.identity);
 
-        //ダウン中でない場合は
-        if (state != State.DOWN)
+        //ダウン中or死亡中でない場合は
+        if (state != State.DOWN && state != State.DIE)
         {
             //ダウンをスタートさせる
             StartDown();
         }
+    }
+
+    //----------------------------------
+    //エフェクトを生成する
+    //----------------------------------
+    private void GenerateChargeEffect(float _chargeTime)
+    {
+        //地面から出てるやつ
+        //生成
+        GameObject effectGround = Instantiate(chargeEffectGround, transform.position, Quaternion.identity) as GameObject;
+        //子供取得
+        int childCount = effectGround.transform.childCount;
+        ParticleSystem[] psGround = new ParticleSystem[childCount];
+        //時間変更
+        for(int i = 0; i < childCount; i++)
+        {
+            psGround[i] = effectGround.transform.GetChild(i).gameObject.GetComponent<ParticleSystem>();
+            psGround[i].Stop();
+            var main = psGround[i].main;
+            main.duration = _chargeTime;
+            psGround[i].Play();
+        }
+
+        //シールドっぽいやつ
+        GameObject effectShield = Instantiate(chargeEffectShield, transform.position, Quaternion.identity) as GameObject;
+        childCount = effectShield.transform.childCount;
+        ParticleSystem[] psShield = new ParticleSystem[childCount + 1];
+        psShield[0] = effectShield.GetComponent<ParticleSystem>();
+        for (int i = 1; i < childCount + 1; i++)
+        {
+            psShield[i] = effectShield.transform.GetChild(i - 1).gameObject.GetComponent<ParticleSystem>();
+        }
+        //時間変更
+        for (int i = 0; i < childCount + 1; i++)
+        {
+            psShield[i].Stop();
+            var main = psShield[i].main;
+            if(i == 0)
+            {
+                main.startLifetime = _chargeTime - 0.2f;
+            }
+            else if(i == childCount)
+            {
+                main.duration = _chargeTime - 1.0f;
+            }
+            else
+            {
+                main.startLifetime = _chargeTime;
+            }
+            psShield[i].Play();
+        }
+    }
+
+    private void GenerateRushEffect()
+    {
+        //生成
+        Vector3 generatingPosition = new Vector3(transform.position.x, rushEffectPositionY, transform.position.z);
+        float generatingRotationY = -1.0f * transform.rotation.eulerAngles.y * Mathf.Deg2Rad;
+        GameObject effect = Instantiate(rushEffect, generatingPosition, Quaternion.identity) as GameObject;
+        //角度調整
+        ParticleSystem ps = effect.GetComponent<ParticleSystem>();
+        ps.Stop();
+        var main = ps.main;
+        main.startRotationY = generatingRotationY;
+        main.startRotationYMultiplier = generatingRotationY;
+        ps.Play();
     }
 
     //---------------------------------
@@ -413,9 +636,14 @@ public class CS_Titan : MonoBehaviour
         //突進中にプレイヤーに衝突した場合
         if(collision.gameObject.CompareTag("Player") && state == State.RUSH)
         {
-            collision.gameObject.GetComponent<CS_Player>().Damage((int)rushPower);
+            collision.gameObject.GetComponent<CS_Player>().ReceiveDamage((int)rushPower);
             //衝突した際のSEを再生
             clashSE.Play();
+            //エフェクト
+            if(collision.contacts[0].point != null)
+            {
+                GameObject effect = Instantiate(hitEffect, collision.contacts[0].point, Quaternion.identity);
+            }
         }
     }
 
@@ -458,5 +686,48 @@ public class CS_Titan : MonoBehaviour
     private void Transfer(float speed)
     {
         transform.position += speed * transform.forward * Time.deltaTime;
+    }
+    //collider調整用
+    private void SetDefaultColliderParameter()
+    {
+        collider.center = new Vector3(0.0f, colliderHeight / 2.0f, 0.0f);
+        collider.radius = colliderRadius;
+        collider.height = colliderHeight;
+    }
+    private void SetDownColliderParameter()
+    {
+        collider.center = downColliderCenter;
+        collider.radius = downColliderRadius;
+        collider.height = downColliderHeight;
+    }
+
+    /// <summary>
+    /// 再生中のアニメーションを取得する
+    /// </summary>
+    /// <param name="animator"> アニメーター </param>
+    /// <returns> 再生中のアニメーション </returns>
+    private AnimatorStateInfo GetCurrentAnim(Animator animator, int layerIndex = 0)
+    {
+        // 再生中のアニメーション
+        return animator.GetCurrentAnimatorStateInfo(layerIndex);
+    }
+
+    /// <summary>
+    /// 指定したアニメーションが再生中か確認する
+    /// </summary>
+    /// <param name="animator"> アニメーター </param>
+    /// <param name="anim"> 確認するアニメーション </param>
+    /// <returns>
+    /// <para> true : 再生中 </para>
+    /// <para> false : 再生していない </para>
+    /// </returns>
+    private bool IsPlayingAnim(Animator animator, AnimationClip anim)
+    {
+        // 再生中のアニメーション
+        var currentAnim = GetCurrentAnim(animator);
+
+        // 再生中のアニメーションの名前が
+        // 指定した名前と一致するならtrue
+        return currentAnim.IsName(anim.name);
     }
 }

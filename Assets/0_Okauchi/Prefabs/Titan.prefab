@@ -58,24 +58,35 @@ MonoBehaviour:
   gradualTrackingValue: 2
   attackReactionDistance: 15
   attackInterval: 5
-  constantTrackingAngle: 360
-  chargeTimeMin: 1
-  chargeTimeMax: 3
-  rushInterval: 0.8
-  rushTime: 0.5
-  rushDefaultPower: 40
+  constantTrackingAngle: 540
+  chargeTimeMin: 2
+  chargeTimeMax: 4
+  damageCutPercentage: 0.75
+  rushInterval: 0.4
+  rushTime: 0.35
+  rushDefaultPower: 30
   rushDefaultSpeed: 20
   rushPowerChargingIncrement: 7
   rushSpeedChargingIncrement: 4
   rushCountMin: 3
-  rushCountMax: 5
+  rushCountMax: 6
+  rushSpeedUpCoefficient: 4000
+  rushSpeedDownCoefficient: 800
   stoppingTime: 5
-  downTime: 5
-  weakPointDamageIncrement: 30
+  downTime: 6
+  weakPointDamageIncrement: 20
   afterDownTime: 1
   moveSE: {fileID: 4888862678878637672}
   chargeSE: {fileID: 1403551164744738637}
   clashSE: {fileID: 1169020781980542164}
+  chargeEffectGround: {fileID: 1369818264248206858, guid: 32b34a20c23a2f6459b88867179b29ce,
+    type: 3}
+  chargeEffectShield: {fileID: 8049982260223953395, guid: 4d3dc4ee01cfce2488a0f7d184f8c001,
+    type: 3}
+  rushEffect: {fileID: 2893964678148829097, guid: 429e197ccc3dcd64d9881db8740cfbee,
+    type: 3}
+  rushEffectPositionY: 0.5
+  rushEffectGeneratingSpan: 0.15
 --- !u!136 &5193346701080043231
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -95,7 +106,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.4
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
@@ -472,6 +483,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 459418086844500209, guid: 97a2946ef7209cb45907a3271164a102,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 459418086844500209, guid: 97a2946ef7209cb45907a3271164a102,
+        type: 3}
+      propertyPath: m_TagString
+      value: EnemyWeakness
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 97a2946ef7209cb45907a3271164a102,
         type: 3}
       propertyPath: m_Name
@@ -495,10 +516,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8346389945876975589}
-    - targetCorrespondingSourceObject: {fileID: 4633052641609153232, guid: 97a2946ef7209cb45907a3271164a102,
+    - targetCorrespondingSourceObject: {fileID: 459418086844500209, guid: 97a2946ef7209cb45907a3271164a102,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6728089325161002164}
+      addedObject: {fileID: 2009903718452431208}
   m_SourcePrefab: {fileID: 100100000, guid: 97a2946ef7209cb45907a3271164a102, type: 3}
 --- !u!4 &3785504557351010369 stripped
 Transform:
@@ -506,6 +527,33 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3675615882953549738}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3846715625468292955 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 459418086844500209, guid: 97a2946ef7209cb45907a3271164a102,
+    type: 3}
+  m_PrefabInstance: {fileID: 3675615882953549738}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2009903718452431208
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3846715625468292955}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.4, y: 0.3, z: 0.3}
+  m_Center: {x: 0, y: -0.075, z: -0.4}
 --- !u!1 &4594517119633709819 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 97a2946ef7209cb45907a3271164a102,
@@ -533,30 +581,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1 &8307313921941216634 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4633052641609153232, guid: 97a2946ef7209cb45907a3271164a102,
-    type: 3}
-  m_PrefabInstance: {fileID: 3675615882953549738}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &6728089325161002164
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8307313921941216634}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.3, y: 0.3, z: 0.35}
-  m_Center: {x: 0, y: 1.22, z: -0.3}

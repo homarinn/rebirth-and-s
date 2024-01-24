@@ -51,7 +51,7 @@ public class CS_EventMgr : MonoBehaviour
                 break;
             case eState.Standby:
                 if(eventBGM != null)eventBGM.Play();
-                goDialogue.GetComponent<CS_Dialogue>().BActive = true;
+                goDialogue.GetComponent<CS_Dialogue>().Benable = true;
                 break;
             case eState.FadeShow:
 
