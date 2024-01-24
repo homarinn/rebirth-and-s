@@ -521,7 +521,6 @@ public class CS_Titan : MonoBehaviour
         if(dieTimeCount >= dieTime)
         {
             isDead = true;
-            UnityEditor.EditorApplication.isPaused = true;
         }
     }
     //ªªªªªªªªªªªªª
