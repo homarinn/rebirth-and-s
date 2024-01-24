@@ -20,9 +20,9 @@ public class CS_UIControl : MonoBehaviour
     [SerializeField, Header("EnemyHPバー")]
     Image cpEnemyHP;
     //! @brief 敵のMaxHP
-    [SerializeField]float enemyHpMax;
+    float enemyHpMax;
     //! @brief 敵のHP
-    [SerializeField]float enemyHp;
+    float enemyHp;
 
     //! @brief 巨人のスクリプト格納
     CS_Titan csTitan = null;
@@ -30,6 +30,9 @@ public class CS_UIControl : MonoBehaviour
     CS_Enemy1 csEnemy01 = null;
     //! @brief Playerミラー
     CS_EnemyPlayer csEnPlayer = null;
+
+    [SerializeField, Header("セリフUI")]
+    GameObject goDialogue;
 
 
     void Start()
@@ -65,6 +68,11 @@ public class CS_UIControl : MonoBehaviour
         ControlSpecilAttackBar();
 
         ControlEnemyHPBar();
+
+        if(enemyHp <= (enemyHpMax * 0.5f))
+        {
+            goDialogue.GetComponent<CS_Dialogue>().Benable = true;
+        }
     }
 
     //! @brief Stageに合った敵のHPを設定
@@ -113,6 +121,7 @@ public class CS_UIControl : MonoBehaviour
         if (cpEnemyHP.fillAmount <= 0.0f)
         {
             cpEnemyHP.fillAmount = 0.0f;
+            goDialogue.GetComponent<CS_Dialogue>().Benable = true;
         }
     }
 

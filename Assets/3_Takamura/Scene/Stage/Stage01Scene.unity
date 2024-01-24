@@ -186,6 +186,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameMgr
       objectReference: {fileID: 0}
+    - target: {fileID: 1087999330061287681, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: e28f1df9f8cfe164095626128f5bbc9c, type: 3}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: state
@@ -208,6 +213,11 @@ PrefabInstance:
       objectReference: {fileID: 686374641}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
+      propertyPath: stageBGM
+      value: 
+      objectReference: {fileID: 14568961}
+    - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
       propertyPath: nextStage
       value: Event02Scene
       objectReference: {fileID: 0}
@@ -221,6 +231,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b466077f633f26469db791f7106095b, type: 3}
+--- !u!82 &14568961 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1087999330061287681, guid: 8b466077f633f26469db791f7106095b,
+    type: 3}
+  m_PrefabInstance: {fileID: 14568960}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &608803283
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -239,6 +255,11 @@ PrefabInstance:
       propertyPath: goPlayer
       value: 
       objectReference: {fileID: 686374636}
+    - target: {fileID: 767292631817329978, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: goDialogue
+      value: 
+      objectReference: {fileID: 1505086956}
     - target: {fileID: 3154834446831600572, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_IsActive
@@ -309,7 +330,7 @@ PrefabInstance:
     - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_text
-      value: "Enemy(\u30B7\u30F4\u30A1)"
+      value: "\u30DE\u30DF\u30FC"
       objectReference: {fileID: 0}
     - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
@@ -702,6 +723,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Mom
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
+      propertyPath: maxHp
+      value: 207
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}

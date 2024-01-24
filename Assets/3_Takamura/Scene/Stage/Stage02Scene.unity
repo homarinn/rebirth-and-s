@@ -892,6 +892,11 @@ PrefabInstance:
       propertyPath: goPlayer
       value: 
       objectReference: {fileID: 1511620372}
+    - target: {fileID: 767292631817329978, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: goDialogue
+      value: 
+      objectReference: {fileID: 339455188}
     - target: {fileID: 3501694037673568600, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_fontAsset
@@ -928,6 +933,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PlaneDistance
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_text
+      value: "\u30D1\u30D4\u30FC"
       objectReference: {fileID: 0}
     - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
         type: 3}

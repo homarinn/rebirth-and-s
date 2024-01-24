@@ -74,7 +74,7 @@ public class CS_GameMgr : MonoBehaviour
             case eState.Game:
                 if(stageBGM != null) stageBGM.Play();
                 if(csTitan != null)csTitan.StartMoving();
-                if(goDialogue != null)goDialogue.GetComponent<CS_Dialogue>().BActive = true;
+                if(goDialogue != null)goDialogue.GetComponent<CS_Dialogue>().Benable = true;
                 break;
             case eState.FadeShow:
                 if (stageBGM != null) stageBGM.Stop();
