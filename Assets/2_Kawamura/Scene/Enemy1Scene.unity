@@ -167,7 +167,7 @@ PrefabInstance:
     - target: {fileID: 3286177031333464908, guid: ed4f576053ab8d14784403b9b7a76853,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 3286177031333464908, guid: ed4f576053ab8d14784403b9b7a76853,
         type: 3}
@@ -28883,6 +28883,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
+      propertyPath: blowOffPower
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
       propertyPath: blowOffEffect
       value: 
       objectReference: {fileID: 595032155927867903, guid: 374ec04769927254a8ec50c475ddf59d,
@@ -28967,7 +28972,7 @@ PrefabInstance:
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
       propertyPath: strongAttackProbability
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
@@ -28982,7 +28987,7 @@ PrefabInstance:
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
       propertyPath: blowOffAttackProbability
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
