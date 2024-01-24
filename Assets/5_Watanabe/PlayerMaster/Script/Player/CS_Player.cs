@@ -510,6 +510,22 @@ public partial class CS_Player : MonoBehaviour
     }
 
     /// <summary>
+    /// 吹き飛ばす
+    /// </summary>
+    /// <param name="direcion">飛ばす方向</param>
+    /// <param name="power">飛ばす威力</param>
+    public void BlowOff(Vector3 direcion, float power)
+    {
+        rb.AddForce(direcion * power, ForceMode.Impulse);
+        if(state == State.Difence)
+        {
+            return;
+        }
+        state = State.Damage;
+        anim.SetTrigger("BlowOffTrigger");
+    }
+
+    /// <summary>
     /// ダメージアニメーション終了の時に呼び出す
     /// </summary>
     private void AnimDamageFailed()
