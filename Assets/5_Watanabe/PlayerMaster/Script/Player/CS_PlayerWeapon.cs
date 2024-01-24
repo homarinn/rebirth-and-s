@@ -15,6 +15,7 @@ public class CS_PlayerWeapon : MonoBehaviour
     {
         var cs_Player = GetComponentInParent<CS_Player>();
         float attackDamage = cs_Player.AttackDamage;
+        //Debug.Log(attackDamage);
         if (attackDamage == 0)
         {
             return;
@@ -33,7 +34,7 @@ public class CS_PlayerWeapon : MonoBehaviour
             // •ê
             if(other.GetComponent<CS_Enemy1>() != null)
             {
-                other.GetComponent<CS_Enemy1>().ReduceHp(attackDamage);
+            
             }
             // •ƒ
             else if (other.GetComponent<CS_Titan>() != null)
@@ -43,7 +44,7 @@ public class CS_PlayerWeapon : MonoBehaviour
             // •Ê‚ÌŽ©•ª
             else if(other.GetComponent<CS_EnemyPlayer>() != null)
             {
-                other.GetComponent<CS_EnemyPlayer>().ReceiveDamage(attackDamage);
+
             }
             else
             {

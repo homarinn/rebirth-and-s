@@ -6,12 +6,17 @@ public class CS_Test : MonoBehaviour
 {
     [SerializeField] private GameObject enemy;
 
+    [SerializeField] private float damage;
+
+    [SerializeField] private float damageCutRatio;
+
     private CS_EnemyPlayer enemyPlayer;
 
     // Start is called before the first frame update
     void Start()
     {
-        enemyPlayer = enemy.GetComponent<CS_EnemyPlayer>();
+        if (enemy)
+            enemyPlayer = enemy.GetComponent<CS_EnemyPlayer>();
         //Debug.Log(enemyPlayer.Hp);
     }
 
@@ -25,7 +30,10 @@ public class CS_Test : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            enemyPlayer.ReceiveDamage(2);
+            // ダメージの軽減値
+            float cut = damage * (damageCutRatio / 100);
+            float d = damage - cut;
+            enemyPlayer.ReceiveDamage(d);
             //Debug.Log(enemyPlayer.Hp);
         }
     }
