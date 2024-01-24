@@ -188,6 +188,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1087999330061287681, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
+      propertyPath: m_Volume
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087999330061287681, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: e28f1df9f8cfe164095626128f5bbc9c, type: 3}
@@ -739,6 +744,18 @@ PrefabInstance:
       propertyPath: stageBoundary
       value: 
       objectReference: {fileID: 924401468}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
+      propertyPath: weakMagicMissile
+      value: 
+      objectReference: {fileID: 3123686247595820355, guid: 6b59c1be67aec4d48895f770f8d82ef2,
+        type: 3}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
+      propertyPath: strongMagicMissile
+      value: 
+      objectReference: {fileID: 8864793513164471864, guid: 2687c560a5b41394b9c187d6e826d22b,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -826,8 +843,40 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a9986dda408171946b68ebd184dfeadc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1003560643}
   m_SourcePrefab: {fileID: 100100000, guid: a9986dda408171946b68ebd184dfeadc, type: 3}
+--- !u!1 &1003560642 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a9986dda408171946b68ebd184dfeadc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1003560641}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1003560643
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003560642}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2873006394824854957, guid: a9986dda408171946b68ebd184dfeadc, type: 3}
 --- !u!225 &1106942810 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 1163849583164973268, guid: 4599c73d429970747bac1312071a185e,
