@@ -290,6 +290,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Camera
       value: 
+      objectReference: {fileID: 1990289614}
+    - target: {fileID: 5784708299847025064, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5784708299847025064, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      propertyPath: m_PlaneDistance
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6477440857290170815, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
@@ -305,7 +315,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 5ba97ac1fe5836e4e93350c7022a834d,
+      objectReference: {fileID: 11400000, guid: b461f37458de3434a916ce25772672da,
         type: 2}
     - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
@@ -336,7 +346,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 2220465314334752200, guid: 5ba97ac1fe5836e4e93350c7022a834d,
+      objectReference: {fileID: -3313772920169313949, guid: b461f37458de3434a916ce25772672da,
         type: 2}
     - target: {fileID: 6565968845475155719, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
@@ -1085,6 +1095,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!20 &1990289614 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 1839967511998124424, guid: ed4f576053ab8d14784403b9b7a76853,
+    type: 3}
+  m_PrefabInstance: {fileID: 2059818515}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2059818515
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1170,7 +1186,7 @@ SceneRoots:
   - {fileID: 1755531049}
   - {fileID: 608803283}
   - {fileID: 924401467}
-  - {fileID: 2059818515}
-  - {fileID: 998474941}
-  - {fileID: 1730844322}
   - {fileID: 1003560641}
+  - {fileID: 2059818515}
+  - {fileID: 1730844322}
+  - {fileID: 998474941}

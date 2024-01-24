@@ -74,7 +74,7 @@ public class CS_GameMgr : MonoBehaviour
             case eState.Game:
                 if(stageBGM != null) stageBGM.Play();
                 if(csTitan != null)csTitan.StartMoving();
-                goDialogue.GetComponent<CS_Dialogue>().BActive = true;
+                if(goDialogue != null)goDialogue.GetComponent<CS_Dialogue>().BActive = true;
                 break;
             case eState.FadeShow:
                 if (stageBGM != null) stageBGM.Stop();
@@ -141,14 +141,14 @@ public class CS_GameMgr : MonoBehaviour
     //! @brief GameClear/GameOver‚Ìƒtƒ‰ƒOİ’è
     void SetGameFlag()
     {
-        //! Todo:PlayerScript‚©‚çHPæ“¾(Š„‡‚É•ÏŠ·‚µ‚Ä‘ã“ü)
+        //! PlayerScript‚©‚çHPæ“¾
         if (csPlayer.Hp <= 0.0f) 
         {
             bGameOver = true;
             if(csTitan != null)csTitan.StopMoving();
             ChangeState(eState.FadeShow);
         }
-        //! Todo:EnemyScript‚©‚çHPæ“¾(Š„‡‚É•ÏŠ·‚µ‚Ä‘ã“ü)
+        //! EnemyScript‚©‚çHPæ“¾
         if (enemyHp <= 0.0f)
         {
             bGameClear = true;
