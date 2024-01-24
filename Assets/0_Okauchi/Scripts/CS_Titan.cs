@@ -145,6 +145,8 @@ public class CS_Titan : MonoBehaviour
     //Ž€–S
     //--------------------
     private float dieTimeCount = 0.0f;
+    [SerializeField, Header("Ž€–S”»’è‚É‚·‚é‚Ü‚Å‚ÌŽžŠÔ")]
+    private float dieTime = 0.0f; 
 
     //--------------------
     //SE
@@ -516,7 +518,7 @@ public class CS_Titan : MonoBehaviour
         {
             SetDownColliderParameter();
         }
-        if(!IsPlayingAnim(animator, dieClip))
+        if(dieTimeCount >= dieTime)
         {
             isDead = true;
         }
