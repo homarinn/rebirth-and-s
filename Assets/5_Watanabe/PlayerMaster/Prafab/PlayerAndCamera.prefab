@@ -2106,6 +2106,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SE_Attack1Hit: {fileID: 8300000, guid: 20e0fa9d22517a0498ec3587697e0560, type: 3}
   SE_Attack2Hit: {fileID: 8300000, guid: 4976f0ca466204b48a870d28686c472b, type: 3}
+  reflctBullet: {fileID: 3123686247595820355, guid: 7cd3350f1b123aa4f89368f5e988c36f,
+    type: 3}
+  reflctBullet2: {fileID: 8864793513164471864, guid: 2b4d8437834491d4aaa4beefdb80a6f6,
+    type: 3}
 --- !u!1 &5119136706156997697
 GameObject:
   m_ObjectHideFlags: 0

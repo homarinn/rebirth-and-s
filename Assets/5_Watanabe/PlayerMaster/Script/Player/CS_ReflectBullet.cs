@@ -7,13 +7,17 @@ public class CS_ReflectBullet : MonoBehaviour
     private Transform targetTrs;
 
     [SerializeField, Header("’e‚Ì‘¬“x")]
-    private float speed = 1;
+    private float speed = 100;
 
     void Start()
     {
-        targetTrs = GameObject.FindWithTag("Enemy").transform;
-        transform.LookAt(targetTrs);
-        GetComponent<Rigidbody>().velocity = new Vector3(speed, 0, 0);
+        gameObject.transform.parent = null;
+        targetTrs = GameObject.FindGameObjectWithTag("Enemy").transform;
+        var dir = targetTrs.position - transform.position;
+        var lookAtRotataion = Quaternion.LookRotation(dir, Vector3.up);
+        var offsetRotation = Quaternion.FromToRotation(Vector3.right, Vector3.forward);
+        transform.rotation = lookAtRotataion * offsetRotation;
+        GetComponent<Rigidbody>().velocity = transform.right * speed;
     }
 
 }

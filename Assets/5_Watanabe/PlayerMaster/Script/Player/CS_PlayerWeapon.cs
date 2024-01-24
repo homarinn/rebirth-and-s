@@ -56,18 +56,19 @@ public class CS_PlayerWeapon : MonoBehaviour
                 Debug.Log("敵にコンポーネントついてないよ");
             }
         }
-        else if(other.gameObject.tag == "MagicMissle")
+        else if(other.gameObject.tag == "MagicMissile")
         {
+            Debug.Log("ヒット");
             if(other.GetComponent<CS_Enemy1MagicMissile>() != null)
             {
                 var type = other.GetComponent<CS_Enemy1MagicMissile>().GetMagicMissileType;
                 if(type == "Weak")
                 {
-                    Instantiate(reflctBullet);
+                    Instantiate(reflctBullet, transform);
                 }
                 if(type == "Strong")
                 {
-                    Instantiate(reflctBullet2);
+                    Instantiate(reflctBullet2,transform);
                 }
             }
         }
