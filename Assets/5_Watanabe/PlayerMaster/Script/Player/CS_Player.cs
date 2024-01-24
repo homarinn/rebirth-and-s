@@ -541,6 +541,7 @@ public partial class CS_Player : MonoBehaviour
 
         if(state == State.Difence || state == State.Ult)
         {
+            isInvisible = false;
             return;
         }
         state = State.Damage;

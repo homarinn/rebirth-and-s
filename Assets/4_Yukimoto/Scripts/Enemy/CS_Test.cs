@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CS_Test : MonoBehaviour
+public class CS_ATest : MonoBehaviour
 {
     [SerializeField] private GameObject enemy;
 

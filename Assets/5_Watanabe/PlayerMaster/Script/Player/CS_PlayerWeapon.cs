@@ -10,6 +10,11 @@ public class CS_PlayerWeapon : MonoBehaviour
     private AudioClip SE_Attack1Hit;
     [SerializeField, Header("攻撃2ヒットSE")]
     private AudioClip SE_Attack2Hit;
+    [SerializeField, Header("跳ね返す玉1")]
+    private GameObject reflctBullet;
+    [SerializeField, Header("跳ね返す玉2")]
+    private GameObject reflctBullet2;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -49,6 +54,22 @@ public class CS_PlayerWeapon : MonoBehaviour
             else
             {
                 Debug.Log("敵にコンポーネントついてないよ");
+            }
+        }
+        else if(other.gameObject.tag == "MagicMissile")
+        {
+            Debug.Log("ヒット");
+            if(other.GetComponent<CS_Enemy1MagicMissile>() != null)
+            {
+                var type = other.GetComponent<CS_Enemy1MagicMissile>().GetMagicMissileType;
+                if(type == "Weak")
+                {
+                    Instantiate(reflctBullet, transform);
+                }
+                if(type == "Strong")
+                {
+                    Instantiate(reflctBullet2,transform);
+                }
             }
         }
         else
