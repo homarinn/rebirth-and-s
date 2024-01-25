@@ -20,9 +20,9 @@ public class CS_UIControl : MonoBehaviour
     [SerializeField, Header("EnemyHPバー")]
     Image cpEnemyHP;
     //! @brief 敵のMaxHP
-    [SerializeField]float enemyHpMax;
+    float enemyHpMax;
     //! @brief 敵のHP
-    [SerializeField]float enemyHp;
+    float enemyHp;
 
     //! @brief 巨人のスクリプト格納
     CS_Titan csTitan = null;
@@ -31,13 +31,17 @@ public class CS_UIControl : MonoBehaviour
     //! @brief Playerミラー
     CS_EnemyPlayer csEnPlayer = null;
 
+    [SerializeField, Header("セリフUI")]
+    GameObject goDialogue;
+
+    //! @brief 一度だけ処理を行うフラグ
+    bool bOnce = false;
 
     void Start()
     {
-        //! 各キャラ、Start関数で設定された値はここでは反映されない。
-        //! Awake関数で初期化をしてもらうか…
+        bOnce = false;
 
-        //! Todo:各キャラのステータスの初期化
+        //! 各キャラのステータスの初期化
         playerHpMax = (float)goPlayer.GetComponent<CS_Player>().Hp;
         ultInterval = goPlayer.GetComponent<CS_Player>().UltTimer;
         
@@ -55,14 +59,13 @@ public class CS_UIControl : MonoBehaviour
         csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
         if(csEnPlayer != null)
         {
-            enemyHpMax = 100;
+            enemyHpMax = csEnPlayer.Hp;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(ultInterval);
         SetEnemyHP();
 
         ControlPlayerHPBar();
@@ -70,11 +73,12 @@ public class CS_UIControl : MonoBehaviour
 
         ControlEnemyHPBar();
 
-        //! test
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    cpSpecialAttack.fillAmount = 0.0f;
-        //}
+        if ((enemyHp <= (enemyHpMax * 0.5f)) && (bOnce == false) && (goDialogue.GetComponent<CS_Dialogue>().Benable == false))
+        {
+            goDialogue.GetComponent<CS_Dialogue>().Benable = true;
+            bOnce = true;
+        }
+        Debug.Log("once : " + bOnce);
     }
 
     //! @brief Stageに合った敵のHPを設定
@@ -90,7 +94,7 @@ public class CS_UIControl : MonoBehaviour
         }
         if(csEnPlayer != null)
         {
-            enemyHp = 100;
+            enemyHp = csEnPlayer.Hp;
         }
     }
     //! @brief PlayerHPバー操作
@@ -123,6 +127,7 @@ public class CS_UIControl : MonoBehaviour
         if (cpEnemyHP.fillAmount <= 0.0f)
         {
             cpEnemyHP.fillAmount = 0.0f;
+            goDialogue.GetComponent<CS_Dialogue>().Benable = true;
         }
     }
 

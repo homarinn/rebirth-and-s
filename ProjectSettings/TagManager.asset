@@ -10,6 +10,8 @@ TagManager:
   - Stage
   - Puddle
   - MagicMissile
+  - FxTemporaire
+  - PlayerWeapon
   layers:
   - Default
   - TransparentFX

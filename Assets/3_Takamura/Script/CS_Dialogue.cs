@@ -32,19 +32,20 @@ public class CS_Dialogue : MonoBehaviour
     [SerializeField, Header("自動送り機能")]
     bool bAuto;
 
-    //! @brief セリフ表示開始フラグ
-    bool bActive;
-    public bool BActive
-    {
-        get { return bActive; }
-        set { bActive = true; }
-    }
     //! @brief 一度だけ処理を行うフラグ
     bool bOnce = false;
+    //! @brief 表示処理が有効かどうか
+    bool bEnable = false;
+    public bool Benable
+    {
+        get { return bEnable; }
+        set { bEnable = value; }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        bEnable = true;
         bFinishString = true;
         LoadText();
         SplitString();
@@ -53,7 +54,7 @@ public class CS_Dialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (bActive == false) return;
+        if (bEnable == false) return;
         bool tmp = bAuto ? (bFinishString == true) : ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && (bFinishString == true));
         if(bOnce == false)
         {
@@ -68,6 +69,7 @@ public class CS_Dialogue : MonoBehaviour
                 {
                     //! 名前判定
                     int index = splitText[textIndex].IndexOf("/");
+                    int index0 = splitText[textIndex].IndexOf("（");
                     if(index != -1)
                     {
                         //! 名前更新
@@ -78,6 +80,18 @@ public class CS_Dialogue : MonoBehaviour
                         Show();
                         bFinishString = false;
                         textIndex++;
+                    }
+                    else if(index0 != -1)
+                    {
+                        //! 名前非表示
+                        talkernameText.text = " ";
+                        //! 括弧付きの文字列表示
+                        dialogueText.text = " ";
+                        Show();
+                        bFinishString = false;
+                        textIndex++;
+                        bEnable = false;
+                        Debug.Log("()文");
                     }
                     else
                     {

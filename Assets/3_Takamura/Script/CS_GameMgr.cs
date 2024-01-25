@@ -74,7 +74,7 @@ public class CS_GameMgr : MonoBehaviour
             case eState.Game:
                 if(stageBGM != null) stageBGM.Play();
                 if(csTitan != null)csTitan.StartMoving();
-                goDialogue.GetComponent<CS_Dialogue>().BActive = true;
+                if(goDialogue != null)goDialogue.GetComponent<CS_Dialogue>().Benable = true;
                 break;
             case eState.FadeShow:
                 if (stageBGM != null) stageBGM.Stop();
@@ -104,8 +104,6 @@ public class CS_GameMgr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetEnemyHP();
-
         SetGameFlag();
         SetNextSceneName();
 
@@ -119,37 +117,40 @@ public class CS_GameMgr : MonoBehaviour
     }
 
     //! @brief Stage‚É‡‚Á‚½Enemy‚ÌHP‚ğİ’è
-    void SetEnemyHP()
+    bool SetEnemyDeathFlag()
     {
-        csTitan = goEnemy.GetComponent<CS_Titan>();
-        if (csTitan != null)
-        {
-            enemyHp = csTitan.Hp;
-        }
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if(csEnemy01 != null)
         {
-            enemyHp = csEnemy01.GetHp;
+            return csEnemy01.GetIsDead;
+        }
+        csTitan = goEnemy.GetComponent<CS_Titan>();
+        if (csTitan != null)
+        {
+            return csTitan.isDead;
         }
         csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
         if(csEnPlayer != null)
         {
-            enemyHp = 100;
+            return  csEnPlayer.IsDead;
         }
+        return false;
     }
 
     //! @brief GameClear/GameOver‚Ìƒtƒ‰ƒOİ’è
     void SetGameFlag()
     {
-        //! Todo:PlayerScript‚©‚çHPæ“¾(Š„‡‚É•ÏŠ·‚µ‚Ä‘ã“ü)
-        if (csPlayer.Hp <= 0.0f) 
+        //! PlayerScript‚©‚çHPæ“¾
+        if (csPlayer.IsDeath) 
         {
             bGameOver = true;
             if(csTitan != null)csTitan.StopMoving();
             ChangeState(eState.FadeShow);
         }
-        //! Todo:EnemyScript‚©‚çHPæ“¾(Š„‡‚É•ÏŠ·‚µ‚Ä‘ã“ü)
-        if (enemyHp <= 0.0f)
+        //! EnemyScript‚©‚çHPæ“¾
+
+        bool isDeath = SetEnemyDeathFlag();
+        if (isDeath)
         {
             bGameClear = true;
             ChangeState(eState.FadeShow);

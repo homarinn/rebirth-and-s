@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class CS_Enemy1Puddle : MonoBehaviour
 {
-    //[Header("水たまり表面のコライダー")]
-    //[SerializeField] BoxCollider surfaceCollider;
-
     [Header("水溜まりを生成するY座標")]
     [SerializeField] float createPositionY;
 
