@@ -51,9 +51,10 @@ public class CS_EventMgr : MonoBehaviour
                 break;
             case eState.Standby:
                 goDialogue.GetComponent<CS_Dialogue>().Benable = true;
+                eventBGM.volume = 0.0f;
+                eventBGM.Play();
                 break;
             case eState.FadeShow:
-
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
                 break;
@@ -74,9 +75,6 @@ public class CS_EventMgr : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        eventBGM.volume = 0.0f;
-        eventBGM.Play();
     }
 
     // Update is called once per frame
