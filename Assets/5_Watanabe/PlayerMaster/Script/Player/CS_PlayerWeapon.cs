@@ -81,6 +81,7 @@ public class CS_PlayerWeapon : MonoBehaviour
         }
         else if(other.gameObject.tag == "MagicMissile")
         {
+            Destroy(other.gameObject);
             Debug.Log("ƒqƒbƒg");
             if(other.GetComponent<CS_Enemy1MagicMissile>() != null)
             {

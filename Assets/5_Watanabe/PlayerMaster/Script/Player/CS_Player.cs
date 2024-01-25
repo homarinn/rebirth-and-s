@@ -515,7 +515,7 @@ public partial class CS_Player : MonoBehaviour
     public void ReceiveDamage(float _damage)
     {
         // –³“G‚¾‚Á‚½‚ç‰½‚à‚µ‚È‚¢
-        if(isInvisible || hp <= 0)
+        if(isInvisible || hp <= 0 || state == State.Sliding)
         {
             return;
         }
