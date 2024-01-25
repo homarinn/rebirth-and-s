@@ -266,6 +266,12 @@ public partial class CS_Player : MonoBehaviour
                 // •KŽE“ü—Í
                 if(Input.GetKeyDown(KeyCode.Space) && ultTimer <= 0)
                 {
+                    Vector3 cameraForward = Vector3.Scale(cameraTransform.forward, new Vector3(1, 0, 1)).normalized;
+                    // is•ûŒü‚É‰ñ“]
+                    if (cameraForward != Vector3.zero)
+                    {
+                        transform.rotation = Quaternion.LookRotation(cameraForward);
+                    }
                     state = State.Ult;
                     rb.velocity = Vector3.zero;
                     anim.SetTrigger("UltTrigger");
