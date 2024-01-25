@@ -71,6 +71,9 @@ public class CS_GameOverMgr : MonoBehaviour
         cgFade.alpha = 1.0f;
         cgFade.blocksRaycasts = true;
         cgFade.interactable = true;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     // Update is called once per frame

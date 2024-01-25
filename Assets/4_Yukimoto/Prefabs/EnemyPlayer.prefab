@@ -536,7 +536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  maxHp: 500
+  maxHp: 250
   chaseSpeed: 5
   chaseAcceleration: 10
   moveSpeed: 2
