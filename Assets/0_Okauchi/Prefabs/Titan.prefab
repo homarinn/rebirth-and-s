@@ -105,8 +105,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 8346389945876975589}
   dieClip: {fileID: 1827226128182048838, guid: f72d7cc2e9b17e4489828417b0e2cc4e, type: 3}
-  hpMax: 200
-  hp: 200
+  hpMax: 600
+  hp: 600
   targetTransform: {fileID: 0}
   walkSpeed: 2
   gradualTrackingValue: 2

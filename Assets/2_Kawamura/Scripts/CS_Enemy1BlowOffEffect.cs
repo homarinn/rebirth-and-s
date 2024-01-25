@@ -149,9 +149,10 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
         //ForceModeを変えると挙動が変わる（今回は質量無視）
         rigidBody.AddForce(direction * blowOffPower, ForceMode.Impulse);
 
-        //アニメーション停止
         var script = other.gameObject.GetComponent<CS_Player>();
-        script.ReceiveDamage(0);
+        //script.ReceiveDamage(0);
+
+        script.BlowOff(Vector3.zero, 0);
 
         Debug.Log("吹き飛ばした");
 
