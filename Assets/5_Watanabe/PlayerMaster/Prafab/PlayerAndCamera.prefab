@@ -2491,11 +2491,11 @@ MonoBehaviour:
   waterOnTheMoveSpeedCut: 0.5
   slidingSpeed: 10
   slidingInterval: 0.5
-  attack1Power: 20
-  attack2Power: 40
+  attack1Power: 10
+  attack2Power: 20
   attack1Interval: 0
   attack2Interval: 0
-  ultPower: 70
+  ultPower: 50
   ultInterval: 5
   difenceInterval: 0
   difenceDamageCut: 0.5

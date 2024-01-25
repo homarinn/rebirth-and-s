@@ -536,19 +536,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  maxHp: 1000
+  maxHp: 500
   chaseSpeed: 5
   chaseAcceleration: 10
   moveSpeed: 2
   attackPower: 20
   triggerDistance: 3
-  attackInterval: 2
+  attackInterval: 5
   attackPercent: 10
   hasSuperArmor: 1
   ultPower: 50
-  ultInterval: 5
+  ultInterval: 10
   ultSpeed: 1.5
-  slidingInterval: 2
+  slidingInterval: 5
   damageCutRatio: 80
   guardInterval: 2
   invincibleTime: 3
