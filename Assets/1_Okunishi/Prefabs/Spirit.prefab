@@ -9734,7 +9734,8 @@ MonoBehaviour:
   spiritPositionTransform: {fileID: 0}
   playerTransform: {fileID: 0}
   player: {fileID: 0}
-  healEffect: {fileID: 0}
+  healEffect: {fileID: 2436218079438090502, guid: 0ed689a1779d31348ad13972c57c8409,
+    type: 3}
   speed: 5
   healSpiritPositionY: 0.7
   rotationSpeed: 2

@@ -104,7 +104,7 @@ public partial class CS_Player : MonoBehaviour
 
     [SerializeField, Header("HPの最大値")]
     private float maxHP = 0;    // 最大HP
-    private float hp;           // 現在のHP
+    [SerializeField] private float hp;           // 現在のHP
     private bool isInvisible = false;
     private bool isDeath = false;
     [SerializeField, Header("ダメージアニメーションを再生する攻撃")]
