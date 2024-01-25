@@ -242,6 +242,14 @@ public partial class CS_Player : MonoBehaviour
                 // 攻撃入力
                 if (Input.GetMouseButtonDown(0) && attackTimer <= 0)
                 {
+                    Vector3 cameraForward = Vector3.Scale(cameraTransform.forward, new Vector3(1, 0, 1)).normalized;
+                    // 進行方向に回転
+                    if (cameraForward != Vector3.zero)
+                    {
+                        transform.rotation = Quaternion.LookRotation(cameraForward);
+                    }
+
+                    rb.velocity = Vector3.zero;                    
                     state = State.Attack;
                     rb.velocity = Vector3.zero;
                     anim.SetTrigger("AttackTrigger");  // アニメーションを再生

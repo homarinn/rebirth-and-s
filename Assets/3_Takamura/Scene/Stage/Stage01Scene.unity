@@ -746,10 +746,25 @@ PrefabInstance:
       objectReference: {fileID: 924401468}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
+      propertyPath: weakMoveSpeed
+      value: 17.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
+      propertyPath: strongMoveSpeed
+      value: 22.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
       propertyPath: weakMagicMissile
       value: 
       objectReference: {fileID: 3123686247595820355, guid: 6b59c1be67aec4d48895f770f8d82ef2,
         type: 3}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
+      propertyPath: strongAttackPower
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
       propertyPath: strongMagicMissile
