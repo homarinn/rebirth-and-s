@@ -2106,6 +2106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SE_Attack1Hit: {fileID: 8300000, guid: 20e0fa9d22517a0498ec3587697e0560, type: 3}
   SE_Attack2Hit: {fileID: 8300000, guid: 4976f0ca466204b48a870d28686c472b, type: 3}
+  SE_Reflect: {fileID: 0}
   reflctBullet: {fileID: 3123686247595820355, guid: 7cd3350f1b123aa4f89368f5e988c36f,
     type: 3}
   reflctBullet2: {fileID: 8864793513164471864, guid: 2b4d8437834491d4aaa4beefdb80a6f6,
@@ -2486,19 +2487,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   rotationSpeed: 0.05
-  waterOnTheMoveSpeedCut: 0
+  waterOnTheMoveSpeedCut: 0.5
   slidingSpeed: 10
   slidingInterval: 0.5
-  attack1Power: 10
-  attack2Power: 20
+  attack1Power: 20
+  attack2Power: 40
   attack1Interval: 0
   attack2Interval: 0
-  ultPower: 30
-  ultInterval: 0
+  ultPower: 70
+  ultInterval: 5
   difenceInterval: 0
-  difenceDamageCut: 0
+  difenceDamageCut: 0.5
   isDifence: 0
   maxHP: 200
+  damageAtackOkAttack: 30
   SE_Move: {fileID: 8300000, guid: 51e1fb83cad6d72448690d1452c39bc4, type: 3}
   SE_Attack: {fileID: 8300000, guid: 9aec4e9a772570245b1e574ac1f743ad, type: 3}
   SE_Sliding: {fileID: 8300000, guid: 26f60acc4ec90fd43912448c053ae368, type: 3}

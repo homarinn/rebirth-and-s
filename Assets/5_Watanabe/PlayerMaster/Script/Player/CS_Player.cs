@@ -102,12 +102,13 @@ public partial class CS_Player : MonoBehaviour
     [SerializeField]
     private bool isDifence = false;
 
-
     [SerializeField, Header("HPの最大値")]
     private float maxHP = 0;    // 最大HP
     private float hp;           // 現在のHP
     private bool isInvisible = false;
     private bool isDeath = false;
+    [SerializeField, Header("ダメージアニメーションを再生する攻撃")]
+    private float damageAtackOkAttack = 0;
     public bool IsDeath
     {
         get
@@ -219,6 +220,10 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        if(isDeath)
+        {
+            return;
+        }
         // インターバルを更新
         IntervalUpdate();
 
@@ -502,11 +507,6 @@ public partial class CS_Player : MonoBehaviour
 
     #endregion
 
-    public void Damage(float damage)
-    {
-
-    }
-
     /// <summary>
     /// ダメージ処理
     /// 攻撃した人に読んでもらう
@@ -515,7 +515,7 @@ public partial class CS_Player : MonoBehaviour
     public void ReceiveDamage(float _damage)
     {
         // 無敵だったら何もしない
-        if(isInvisible)
+        if(isInvisible || hp <= 0)
         {
             return;
         }
@@ -539,13 +539,14 @@ public partial class CS_Player : MonoBehaviour
             hp = 0;
         }
 
-        if(state == State.Difence || state == State.Ult)
+        if(state == State.Difence || state == State.Ult || _damage <= damageAtackOkAttack)
         {
             isInvisible = false;
             return;
         }
         state = State.Damage;
         rb.velocity = Vector3.zero;
+        attackDamage = 0;
         anim.SetTrigger("DamageTrigger");
     }
 
@@ -574,6 +575,11 @@ public partial class CS_Player : MonoBehaviour
         isInvisible = false;
         attack2Ok = false;
         attackDamage = 0;
+    }
+
+    private void AnimDead()
+    {
+        isDeath = true;
     }
 
 
