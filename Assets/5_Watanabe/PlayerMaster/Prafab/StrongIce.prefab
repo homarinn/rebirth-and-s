@@ -29104,6 +29104,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 25
+  damage: 10
+  hitEffect: {fileID: 3276742099768398204, guid: 7ff03c58f31b1c84382fcbecdb533193,
+    type: 3}
 --- !u!1 &9028142507399032126
 GameObject:
   m_ObjectHideFlags: 0

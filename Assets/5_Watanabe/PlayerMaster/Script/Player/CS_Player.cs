@@ -584,7 +584,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // êÖÇΩÇ‹ÇË
-        if(other.gameObject.tag == "")
+        if(other.gameObject.tag == "Puddle")
         {
             isWaterOnThe = true;
         }
@@ -597,7 +597,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         // êÖÇΩÇ‹ÇË
-        if (other.gameObject.tag == "")
+        if (other.gameObject.tag == "Puddle")
         {
             isWaterOnThe = false;
         }
