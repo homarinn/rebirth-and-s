@@ -515,14 +515,14 @@ public partial class CS_Player : MonoBehaviour
     public void ReceiveDamage(float _damage)
     {
         // 無敵だったら何もしない
-        if(isInvisible || hp <= 0 || state == State.Sliding)
+        if (isInvisible || hp <= 0 || state == State.Sliding)
         {
             return;
         }
 
         if (isDifence)
         {
-            Instantiate(Eff_Difence,transform);
+            Instantiate(Eff_Difence, transform);
             audio.PlayOneShot(SE_Difence);
             // ガード中ダメージ半減
             hp -= _damage * difenceDamageCut;
@@ -534,20 +534,26 @@ public partial class CS_Player : MonoBehaviour
             hp -= _damage;
         }
 
-        if(hp <= 0)
+        if (hp <= 0)
         {
             hp = 0;
         }
 
-        if(state == State.Difence || state == State.Ult || _damage <= damageAtackOkAttack)
+        if (state == State.Difence || state == State.Ult)
         {
             isInvisible = false;
             return;
         }
-        state = State.Damage;
-        rb.velocity = Vector3.zero;
-        attackDamage = 0;
-        anim.SetTrigger("DamageTrigger");
+        if (_damage >= damageAtackOkAttack)
+        {
+            attackDamage = 0;
+            state = State.Damage;
+            anim.SetTrigger("DamageTrigger");
+        }
+        else
+        {
+            isInvisible = false;
+        }
     }
 
     /// <summary>
@@ -557,7 +563,6 @@ public partial class CS_Player : MonoBehaviour
     /// <param name="power">飛ばす威力</param>
     public void BlowOff(Vector3 direcion, float power)
     {
-        rb.AddForce(direcion * power, ForceMode.Impulse);
         if(state == State.Difence)
         {
             return;
