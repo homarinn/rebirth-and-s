@@ -113,7 +113,7 @@ public class CS_Spirit : MonoBehaviour
                 }
 
                 //‰ñ•œ‚µ‚Ü[‚·
-                if (healFlag && player.Hp >= 0)
+                if (healFlag && player.Hp > 0)
                 {
                     PlayerHealing();
                     ApplyHealEffect();

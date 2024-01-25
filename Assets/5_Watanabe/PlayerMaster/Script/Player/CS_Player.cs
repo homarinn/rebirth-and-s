@@ -105,7 +105,7 @@ public partial class CS_Player : MonoBehaviour
 
     [SerializeField, Header("HPÇÃç≈ëÂíl")]
     private float maxHP = 0;    // ç≈ëÂHP
-    private float hp;           // åªç›ÇÃHP
+    [SerializeField] private float hp;           // åªç›ÇÃHP
     private bool isInvisible = false;
     private bool isDeath = false;
     public bool IsDeath
