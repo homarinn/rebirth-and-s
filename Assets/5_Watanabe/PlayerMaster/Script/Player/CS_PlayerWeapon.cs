@@ -81,7 +81,6 @@ public class CS_PlayerWeapon : MonoBehaviour
         }
         else if(other.gameObject.tag == "MagicMissile")
         {
-            Destroy(other.gameObject);
             Debug.Log("ƒqƒbƒg");
             if(other.GetComponent<CS_Enemy1MagicMissile>() != null)
             {
@@ -94,6 +93,7 @@ public class CS_PlayerWeapon : MonoBehaviour
                 {
                     Instantiate(reflctBullet2, transform);
                 }
+                Destroy(other.gameObject);
             }
 
             // e‚ÌAudoSouce‚ğæ“¾
