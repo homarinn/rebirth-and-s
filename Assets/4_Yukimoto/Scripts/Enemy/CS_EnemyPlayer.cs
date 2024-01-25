@@ -84,91 +84,144 @@ public class CS_EnemyPlayer : MonoBehaviour
     // 速度
     // ---------------------
 
-    /// <summary> 追尾時の最大速度 </summary>
-    [Header("追尾時の最大速度")]
-    [SerializeField] private float chaseSpeed;
+    /// <summary> 速度関係のパラメータ </summary>
+    [System.Serializable]
+    private struct SpeedParameter
+    {
+        /// <summary> 追尾時の最大速度 </summary>
+        [Header("追尾時の最大速度")]
+        public float chaseMax;
 
-    [Header("追尾時の加速度")]
-    [SerializeField] private float chaseAcceleration;
+        [Header("追尾時の加速度")]
+        public float chaseAcceleration;
 
-    /// <summary> プレイヤーに近づいた後の移動速度 </summary>
-    [Header("プレイヤーに近づいた後の移動速度")]
-    [SerializeField] private float moveSpeed;
+        /// <summary> プレイヤーに近づいた後の移動速度 </summary>
+        [Header("プレイヤーに近づいた後の移動速度")]
+        public float nearMove;
+    }
+
+    /// <summary> 速度関係のパラメータ </summary>
+    [Header("速度関係のパラメータ")]
+    [SerializeField] private SpeedParameter speedParameter;
 
     // --------------------------
     // 攻撃
     // --------------------------
 
-    /// <summary> 攻撃力 </summary>
-    [Header("攻撃力")]
-    [SerializeField] private float attackPower;
+    /// <summary> 攻撃関係のパラメータ </summary>
+    [System.Serializable]
+    private struct AttackParameter
+    {
+        /// <summary> 攻撃力 </summary>
+        [Header("攻撃力")]
+        public float power;
 
-    /// <summary> 
-    /// 攻撃のトリガーとなるプレイヤーとの距離
-    /// </summary>
-    [Header("攻撃のトリガーとなるプレイヤーとの距離")]
-    [SerializeField] private float triggerDistance;
+        /// <summary> 
+        /// 攻撃のトリガーとなるプレイヤーとの距離
+        /// </summary>
+        [Header("攻撃のトリガーとなるプレイヤーとの距離")]
+        public float triggerDistance;
 
-    /// <summary> 攻撃待機時間(秒) </summary>
-    [Header("攻撃待機時間(秒)")]
-    [SerializeField] private float attackInterval;
+        /// <summary> 攻撃待機時間(秒) </summary>
+        [Header("攻撃待機時間(秒)")]
+        public float interval;
 
-    /// <summary> 攻撃する確率(%) </summary>
-    [Header("攻撃した後に再攻撃する確率(%)")]
-    [SerializeField] private float attackPercent;
+        /// <summary> 攻撃する確率(%) </summary>
+        [Header("攻撃した後に再攻撃する確率(%)")]
+        public float percent;
 
-    [Header("trueなら、攻撃中に被ダメージモーションを起こさない")]
-    [SerializeField] private bool hasSuperArmor;
+        /// <summary>
+        /// 攻撃時にスーパーアーマーをつけるかどうか
+        /// </summary>
+        [Header("攻撃時にスーパーアーマーをつけるかどうか")]
+        public bool hasSuperArmor;
 
-    /// <summary> 攻撃可能ならtrue </summary>
-    private bool canAttack = false;
+        /// <summary> 攻撃可能ならtrue </summary>
+        [NonSerialized] public bool canAttack;
 
-    /// <summary> 攻撃の確率を引き当てたらtrue </summary>
-    private bool isAttackPercent = false;
+        /// <summary> 攻撃の確率を引き当てたらtrue </summary>
+        [NonSerialized] public bool isPercent;
+    }
+
+    /// <summary> 攻撃関係のパラメータ </summary>
+    [Header("攻撃関係のパラメータ")]
+    [SerializeField] private AttackParameter attackParameter;
 
     // ------------------------------
     // 必殺技
     // ------------------------------
 
-    [Header("必殺技の威力")]
-    [SerializeField] private float ultPower;
+    /// <summary>
+    /// 必殺技関係のパラメータ
+    /// </summary>
+    [System.Serializable]
+    private struct UltParameter
+    {
+        /// <summary> 必殺技の威力 </summary>
+        [Header("必殺技の威力")]
+        public float power;
 
-    /// <summary> 必殺技のインターバル時間(秒) </summary>
-    [Header("必殺技のインターバル時間(秒)")]
-    [SerializeField] private float ultInterval;
+        /// <summary> 必殺技のインターバル時間(秒) </summary>
+        [Header("必殺技のインターバル時間(秒)")]
+        public float interval;
 
-    [Header("必殺技の速度")]
-    [Range(1.0f, 5.0f)]
-    [SerializeField] private float ultSpeed;
+        /// <summary> 必殺技の速度 </summary>
+        [Header("必殺技の速度"), Range(1.0f, 10.0f)]
+        public float speed;
 
-    /// <summary> 必殺技が使用可能ならtrue </summary>
-    private bool canUlt = false;
+        /// <summary> 必殺技が使用可能ならtrue </summary>
+        [NonSerialized] public bool canUlt;
+    }
+
+    /// <summary>
+    /// 必殺技関係のパラメータ
+    /// </summary>
+    [Header("必殺技関係のパラメータ")]
+    [SerializeField] private UltParameter ultParameter;
 
     // ------------------------------
     // 回避
     // ------------------------------
 
-    /// <summary> 回避インターバル時間(秒) </summary>
-    [Header("回避インターバル時間(秒)")]
-    [SerializeField] private float slidingInterval;
+    /// <summary> 回避関係のパラメータ </summary>
+    [System.Serializable]
+    private struct SlidingParameter
+    {
+        /// <summary> 回避インターバル時間(秒) </summary>
+        [Header("回避インターバル時間(秒)")]
+        public float interval;
 
-    /// <summary> 回避可能ならtrue </summary> 
-    private bool canSliding = false;
+        /// <summary> 回避可能ならtrue </summary> 
+        [NonSerialized] public bool canSliding;
+    }
+
+    /// <summary> 回避関係のパラメータ </summary>
+    [Header("回避関係のパラメータ")]
+    [SerializeField] private SlidingParameter slidingParameter;
 
     // ------------------------------
     // 防御
     // ------------------------------
 
-    /// <summary> 防御時のカット率 </summary>
-    [Header("防御時のカット率(%)")]
-    [SerializeField] private float damageCutRatio;
+    /// <summary> 防御関係のパラメータ </summary>
+    [System.Serializable]
+    private struct GuardParameter
+    {
+        /// <summary> 防御時のカット率 </summary>
+        [Header("防御時のカット率(%)")]
+        public float cutRatio;
 
-    /// <summary> 防御インターバル時間(秒) </summary>
-    [Header("防御インターバル時間(秒)")]
-    [SerializeField] private float guardInterval;
+        /// <summary> 防御インターバル時間(秒) </summary>
+        [Header("防御インターバル時間(秒)")]
+        public float interval;
 
-    /// <summary> 防御可能ならtrue </summary>
-    private bool canGuard = false;
+        /// <summary> 防御可能ならtrue </summary>
+        [NonSerialized] public bool canGuard;
+    }
+
+    /// <summary> 防御関係のパラメータ </summary> 
+    [Header("防御関係のパラメータ")]
+    [SerializeField] private GuardParameter guardParameter;
 
     // ----------------------------
     // 与ダメージ
@@ -209,13 +262,22 @@ public class CS_EnemyPlayer : MonoBehaviour
     // 攻撃検知用
     // ----------------------------
 
-    /// <summary> 攻撃を検知できる時間(秒) </summary>
-    [Header("攻撃を検知できる時間(秒)")]
-    [SerializeField] private float attackReceptionTime;
+    /// <summary> 攻撃などを検知できる時間 </summary>
+    [System.Serializable]
+    private struct ReceptionTime
+    {
+        /// <summary> 攻撃を検知できる時間(秒) </summary>
+        [Header("攻撃を検知できる時間(秒)")]
+        public float attack;
 
-    /// <summary> 必殺技を検知できる時間(秒) </summary>
-    [Header("必殺技を検知できる時間(秒)")]
-    [SerializeField] private float ultReceptionTime;
+        /// <summary> 必殺技を検知できる時間(秒) </summary>
+        [Header("必殺技を検知できる時間(秒)")]
+        public float ult;
+    }
+
+    /// <summary> 攻撃などを検知できる時間 </summary>
+    [Header("攻撃などを検知できる時間")]
+    [SerializeField] private ReceptionTime receptionTime;
 
     // --------------------
     // AI制御用
@@ -228,17 +290,25 @@ public class CS_EnemyPlayer : MonoBehaviour
     // アニメーション検知用
     // --------------------------------
 
-    /// <summary> プレイヤーの必殺技アニメーション </summary>
-    [Header("必殺技のアニメーション(プレイヤー)")]
-    [SerializeField] private AnimationClip playerUltAnim;
+    /// <summary> プレイヤーのアニメーション検知用 </summary>
+    [System.Serializable]
+    private struct PlayerAnimation
+    {
+        /// <summary> プレイヤーの必殺技アニメーション </summary>
+        [Header("必殺技のアニメーション(プレイヤー)")]
+        public AnimationClip ult;
 
-    /// <summary> プレイヤーの攻撃1アニメーション </summary>
-    [Header("プレイヤーの攻撃1アニメーション")]
-    [SerializeField] private AnimationClip playerAttack1Anim;
+        /// <summary> プレイヤーの攻撃1アニメーション </summary>
+        [Header("プレイヤーの攻撃1アニメーション")]
+        public AnimationClip attack1;
 
-    /// <summary> プレイヤーの攻撃2アニメーション </summary>
-    [Header("プレイヤーの攻撃2アニメーション")]
-    [SerializeField] private AnimationClip playerAttack2Anim;
+        /// <summary> プレイヤーの攻撃2アニメーション </summary>
+        [Header("プレイヤーの攻撃2アニメーション")]
+        public AnimationClip attack2;
+    }
+
+    [Header("プレイヤーのアニメーション検知用")]
+    [SerializeField] private PlayerAnimation playerAnimation;
 
     /// <summary> プレイヤーのアニメーション読み取り用 </summary>
     private Animator playerAnimator;
@@ -430,7 +500,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         }
 
         // テスト
-        if(Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log(canWeaponHit);
         }
@@ -447,6 +517,13 @@ public class CS_EnemyPlayer : MonoBehaviour
         if (!player)
         {
             Debug.Log("プレイヤーがいません");
+            return;
+        }
+
+        // 追尾速度が0なら待機
+        if (speedParameter.chaseMax <= 0)
+        {
+            Debug.Log("追尾速度が0以下に設定されています");
             return;
         }
 
@@ -483,13 +560,13 @@ public class CS_EnemyPlayer : MonoBehaviour
         // -----------------------------
 
         // 必殺技が使用可能
-        if (canUlt)
+        if (ultParameter.canUlt)
         {
             ChangeState(State.Ult);
             return;
         }
         // 必殺技が使用不可で攻撃可能
-        else if (canAttack)
+        else if (attackParameter.canAttack)
         {
             // タイマーリセット
             attackTimer = 0;
@@ -505,7 +582,7 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // プレイヤーの必殺技を検知し
         // 防御可能なら防御する
-        if (CheckPlayerUlt() && canGuard)
+        if (CheckPlayerUlt() && guardParameter.canGuard)
         {
             // 防御状態に移行
             ChangeState(State.Guard);
@@ -518,14 +595,14 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // プレイヤーの攻撃を検知し
         // 回避可能なら回避する
-        if (CheckPlayerAttack() && canSliding)
+        if (CheckPlayerAttack() && slidingParameter.canSliding)
         {
             ChangeState(State.Sliding);
             return;
         }
         // 回避不可能で
         // 防御可能なら防御する
-        else if (CheckPlayerAttack() && canGuard)
+        else if (CheckPlayerAttack() && guardParameter.canGuard)
         {
             ChangeState(State.Guard);
             return;
@@ -536,7 +613,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         // ----------------------------------
 
         // 攻撃の確率を引き当てたら攻撃
-        if (isAttackPercent)
+        if (attackParameter.isPercent)
         {
             ChangeState(State.Attack);
             return;
@@ -572,7 +649,7 @@ public class CS_EnemyPlayer : MonoBehaviour
     private void MoveAround(bool moveRight = true)
     {
         // 回転移動の速度
-        float rotateSpeed = moveSpeed * 10.0f;
+        float rotateSpeed = speedParameter.nearMove * 10.0f;
 
         // 右移動
         if (moveRight)
@@ -629,7 +706,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         enemyAnimator.SetBool(isAttack, false);
 
         // この後また攻撃するか抽選する
-        isAttackPercent = CheckProbability(attackPercent);
+        attackParameter.isPercent = CheckProbability(attackParameter.percent);
 
         // 待機状態に移行
         ChangeState(State.Idle);
@@ -662,7 +739,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         attackTimer = 0;
 
         // この後で攻撃するか抽選する
-        isAttackPercent = CheckProbability(attackPercent);
+        attackParameter.isPercent = CheckProbability(attackParameter.percent);
 
         // 待機状態に移行
         ChangeState(State.Idle);
@@ -794,7 +871,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         if (isGuard)
         {
             // ダメージの軽減値
-            float cut = damage * (damageCutRatio / 100);
+            float cut = damage * (guardParameter.cutRatio / 100);
             damage -= cut;
             hp -= damage;
         }
@@ -814,7 +891,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         // スーパーアーマーなら攻撃中に
         // 被ダメージモーションはしない
         if (currentState == State.Attack &&
-            hasSuperArmor)
+            attackParameter.hasSuperArmor)
         {
             return;
         }
@@ -848,14 +925,14 @@ public class CS_EnemyPlayer : MonoBehaviour
         if (currentState == State.Attack)
         {
             // 通常の攻撃力を参照
-            playerManager.ReceiveDamage(attackPower);
+            playerManager.ReceiveDamage(attackParameter.power);
         }
 
         // 必殺技
         if (currentState == State.Ult)
         {
             // 必殺技の威力を参照
-            playerManager.ReceiveDamage(ultPower);
+            playerManager.ReceiveDamage(ultParameter.power);
         }
     }
 
@@ -904,7 +981,7 @@ public class CS_EnemyPlayer : MonoBehaviour
             target.position, transform.position);
 
         // 一定以内にターゲットがいるのか
-        return distance < triggerDistance;
+        return distance < attackParameter.triggerDistance;
     }
 
     /// <summary>
@@ -938,20 +1015,20 @@ public class CS_EnemyPlayer : MonoBehaviour
     private bool CheckPlayerUlt()
     {
         // 必殺技のアニメーションが設定されていない
-        if (!playerUltAnim)
+        if (!playerAnimation.ult)
         {
             Debug.Log("プレイヤーの必殺技が設定されていません");
             return false;
         }
 
         // プレイヤーが必殺技をしていない
-        if (!IsPlayingAnim(playerAnimator, playerUltAnim))
+        if (!IsPlayingAnim(playerAnimator, playerAnimation.ult))
         {
             return false;
         }
 
         // プレイヤーの必殺技の判定開始時間
-        float ultStartTime = playerUltAnim.events[0].time;
+        float ultStartTime = playerAnimation.ult.events[0].time;
 
         // アニメーションの経過時間
         float elapsedTime = GetAnimElapsedTime(playerAnimator);
@@ -959,7 +1036,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーの必殺技のアニメーションが
         // ある程度再生されたら検知
         return elapsedTime >= ultStartTime &&
-            elapsedTime < ultStartTime + ultReceptionTime;
+            elapsedTime < ultStartTime + receptionTime.ult;
     }
 
     /// <summary>
@@ -978,8 +1055,8 @@ public class CS_EnemyPlayer : MonoBehaviour
         }
 
         // プレイヤーが攻撃していない
-        if (!IsPlayingAnim(playerAnimator, playerAttack1Anim) &&
-            !IsPlayingAnim(playerAnimator, playerAttack2Anim))
+        if (!IsPlayingAnim(playerAnimator, playerAnimation.attack1) &&
+            !IsPlayingAnim(playerAnimator, playerAnimation.attack2))
         {
             return false;
         }
@@ -989,7 +1066,7 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // 攻撃検知可能な時間を経過しているので
         // 攻撃を検知できない
-        if (elapsedTime > attackReceptionTime)
+        if (elapsedTime > receptionTime.attack)
         {
             return false;
         }
@@ -1013,7 +1090,7 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // アニメーションの再生時間に掛けて
         // 経過時間を求める
-        return playerUltAnim.length * currentTimeRatio;
+        return playerAnimation.ult.length * currentTimeRatio;
     }
 
     /// <summary>
@@ -1058,14 +1135,14 @@ public class CS_EnemyPlayer : MonoBehaviour
     private bool CheckPlayerAttakAnim()
     {
         // プレイヤーの攻撃1が設定されていない
-        if (!playerAttack1Anim)
+        if (!playerAnimation.attack1)
         {
             Debug.Log("プレイヤーの攻撃1が設定されていません");
             return false;
         }
 
         // プレイヤーの攻撃2が設定されていない
-        if (!playerAttack1Anim)
+        if (!playerAnimation.attack1)
         {
             Debug.Log("プレイヤーの攻撃2が設定されていません");
             return false;
@@ -1107,10 +1184,10 @@ public class CS_EnemyPlayer : MonoBehaviour
             case State.Chase:
 
                 // 最大速度を設定
-                enemyAi.speed = chaseSpeed;
+                enemyAi.speed = speedParameter.chaseMax;
 
                 // 加速度を設定
-                enemyAi.acceleration = chaseAcceleration;
+                enemyAi.acceleration = speedParameter.chaseAcceleration;
 
                 // ダッシュモーション開始
                 enemyAnimator.SetBool(isRun, true);
@@ -1147,7 +1224,7 @@ public class CS_EnemyPlayer : MonoBehaviour
             case State.Ult:
 
                 // 必殺技の速度を設定
-                enemyAnimator.speed = ultSpeed;
+                enemyAnimator.speed = ultParameter.speed;
 
                 // 必殺技アニメーション開始
                 enemyAnimator.SetTrigger(ultTirgger);
@@ -1247,16 +1324,16 @@ public class CS_EnemyPlayer : MonoBehaviour
         if (isInvincible) invincibleTimer -= Time.deltaTime;
 
         // 攻撃してからの時間を計測
-        if (!canAttack) attackTimer += Time.deltaTime;
+        if (!attackParameter.canAttack) attackTimer += Time.deltaTime;
 
         // 必殺技を使用してからの時間を計測
-        if (!canUlt) ultTimer += Time.deltaTime;
+        if (!ultParameter.canUlt) ultTimer += Time.deltaTime;
 
         // 回避してからの時間を計測
-        if (!canSliding) slidingTimer += Time.deltaTime;
+        if (!slidingParameter.canSliding) slidingTimer += Time.deltaTime;
 
         // 防御してからの時間を計測
-        if (!canGuard) guardTimer += Time.deltaTime;
+        if (!guardParameter.canGuard) guardTimer += Time.deltaTime;
 
         // ----------------------------------
         // 一定時間経ったか確認
@@ -1264,9 +1341,9 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         isInvincible = invincibleTimer > 0;
 
-        canAttack = attackTimer >= attackInterval;
-        canUlt = ultTimer >= ultInterval;
-        canSliding = slidingTimer >= slidingInterval;
-        canGuard = guardTimer >= guardInterval;
+        attackParameter.canAttack = attackTimer >= attackParameter.interval;
+        ultParameter.canUlt = ultTimer >= ultParameter.interval;
+        slidingParameter.canSliding = slidingTimer >= slidingParameter.interval;
+        guardParameter.canGuard = guardTimer >= guardParameter.interval;
     }
 }

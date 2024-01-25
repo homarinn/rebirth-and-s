@@ -1555,6 +1555,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 1271042575669801200, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1393033421661020282, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: m_Layer
@@ -1684,6 +1689,21 @@ PrefabInstance:
         type: 3}
       propertyPath: triggerDistance
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: receptionTime.attack
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: attackParameter.percent
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: attackParameter.interval
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2721156292797431183, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
@@ -2117,6 +2137,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SE_Attack1Hit: {fileID: 8300000, guid: 20e0fa9d22517a0498ec3587697e0560, type: 3}
   SE_Attack2Hit: {fileID: 8300000, guid: 4976f0ca466204b48a870d28686c472b, type: 3}
+  reflctBullet: {fileID: 0}
+  reflctBullet2: {fileID: 0}
 --- !u!1 &2299229397179326714
 GameObject:
   m_ObjectHideFlags: 0
