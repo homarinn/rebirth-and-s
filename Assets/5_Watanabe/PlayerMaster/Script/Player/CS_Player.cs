@@ -563,7 +563,7 @@ public partial class CS_Player : MonoBehaviour
     /// <param name="power">”ò‚Î‚·ˆÐ—Í</param>
     public void BlowOff(Vector3 direcion, float power)
     {
-        if(state == State.Difence)
+        if(state == State.Difence || state == State.Ult)
         {
             return;
         }
