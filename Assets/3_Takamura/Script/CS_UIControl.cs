@@ -34,9 +34,13 @@ public class CS_UIControl : MonoBehaviour
     [SerializeField, Header("セリフUI")]
     GameObject goDialogue;
 
+    //! @brief 一度だけ処理を行うフラグ
+    bool bOnce = false;
 
     void Start()
     {
+        bOnce = false;
+
         //! 各キャラのステータスの初期化
         playerHpMax = (float)goPlayer.GetComponent<CS_Player>().Hp;
         ultInterval = goPlayer.GetComponent<CS_Player>().UltTimer;
@@ -69,10 +73,12 @@ public class CS_UIControl : MonoBehaviour
 
         ControlEnemyHPBar();
 
-        if(enemyHp <= (enemyHpMax * 0.5f))
+        if ((enemyHp <= (enemyHpMax * 0.5f)) && (bOnce == false) && (goDialogue.GetComponent<CS_Dialogue>().Benable == false))
         {
             goDialogue.GetComponent<CS_Dialogue>().Benable = true;
+            bOnce = true;
         }
+        Debug.Log("once : " + bOnce);
     }
 
     //! @brief Stageに合った敵のHPを設定

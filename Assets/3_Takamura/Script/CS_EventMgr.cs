@@ -111,6 +111,11 @@ public class CS_EventMgr : MonoBehaviour
                 break;
         }
 
+        if(goDialogue.activeSelf == false)
+        {
+            ChangeState(eState.FadeShow);
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Quit();
