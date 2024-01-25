@@ -14567,10 +14567,7 @@ MonoBehaviour:
   puddle: {fileID: 4317912990116398507, guid: 9c2f8c263766c764380855e5ec072bc7, type: 3}
   hitEffect: {fileID: 5871352135790364307, guid: 9da9c46311afc2a41a41669c29a3b5ab,
     type: 3}
-  moveSpeed: 20
-  attackPower: 10
   disappearTime: 0.15
-  period: 1
 --- !u!54 &6343489040496740858
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14618,7 +14615,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.6, y: 0.11, z: 0.1}
-  m_Center: {x: 0.18, y: 0, z: -0.013}
+  m_Center: {x: 0.18, y: 0, z: 0}
 --- !u!1 &3728303394189113485
 GameObject:
   m_ObjectHideFlags: 0
