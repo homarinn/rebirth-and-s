@@ -123,31 +123,31 @@ public class CS_Enemy1BlowOffEffect : MonoBehaviour
         //var direction = (other.transform.position - transform.position).normalized;
 
         //中央からの方向
-        //Vector3 direction = new Vector3(
-        //    other.transform.position.x - transform.position.x,
-        //    0.0f,
-        //    other.transform.position.z - transform.position.z);
+        Vector3 direction = new Vector3(
+            other.transform.position.x - transform.position.x,
+            0.0f,
+            other.transform.position.z - transform.position.z);
 
-        ////距離が近すぎればプレイヤーの後ろ方向に飛ばす
-        //const float rangeNormalDirection = 0.6f * 0.6f;  //中央から吹き飛ぶようにする判定範囲
-        //if (direction.sqrMagnitude <= rangeNormalDirection)
-        //{
-        //    //後ろ方向に吹き飛ばす
-        //    direction.x = -other.transform.forward.x;
-        //    direction.z = -other.transform.forward.z;
+        //距離が近すぎればプレイヤーの後ろ方向に飛ばす
+        const float rangeNormalDirection = 0.6f * 0.6f;  //中央から吹き飛ぶようにする判定範囲
+        if (direction.sqrMagnitude <= rangeNormalDirection)
+        {
+            //後ろ方向に吹き飛ばす
+            direction.x = -other.transform.forward.x;
+            direction.z = -other.transform.forward.z;
 
-        //    Debug.Log("吹き飛ばす方向 = " + direction);
-        //}
-        //else
-        //{
-        //    //中央から外側に吹き飛ばす
-        //    direction = direction.normalized;
-        //    Debug.Log("吹き飛ばす方向(通常) = " + direction);
-        //}
+            Debug.Log("吹き飛ばす方向 = " + direction);
+        }
+        else
+        {
+            //中央から外側に吹き飛ばす
+            direction = direction.normalized;
+            Debug.Log("吹き飛ばす方向(通常) = " + direction);
+        }
 
         //吹き飛ばす
         //ForceModeを変えると挙動が変わる（今回は質量無視）
-        //rigidBody.AddForce(direction * blowOffPower, ForceMode.Impulse);
+        rigidBody.AddForce(direction * blowOffPower, ForceMode.Impulse);
 
         var script = other.gameObject.GetComponent<CS_Player>();
         //script.ReceiveDamage(0);
