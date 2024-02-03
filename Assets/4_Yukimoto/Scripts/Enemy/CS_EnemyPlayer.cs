@@ -46,7 +46,7 @@ public class CS_EnemyPlayer : MonoBehaviour
     }
 
     /// <summary> 現在の状態 </summary>
-    private State currentState;
+    [SerializeField] private State currentState;
 
     /// <summary>
     /// 現在の状態
@@ -97,7 +97,7 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         /// <summary> プレイヤーに近づいた後の移動速度 </summary>
         [Header("プレイヤーに近づいた後の移動速度")]
-        public float nearMove;
+        [NonSerialized] public float nearMove;
     }
 
     /// <summary> 速度関係のパラメータ </summary>
@@ -305,6 +305,10 @@ public class CS_EnemyPlayer : MonoBehaviour
         /// <summary> プレイヤーの攻撃2アニメーション </summary>
         [Header("プレイヤーの攻撃2アニメーション")]
         public AnimationClip attack2;
+
+        /// <summary> プレイヤーの死亡アニメーション </summary> 
+        [Header("プレイヤーの死亡アニメーション")]
+        public AnimationClip dead;
     }
 
     [Header("プレイヤーのアニメーション検知用")]
@@ -364,6 +368,13 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// <summary> 防御用タイマー </summary>
     private float guardTimer = 0;
 
+    // ----------------------------
+    // 当たり判定
+    // ----------------------------
+
+    /// <summary> 当たり判定制御用 </summary>
+    private CapsuleCollider capsuleCollider;
+
     private void Awake()
     {
         // HPを最大にする
@@ -385,6 +396,9 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーの
         // アニメーション制御用コンポーネントを取得
         playerAnimator = player.GetComponent<Animator>();
+
+        // 当たり判定制御用コンポーネントを取得
+        capsuleCollider = gameObject.GetComponent<CapsuleCollider>();
 
         // 待機状態から始める
         ChangeState(State.Idle);
@@ -498,12 +512,6 @@ public class CS_EnemyPlayer : MonoBehaviour
 
                 break;
         }
-
-        // テスト
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log(canWeaponHit);
-        }
     }
 
     #region 状態別の処理
@@ -527,6 +535,12 @@ public class CS_EnemyPlayer : MonoBehaviour
             return;
         }
 
+        // プレイヤーが死亡したので待機
+        if (CheckPlayerDead())
+        {
+            return;
+        }
+
         // 追尾状態に移行
         ChangeState(State.Chase);
     }
@@ -538,6 +552,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     {
         // プレイヤーに向かって移動
         enemyAi.SetDestination(player.position);
+
+        // プレイヤーの方向を向く
+        LookTarget(player);
 
         // プレイヤーとの距離が一定以内
         if (IsNear(player))
@@ -761,6 +778,23 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // プレイヤーの方を向く
         LookTarget(player);
+
+        // プレイヤーが下を通れるように
+        // 衝突判定を無しにする
+        capsuleCollider.isTrigger = true;
+    }
+
+    /// <summary>
+    /// 必殺技の判定終了イベント
+    /// </summary>
+    private void UltFinish()
+    {
+        // 武器が当たらないようにする
+        canWeaponHit = false;
+
+        // 敵を貫通しないように
+        // 衝突判定を戻す
+        capsuleCollider.isTrigger = false;
     }
 
     /// <summary>
@@ -768,9 +802,6 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimUltFailed()
     {
-        // 武器が当たらないようにする
-        canWeaponHit = false;
-
         // タイマーリセット
         ultTimer = 0;
 
@@ -957,9 +988,16 @@ public class CS_EnemyPlayer : MonoBehaviour
         }
 
         // アニメーション制御用コンポーネントがない
-        if (!enemyAnimator || !playerAnimator)
+        if (!enemyAnimator)
         {
-            Debug.Log("Animatorがありません");
+            Debug.Log("敵のAnimatorがありません");
+            return false;
+        }
+
+        // コライダーを確認
+        if (!capsuleCollider)
+        {
+            Debug.Log("コライダーがありません");
             return false;
         }
 
@@ -1014,10 +1052,17 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </returns>
     private bool CheckPlayerUlt()
     {
+        // プレイヤーのアニメーターがない
+        if (!playerAnimator)
+        {
+            Debug.Log("プレイヤーのアニメーターがありません");
+            return false;
+        }
+
         // 必殺技のアニメーションが設定されていない
         if (!playerAnimation.ult)
         {
-            Debug.Log("プレイヤーの必殺技が設定されていません");
+            Debug.Log("プレイヤーの必殺技アニメーションが設定されていません");
             return false;
         }
 
@@ -1048,6 +1093,13 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </returns>
     private bool CheckPlayerAttack()
     {
+        // プレイヤーのアニメーターがない
+        if (!playerAnimator)
+        {
+            Debug.Log("プレイヤーのアニメーターがありません");
+            return false;
+        }
+
         // プレイヤーの攻撃が設定されていない
         if (!CheckPlayerAttakAnim())
         {
@@ -1067,6 +1119,38 @@ public class CS_EnemyPlayer : MonoBehaviour
         // 攻撃検知可能な時間を経過しているので
         // 攻撃を検知できない
         if (elapsedTime > receptionTime.attack)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// プレイヤーの死亡を検知したか確認する
+    /// </summary>
+    /// <returns>
+    /// <para> true : 検知した </para>
+    /// <para> false : 検知しなかった </para>
+    /// </returns>
+    private bool CheckPlayerDead()
+    {
+        // プレイヤーのアニメーターがない
+        if (!playerAnimator)
+        {
+            Debug.Log("プレイヤーのアニメーターがありません");
+            return false;
+        }
+
+        // 死亡アニメーションが設定されていない
+        if (!playerAnimation.dead)
+        {
+            Debug.Log("プレイヤーの死亡アニメーションが設定されていません");
+            return false;
+        }
+
+        // プレイヤーが死亡していない
+        if (!IsPlayingAnim(playerAnimator, playerAnimation.dead))
         {
             return false;
         }
@@ -1137,14 +1221,14 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーの攻撃1が設定されていない
         if (!playerAnimation.attack1)
         {
-            Debug.Log("プレイヤーの攻撃1が設定されていません");
+            Debug.Log("プレイヤーの攻撃1アニメーションが設定されていません");
             return false;
         }
 
         // プレイヤーの攻撃2が設定されていない
         if (!playerAnimation.attack1)
         {
-            Debug.Log("プレイヤーの攻撃2が設定されていません");
+            Debug.Log("プレイヤーの攻撃2アニメーションが設定されていません");
             return false;
         }
 

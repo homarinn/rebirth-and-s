@@ -404,7 +404,7 @@ GameObject:
   - component: {fileID: 5155727150018060087}
   - component: {fileID: 6545941894283809608}
   - component: {fileID: 3466569981927529051}
-  - component: {fileID: 4117776049064388840}
+  - component: {fileID: 7574821035289772116}
   - component: {fileID: 2571286890000043425}
   m_Layer: 7
   m_Name: EnemyPlayer
@@ -500,7 +500,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &4117776049064388840
+--- !u!136 &7574821035289772116
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -520,9 +520,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.21
-  m_Height: 1.6540359
+  m_Height: 1.67
   m_Direction: 1
-  m_Center: {x: 0, y: 0.827982, z: 0}
+  m_Center: {x: 0, y: -0.24, z: 0}
 --- !u!114 &2571286890000043425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,35 +535,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcf53af9d3180614280890d472557b14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
   player: {fileID: 0}
-  maxHp: 1000
+  maxHp: 250
   speedParameter:
-    chaseMax: 10
+    chaseMax: 5
     chaseAcceleration: 10
-    nearMove: 10
   attackParameter:
     power: 20
-    triggerDistance: 2
-    interval: 2
+    triggerDistance: 3
+    interval: 5
     percent: 10
     hasSuperArmor: 1
   ultParameter:
     power: 50
-    interval: 5
+    interval: 10
     speed: 1.5
   slidingParameter:
-    interval: 1
+    interval: 5
   guardParameter:
     cutRatio: 80
-    interval: 3
+    interval: 2
   invincibleTime: 3
   receptionTime:
-    attack: 0.2
-    ult: 0.1
+    attack: 1
+    ult: 0.2
   playerAnimation:
     ult: {fileID: 7400000, guid: 320a71571419a994394ddb7f9468cfbf, type: 2}
     attack1: {fileID: 7400000, guid: 539042840a7da314ab1f0fce875c1490, type: 2}
     attack2: {fileID: 7400000, guid: 424e3166b18c51b44a133d49648c310c, type: 2}
+    dead: {fileID: 7400000, guid: 687911b984ec9e14a92ab23ef092343c, type: 2}
 --- !u!1 &1393033421661020282
 GameObject:
   m_ObjectHideFlags: 0

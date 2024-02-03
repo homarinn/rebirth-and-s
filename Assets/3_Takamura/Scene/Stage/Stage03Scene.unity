@@ -718,6 +718,26 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1708030539}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: receptionTime.ult
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: receptionTime.attack
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: attackParameter.percent
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: attackParameter.interval
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5141234283029988823, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -787,6 +807,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1911963200798611062, guid: f838bf6d60a653f4ba8e397eb94a3a8e,
+        type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3284229310123457392, guid: f838bf6d60a653f4ba8e397eb94a3a8e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -925,6 +950,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6676384815485972441, guid: ed4f576053ab8d14784403b9b7a76853,
+        type: 3}
+      propertyPath: maxHP
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
