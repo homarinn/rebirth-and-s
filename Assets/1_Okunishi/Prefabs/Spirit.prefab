@@ -9741,7 +9741,7 @@ MonoBehaviour:
   rotationSpeed: 2
   healCoolTime: 10
   healPercentage: 20
-  healTrrigerPercentage: 50
+  healTrrigerPercentage: 80
   healFlag: 0
   healing_SE: {fileID: 8300000, guid: 29d3bdb5973f22241ab7faad6e0c4595, type: 3}
 --- !u!82 &7333649945911786157

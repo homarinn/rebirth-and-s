@@ -32,6 +32,9 @@ public class CS_Dialogue : MonoBehaviour
     [SerializeField, Header("自動送り機能")]
     bool bAuto;
 
+    [SerializeField, Header("効果音")]
+    AudioSource se;
+
     //! @brief 一度だけ処理を行うフラグ
     bool bOnce = false;
     //! @brief 表示処理が有効かどうか
@@ -45,7 +48,7 @@ public class CS_Dialogue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bEnable = true;
+        bEnable = false;
         bFinishString = true;
         LoadText();
         SplitString();
@@ -69,8 +72,9 @@ public class CS_Dialogue : MonoBehaviour
                 {
                     //! 名前判定
                     int index = splitText[textIndex].IndexOf("/");
-                    int index0 = splitText[textIndex].IndexOf("（");
-                    if(index != -1)
+                    int indexP = splitText[textIndex].IndexOf("（");
+                    int indexS = splitText[textIndex].IndexOf("#");
+                    if (index != -1)
                     {
                         //! 名前更新
                         talkernameText.text = splitText[textIndex].Replace("/","");
@@ -81,7 +85,7 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                     }
-                    else if(index0 != -1)
+                    else if(indexP != -1)
                     {
                         //! 名前非表示
                         talkernameText.text = " ";
@@ -91,7 +95,13 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                         bEnable = false;
-                        Debug.Log("()文");
+                    }
+                    else if(indexS != -1)
+                    {
+                        dialogueText.text = splitText[textIndex].Replace("#", "");
+                        if (se != null) se.Play();
+                        //Show();
+                        textIndex++;
                     }
                     else
                     {
