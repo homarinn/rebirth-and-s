@@ -29,6 +29,8 @@ public class CS_Dialogue : MonoBehaviour
     Coroutine showCoroutine;
     //! @brief 一文表示終了フラグ
     bool bFinishString;
+    [SerializeField, Header("表示終了時のアイコンテキスト")]
+    GameObject goFinish;
     [SerializeField, Header("自動送り機能")]
     bool bAuto;
 
@@ -48,8 +50,13 @@ public class CS_Dialogue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!bAuto)
+        {
+            waitSecond = 0.5f;
+        }
         bEnable = false;
         bFinishString = true;
+        goFinish.SetActive(false);
         LoadText();
         SplitString();
     }
@@ -71,10 +78,10 @@ public class CS_Dialogue : MonoBehaviour
                 if (!string.IsNullOrEmpty(splitText[textIndex]))
                 {
                     //! 名前判定
-                    int index = splitText[textIndex].IndexOf("/");
-                    int indexP = splitText[textIndex].IndexOf("（");
-                    int indexS = splitText[textIndex].IndexOf("#");
-                    if (index != -1)
+                    int indexName = splitText[textIndex].IndexOf("/");
+                    int indexPause = splitText[textIndex].IndexOf("（");
+                    int indexSe = splitText[textIndex].IndexOf("#");
+                    if (indexName != -1)
                     {
                         //! 名前更新
                         talkernameText.text = splitText[textIndex].Replace("/","");
@@ -85,7 +92,7 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                     }
-                    else if(indexP != -1)
+                    else if(indexPause != -1)
                     {
                         //! 名前非表示
                         talkernameText.text = " ";
@@ -96,7 +103,7 @@ public class CS_Dialogue : MonoBehaviour
                         textIndex++;
                         bEnable = false;
                     }
-                    else if(indexS != -1)
+                    else if(indexSe != -1)
                     {
                         dialogueText.text = splitText[textIndex].Replace("#", "");
                         if (se != null) se.Play();
@@ -119,6 +126,7 @@ public class CS_Dialogue : MonoBehaviour
             }
 
         }
+        goFinish.SetActive(bFinishString);
     }
 
     //! @brief テキストファイルを読み込む

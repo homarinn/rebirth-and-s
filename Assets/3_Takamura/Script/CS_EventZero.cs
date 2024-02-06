@@ -9,13 +9,18 @@ public class CS_EventZero : MonoBehaviour
     [SerializeField, Header("イベントマネージャー")]
     GameObject goEventMgr;
     //! @brief 表示するUIのインデックス
-    public int index = 0;
+    int index = 1;
     [SerializeField, Header("EventSE")]
     AudioSource eventSE;
     [SerializeField, Header("SEテキストUI")]
     GameObject SEtext;
     //! @brief シーン遷移フラグ
     bool bTransition;
+    //! @brief タイマー
+    float time = 0.0f;
+    [SerializeField, Header("セリフを表示し始めるまでの時間")]
+    float enableTime;
+
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +36,9 @@ public class CS_EventZero : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        time += Time.deltaTime;
+        if (time < 1.0f) return;
+
         if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return))
         {
             //! SE再生終了でシーン遷移
