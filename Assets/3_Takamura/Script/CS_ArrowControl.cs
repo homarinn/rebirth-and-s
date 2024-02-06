@@ -12,11 +12,8 @@ public class CS_ArrowControl : MonoBehaviour,IPointerEnterHandler,IPointerExitHa
     public void OnPointerEnter(PointerEventData eventData)
     {
         var pos = this.transform.position;
-        pos = new Vector3(-250.0f, pos.y);
-        Debug.Log(pos);
-        Debug.Log(goArrow.transform.position);
+        pos = new Vector3(-270.0f, pos.y);
         goArrow.transform.position = this.transform.position;
-        Debug.Log(goArrow.transform.position);
         goArrow.SetActive(true);
     }
 

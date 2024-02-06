@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ff2b215629dce614a91f04c2022caf07
+guid: 6dde9ea21c33ffc4f9a57ab1b61c5716
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: gameover _textImage_Continue
+      name: gameover_bg_0
       rect:
         serializedVersion: 2
-        x: 760
-        y: 450
-        width: 400
-        height: 70
+        x: 810
+        y: 457
+        width: 300
+        height: 60
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2375a15f1ee3cf944bfbd84fed33503b
-      internalID: -860595519
+      spriteID: c05bf21e9a4c05f44975b131e389e635
+      internalID: 528853471
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gameover _textImage_Title
+      name: gameover_bg_1
       rect:
         serializedVersion: 2
-        x: 760
-        y: 380
-        width: 400
-        height: 70
+        x: 810
+        y: 383
+        width: 300
+        height: 60
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,29 +158,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e659481ab65622d49819f59c9e16dbd8
-      internalID: 1555887225
+      spriteID: 705ed4c5bc436f446b27a5221c6b4746
+      internalID: -1764354577
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gameover _textImage_GameOver
+      name: gameover_bg_2
       rect:
         serializedVersion: 2
-        x: 610
-        y: 640
-        width: 700
-        height: 150
+        x: 625
+        y: 668
+        width: 670
+        height: 90
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 319bfc1eb4c8a374fb8a74ae758e9838
-      internalID: -1231389504
+      spriteID: 5753ed5cc17c822408edab499e92d7e9
+      internalID: 523179420
       vertices: []
       indices: 
       edges: []
@@ -188,7 +188,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: c7f912f7c76acf541a2064ff04f625c8
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -196,9 +196,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      gameover _textImage_Continue: -860595519
-      gameover _textImage_GameOver: -1231389504
-      gameover _textImage_Title: 1555887225
+      gameover_bg_0: 528853471
+      gameover_bg_1: -1764354577
+      gameover_bg_2: 523179420
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
