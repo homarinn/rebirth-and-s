@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c7c48e0b22613d54a8c7dfa5c5b3c11f
+guid: 5a8663ce0bc88fe48833591f3bbee74d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,11 +123,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: gameover_underLine_0
+      name: gameover_logo_0
       rect:
         serializedVersion: 2
         x: 560
-        y: 655
+        y: 635
         width: 800
         height: 150
       alignment: 0
@@ -137,8 +137,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 63bd413ce7761ef479b0b53f9e8c99e7
-      internalID: -860075262
+      spriteID: e123a58341d8f9d40ae4b205c15122e1
+      internalID: 1825269598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gameover_logo_1
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 445
+        width: 300
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0dd54c8eafef5a042b09823c20e2dcc7
+      internalID: -561406574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: gameover_logo_2
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 371
+        width: 300
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c66da945a2f1693408cfdd9fe80cb1c8
+      internalID: -2020128824
       vertices: []
       indices: 
       edges: []
@@ -146,7 +188,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 8a15e4b5029884a4c9366d56c3880222
     internalID: 0
     vertices: []
     indices: 
@@ -154,7 +196,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      gameover_underLine_0: -860075262
+      gameover_logo_0: 1825269598
+      gameover_logo_1: -561406574
+      gameover_logo_2: -2020128824
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
