@@ -77,7 +77,7 @@ public class CS_Dialogue : MonoBehaviour
             {
                 if (!string.IsNullOrEmpty(splitText[textIndex]))
                 {
-                    //! 名前判定
+                    //! コマンド判定
                     int indexName = splitText[textIndex].IndexOf("/");
                     int indexPause = splitText[textIndex].IndexOf("（");
                     int indexSe = splitText[textIndex].IndexOf("#");
@@ -171,14 +171,13 @@ public class CS_Dialogue : MonoBehaviour
             //! 一定時間待機
             yield return delay;
         }
-
-        yield return new WaitForSeconds(waitSecond);
-        
         //! 演出が終わったらすべての文字を表示
         dialogueText.maxVisibleCharacters = length;
 
-        bFinishString = true;
+        //! 全文表示後の待機
+        yield return new WaitForSeconds(waitSecond);        
 
+        bFinishString = true;
         showCoroutine = null;
     }
 }
