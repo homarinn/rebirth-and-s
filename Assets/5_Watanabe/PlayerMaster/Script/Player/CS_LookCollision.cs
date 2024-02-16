@@ -14,6 +14,7 @@ public class CS_LookCollision : MonoBehaviour
         }
     }
     private bool isHit = false;
+    private Transform enemyTrs;
     public bool IsHit
     {
         get
@@ -22,12 +23,20 @@ public class CS_LookCollision : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(isHit)
+        {
+            enemyPos = enemyTrs.position;
+        }
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if(other.gameObject.tag == "Enemy")
         {
             isHit = true;
-            enemyPos = other.transform.position;
+            enemyTrs = other.transform;
         }
     }
 
@@ -36,7 +45,7 @@ public class CS_LookCollision : MonoBehaviour
         if (other.gameObject.tag == "Enemy")
         {
             isHit = false;
-            enemyPos = Vector3.zero;
+            enemyTrs = null;
         }
 
     }
