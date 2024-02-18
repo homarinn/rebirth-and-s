@@ -30,7 +30,7 @@ public class CS_EventZero : MonoBehaviour
             goDialogue[i].SetActive(false);
         }
         SEtext.SetActive(false);
-        goEventMgr.GetComponent<CS_EventMgr>().State = CS_EventMgr.eState.None;
+        goEventMgr.GetComponent<CS_Event01>().ChangeState(CS_Event01.eState.None);
     }
 
     // Update is called once per frame
@@ -45,7 +45,7 @@ public class CS_EventZero : MonoBehaviour
             if (bTransition/* && !eventSE.isPlaying*/)
             {
                 SEtext.SetActive(false);
-                goEventMgr.GetComponent<CS_EventMgr>().State = CS_EventMgr.eState.FadeHide;
+                goEventMgr.GetComponent<CS_Event01>().ChangeState(CS_Event01.eState.Standby);
             }
             else
             {

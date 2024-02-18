@@ -694,6 +694,16 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4522967223254549001, guid: 80154821c16d27f4993f1906174cfabd,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: f2b607ad32459364ca12c56a92732bf5, type: 3}
+    - target: {fileID: 4522967223254549001, guid: 80154821c16d27f4993f1906174cfabd,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4998437303807077157, guid: 80154821c16d27f4993f1906174cfabd,
         type: 3}
       propertyPath: m_fontAsset
