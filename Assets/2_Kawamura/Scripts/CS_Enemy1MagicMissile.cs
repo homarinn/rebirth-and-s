@@ -219,7 +219,7 @@ public class CS_Enemy1MagicMissile : MonoBehaviour
 
         isCollisionPlayer = false;
 
-        Debug.Log("type = " + magicMissileType);
+        //Debug.Log("type = " + magicMissileType);
 
         isCurve = false;
 
