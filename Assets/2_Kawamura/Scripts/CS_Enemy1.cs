@@ -166,6 +166,21 @@ public class CS_Enemy1 : MonoBehaviour
     //[SerializeField] float timeFallToGroundByDeath;
     //[Header("==========")]
 
+    [Header("接地検知オブジェクト")]
+    [SerializeField] GameObject groundDetection;
+
+    [Header("もやエフェクト")]
+    [SerializeField] ParticleSystem mist;
+
+    [Header("放出もやエフェクト")]
+    [SerializeField] ParticleSystem releaseMist;
+
+    [Header("溜めエフェクト")]
+    [SerializeField] ParticleSystem trail;
+
+    [Header("土煙エフェクト")]
+    [SerializeField] ParticleSystem dustCloud;
+
     [Header("弾を撃つSE")]
     [SerializeField] private AudioClip shotSE;
 
@@ -214,6 +229,10 @@ public class CS_Enemy1 : MonoBehaviour
     bool isWaitFall;  //降下準備中か？
     float timeArriveNormalPos;
     Coroutine waitFall;
+
+    //エフェクト用
+    CS_Enemy1Trail trailScript;
+    bool isPlayDustCloudEffect;
 
     //float shotCount = 0;
 
@@ -361,6 +380,14 @@ public class CS_Enemy1 : MonoBehaviour
         isWaitFall = false;
         timeArriveNormalPos = timeReturnNormalPos;
         waitFall = StartCoroutine(WaitFall());
+
+        //エフェクト用
+        trailScript = trail.GetComponent<CS_Enemy1Trail>();
+        trail.Stop();
+        isPlayDustCloudEffect = false;
+
+        //死亡時用
+        groundDetection.SetActive(false);
     }
 
     // Update is called once per frame
@@ -377,7 +404,8 @@ public class CS_Enemy1 : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.H))
         {
-            hp -= downedDamageAmount + 1.0f;
+            ReduceHp(downedDamageAmount + 1.0f);
+            //hp -= downedDamageAmount + 1.0f;
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -713,6 +741,10 @@ public class CS_Enemy1 : MonoBehaviour
             creationInterval[num] = 0.0f;
 
             myAnimator.SetBool("Attack", true);  //モーション発動
+
+            trail.Play();  //エフェクト再生
+            trailScript.GetSetIsPlay = true;
+            Debug.Log("trail再生生成終わり");
         }
     }
 
@@ -844,6 +876,12 @@ public class CS_Enemy1 : MonoBehaviour
         isAttack = true;  //攻撃開始
         myAnimator.SetBool("Attack", true);  //モーション発動
 
+        if (!trailScript.GetSetIsPlay)
+        {
+            trail.Play();  //エフェクト再生
+            trailScript.GetSetIsPlay = true;
+        }
+
         ////blowOffCount -= Time.deltaTime;
         ////if(blowOffCount <= 0.0f)
         ////{
@@ -901,6 +939,8 @@ public class CS_Enemy1 : MonoBehaviour
         if(attackType == AttackType.BlowOff)
         {
             canBlowOff = true;//吹き飛ばし可能
+            trail.Stop();  //エフェクト停止
+            trailScript.GetSetIsPlay = false;
         }
     }
 
@@ -935,9 +975,14 @@ public class CS_Enemy1 : MonoBehaviour
         //ダウンでなければ(もしくは降下中でなければ)上昇、かつ降下準備中でないとき
         if (!isDowned && !isWaitFall)
         {
-            Debug.Log("aaaaaaa");
             isReturningNormalPos = true;
             isWaitRise = false;
+        }
+
+        //通常時かつ上昇時だけエフェクト再生
+        if (!isStartReadyStandby && !isStandby && !isDowned)
+        {
+            PlayDustCloudEffect();
         }
     }
 
@@ -982,11 +1027,23 @@ public class CS_Enemy1 : MonoBehaviour
                     {
                         //モーションに合わせて発射
                         Shoot(type);
+
+                        if (trailScript.GetSetIsPlay)
+                        {
+                            trail.Stop();
+                            trailScript.GetSetIsPlay = false;
+                        }
                     }
                     else
                     {
                         //範囲内に入ったのでモーションを再度再生
                         myAnimator.SetBool("Attack", true);
+
+                        if (!trailScript.GetSetIsPlay)
+                        {
+                            trail.Play();
+                            trailScript.GetSetIsPlay = true;
+                        }
                     }
                 }
                 //一定距離離れていたら発射とモーション中止
@@ -995,6 +1052,12 @@ public class CS_Enemy1 : MonoBehaviour
                     canShoot = false;
                     myAnimator.SetBool("Attack", false);
                     myAnimator.SetFloat("AnimationSpeed", 1);  //速度を戻す
+
+                    if (trailScript.GetSetIsPlay)
+                    {
+                        trail.Stop();
+                        trailScript.GetSetIsPlay = false;
+                    }
                 }
 
                 //if (isShooting) 
@@ -1181,6 +1244,19 @@ public class CS_Enemy1 : MonoBehaviour
             Collider boneCollider = transform.GetChild(3).GetComponent<Collider>();
             boneCollider.enabled = true;
 
+            //接地検知オブジェクト有効化
+            groundDetection.SetActive(true);
+
+            //エフェクト停止
+            mist.Stop();
+            trail.Stop();
+            trailScript.GetSetIsPlay = false;
+
+            //エフェクト再生
+            Vector3 pos = transform.position;
+            pos.y += 2.0f;
+            Instantiate(releaseMist, pos, Quaternion.identity);
+
             //地面に下ろす(重力落下にしたので要らない)
             //目標までの距離から割合を算出してtimeArriveGroundの数値を変える
             // = 降下スピードが変わらない
@@ -1215,10 +1291,10 @@ public class CS_Enemy1 : MonoBehaviour
                 totalReturnTime = 0.0f;
                 //myAnimator.SetBool("Rise", false);
                 myAnimator.SetBool("Fall", true);
-                Debug.Log("totalFallTime" + totalFallTime);
             }
 
             isDowned = true;
+            isPlayDustCloudEffect = false;
             //myRigidbody.useGravity = true;
 
             //変数の初期化（弾関連は絶対）
@@ -1238,6 +1314,11 @@ public class CS_Enemy1 : MonoBehaviour
             myAnimator.SetBool("Fall", true);
             myAnimator.SetBool("Attack", false);
             myAnimator.SetFloat("AnimationSpeed", 1);  //速度を戻す
+
+            //エフェクトの停止
+            mist.Stop();
+            trail.Stop();
+            trailScript.GetSetIsPlay = false;
 
             //地面に下ろす
             //目標までの距離から割合を算出してtimeArriveGroundの数値を変える
@@ -1270,7 +1351,6 @@ public class CS_Enemy1 : MonoBehaviour
         totalDownedTime += Time.deltaTime;
         if(totalDownedTime > downedTime)
         {
-            Debug.Log("ダウン終了");
             isDowned = false;
             downedPos = transform.position;
             //myRigidbody.useGravity = false;
@@ -1280,6 +1360,9 @@ public class CS_Enemy1 : MonoBehaviour
             //定位置に戻るアニメーション再生
             myAnimator.SetBool("Rise", true);
             myAnimator.SetBool("Down", false);
+
+            //エフェクトの再生
+            mist.Play();
 
             //定位置に戻す
             //isReturningNormalPos = true;
@@ -1340,7 +1423,6 @@ public class CS_Enemy1 : MonoBehaviour
     void FallToGround()
     {
         isFall = true;
-        Debug.Log("落下中");
 
         //移動処理
         totalFallTime += Time.deltaTime;
@@ -1353,7 +1435,17 @@ public class CS_Enemy1 : MonoBehaviour
             t = 1.0f;
         }
 
-        if (t >= 1)
+        //着地より少し早めにエフェクト再生
+        if(t >= 0.96f && t < 1)
+        {
+            if(!isPlayDustCloudEffect && !isStartReadyStandby)
+            {
+                //エフェクト生成
+                PlayDustCloudEffect();
+                isPlayDustCloudEffect = true;
+            }
+        }
+        else if (t >= 1)
         {
             //演出待機準備中以外の時に地面の座標を入れる
             if (!isStartReadyStandby)
@@ -1404,6 +1496,17 @@ public class CS_Enemy1 : MonoBehaviour
                 isStandby = true;
             }
         }
+    }
+
+    /// <summary>
+    /// 土煙エフェクトを再生する
+    /// </summary>
+    void PlayDustCloudEffect()
+    {
+        Vector3 pos = new Vector3(transform.position.y, 0.2f, transform.position.z);
+        ParticleSystem p = Instantiate(dustCloud, pos, Quaternion.Euler(-90.0f, 0.0f, 0.0f));
+
+        p.Play();
     }
 
     /// <summary>
@@ -1545,6 +1648,11 @@ public class CS_Enemy1 : MonoBehaviour
             Debug.Log("空中待機中");
         }
 
+        //エフェクト停止
+        mist.Stop();
+        trail.Stop();
+        trailScript.GetSetIsPlay = false;
+
     }
 
     /// <summary>
@@ -1556,6 +1664,9 @@ public class CS_Enemy1 : MonoBehaviour
 
         //攻撃の種類を決定
         ChooseAttackType();
+
+        //エフェクト再生
+        mist.Play();
 
         damageAmount = 0.0f;
         canShoot = false;  //発射不可
