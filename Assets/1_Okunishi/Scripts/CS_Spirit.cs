@@ -13,6 +13,9 @@ public class CS_Spirit : MonoBehaviour
     [SerializeField, Header("プレイヤーを取得する")]
     private CS_Player player;
 
+    [SerializeField, Header("回復時のエフェクト")]
+    private GameObject healEffect;
+
     //===精霊の移動===
     [SerializeField, Header("精霊の移動速度")]
     private float speed = 5.0f;
@@ -25,10 +28,11 @@ public class CS_Spirit : MonoBehaviour
 
     //===精霊の回転===
     [SerializeField, Header("精霊の回転速度")]
-    private float rotationSpeed = 360.0f;
+    private float rotationSpeed = 1.0f;
 
-    private float startAngle = 0f;      //精霊回転開始時の角度
-    private float currentAngle = 0f;    //精霊の現在の角度
+    private float startAngle = 0f;       //精霊回転開始時の角度
+    private float currentAngle = 0f;     //精霊の現在の角度
+    private float endRotation = 1320.0f; //回転終了値
 
     //===回復===
     [SerializeField, Header("回復クールタイム(秒)")]
@@ -40,6 +44,8 @@ public class CS_Spirit : MonoBehaviour
     [SerializeField, Header("HPがPlayerの最大HPの何%まで減ったら回復するか")]
     private float healTrrigerPercentage = 50.0f;
 
+    private float healAmount = 0.0f;                //回復量
+    [SerializeField] private bool healFlag = false;                  //回復フラグ
 
     //===音声===
     [SerializeField, Header("回復音声")]
@@ -48,14 +54,15 @@ public class CS_Spirit : MonoBehaviour
     AudioSource spiritAudio;    //自身の音源
 
     //===その他変数===
-    private float healAmount = 0.0f;                //回復量
-    private float currentCoolTime = 0.0f;           //現在のクールタイム
-    private bool healFlag = false;                  //回復フラグ
-    private bool log = true;                        //デバッグ表示用
+    private float currentCoolTime = 0.0f;       //現在のクールタイム
+    private float effectDuration = 0.1f;        //エフェクトの持続時間
+    private float effectPositionYOffset = 2.2f; //エフェクトのY調整
+    private bool log = true;                    //デバッグ表示用
 
     void Start()
     {
         spiritAudio = GetComponent<AudioSource>();
+        healEffect.transform.position = transform.position;
     }
 
     void Update()
@@ -101,16 +108,19 @@ public class CS_Spirit : MonoBehaviour
                     //回復するHPの計算
                     healAmount = player.MaxHP * (healPercentage / 100.0f);
 
-                    if (player.Hp != 0)
-                    {
-                        healFlag = true;
-                    }
+                    //回復許可
+                    healFlag = true;
                 }
 
-                //回復の際、プレイヤーの周りを一回転する
-                if (healFlag)
+                //回復しまーす
+                if (healFlag && player.Hp > 0)
                 {
-                    RotateAroundPlayer();
+                    PlayerHealing();
+                    ApplyHealEffect();
+                }
+                else
+                {
+                    healFlag = false;
                 }
 
                 //クールタイム減少
@@ -118,15 +128,6 @@ public class CS_Spirit : MonoBehaviour
                 {
                     currentCoolTime -= 1.0f * Time.deltaTime;
                 }
-            }
-
-            //==============================
-            //=====デバッグ用===============
-            //=====実装時に必ず消すこと=====
-            //==============================
-            if (Input.GetKey(KeyCode.H) && healCoolTime <= 0)
-            {
-                healFlag = true;
             }
         }
         else if (log)
@@ -136,14 +137,19 @@ public class CS_Spirit : MonoBehaviour
         }
     }
 
-    //回復の際、プレイヤーの周りを回転する関数
-    void RotateAroundPlayer()
+    ///<summary>
+    ///回復の際、プレイヤーの周りを回転する関数
+    ///</summary>
+    void PlayerHealing()
     {
+        //回転速度を補正
+        float rSpeed = rotationSpeed * 360.0f;
+
         //回転速度に基づいて角度を更新
-        currentAngle += rotationSpeed * Time.deltaTime;
+        currentAngle += rSpeed * Time.deltaTime;
 
         //プレイヤーの周りを4周したら回転を終了
-        if (currentAngle - startAngle >= 1320.0f)
+        if (currentAngle - startAngle >= endRotation)
         {
             spiritAudio.PlayOneShot(healing_SE);  //回復音声を鳴らす
             player.Hp += healAmount;              //HP回復
@@ -164,13 +170,42 @@ public class CS_Spirit : MonoBehaviour
             new Vector3(0f, healSpiritPositionY, -2f);
     }
 
-    //精霊を上下にふわふわさせる処理
+    ///<summary>
+    ///精霊を上下にふわふわさせる処理
+    ///</summary>
     void FloatEffectWhileIdle()
     {
         //ふわふわさせる幅と速さを調整
         float yOffset = Mathf.Sin(Time.time * 3f) * 0.2f;
         transform.position = new Vector3(transform.position.x,
             spiritPositionTransform.position.y + yOffset, transform.position.z);
+    }
+
+    /// <summary>
+    /// 回復エフェクトを発動
+    /// </summary>
+    public void ApplyHealEffect()
+    {
+        if (healEffect != null)
+        {
+            //エフェクトの位置を設定
+            Vector3 effectPosition = new Vector3(transform.position.x, 
+                transform.position.y - effectPositionYOffset, 
+                transform.position.z);
+
+            //エフェクトのインスタンスを生成
+            GameObject effectInstance = Instantiate(healEffect, effectPosition, Quaternion.identity);
+
+            //精霊の子オブジェクトにする（親子関係を形成)
+            effectInstance.transform.parent = transform;
+
+            //エフェクトの持続時間後に削除
+            Destroy(effectInstance, effectDuration);
+        }
+        else
+        {
+            Debug.Log("ヒールエフェクトが設定されていません。 \n inspecterよりhealEffectをアタッチしてください。");
+        }
     }
 
     //回復するときに外部から呼び出す用

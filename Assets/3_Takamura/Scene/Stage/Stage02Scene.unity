@@ -399,6 +399,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpiritPosition
       objectReference: {fileID: 0}
+    - target: {fileID: 6814755633824491253, guid: 5b3b285e9917512468e1b576dc1bf3f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2108,6 +2113,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1087999330061287681, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
+      propertyPath: m_Volume
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087999330061287681, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: cef91e4c0f4f7d94abb1e0957dd149d7, type: 3}
@@ -2158,9 +2168,9 @@ SceneRoots:
   - {fileID: 2070655948}
   - {fileID: 3002582498975325075}
   - {fileID: 300836717}
-  - {fileID: 1562136316962758789}
   - {fileID: 1956626527}
   - {fileID: 1318101202}
   - {fileID: 1852728542}
   - {fileID: 1379867287}
+  - {fileID: 1562136316962758789}
   - {fileID: 465736108}

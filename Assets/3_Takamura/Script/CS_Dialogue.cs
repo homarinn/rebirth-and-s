@@ -29,8 +29,13 @@ public class CS_Dialogue : MonoBehaviour
     Coroutine showCoroutine;
     //! @brief 一文表示終了フラグ
     bool bFinishString;
+    [SerializeField, Header("表示終了時のアイコンテキスト")]
+    GameObject goFinish;
     [SerializeField, Header("自動送り機能")]
     bool bAuto;
+
+    [SerializeField, Header("効果音")]
+    AudioSource se;
 
     //! @brief 一度だけ処理を行うフラグ
     bool bOnce = false;
@@ -45,8 +50,13 @@ public class CS_Dialogue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bEnable = true;
+        if (!bAuto)
+        {
+            waitSecond = 0.5f;
+        }
+        bEnable = false;
         bFinishString = true;
+        goFinish.SetActive(false);
         LoadText();
         SplitString();
     }
@@ -67,10 +77,11 @@ public class CS_Dialogue : MonoBehaviour
             {
                 if (!string.IsNullOrEmpty(splitText[textIndex]))
                 {
-                    //! 名前判定
-                    int index = splitText[textIndex].IndexOf("/");
-                    int index0 = splitText[textIndex].IndexOf("（");
-                    if(index != -1)
+                    //! コマンド判定
+                    int indexName = splitText[textIndex].IndexOf("/");
+                    int indexPause = splitText[textIndex].IndexOf("（");
+                    int indexSe = splitText[textIndex].IndexOf("#");
+                    if (indexName != -1)
                     {
                         //! 名前更新
                         talkernameText.text = splitText[textIndex].Replace("/","");
@@ -81,7 +92,7 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                     }
-                    else if(index0 != -1)
+                    else if(indexPause != -1)
                     {
                         //! 名前非表示
                         talkernameText.text = " ";
@@ -91,6 +102,13 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                         bEnable = false;
+                    }
+                    else if(indexSe != -1)
+                    {
+                        dialogueText.text = splitText[textIndex].Replace("#", "");
+                        if (se != null) se.Play();
+                        //Show();
+                        textIndex++;
                     }
                     else
                     {
@@ -108,6 +126,7 @@ public class CS_Dialogue : MonoBehaviour
             }
 
         }
+        goFinish.SetActive(bFinishString);
     }
 
     //! @brief テキストファイルを読み込む
@@ -152,14 +171,13 @@ public class CS_Dialogue : MonoBehaviour
             //! 一定時間待機
             yield return delay;
         }
-
-        yield return new WaitForSeconds(waitSecond);
-        
         //! 演出が終わったらすべての文字を表示
         dialogueText.maxVisibleCharacters = length;
 
-        bFinishString = true;
+        //! 全文表示後の待機
+        yield return new WaitForSeconds(waitSecond);        
 
+        bFinishString = true;
         showCoroutine = null;
     }
 }

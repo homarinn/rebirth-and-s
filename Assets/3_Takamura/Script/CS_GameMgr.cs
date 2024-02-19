@@ -119,8 +119,6 @@ public class CS_GameMgr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetEnemyDeathFlag();
-
         SetGameFlag();
         SetNextSceneName();
 
@@ -162,7 +160,7 @@ public class CS_GameMgr : MonoBehaviour
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if(csEnemy01 != null)
         {
-            enemyHp = csEnemy01.GetHp;
+            return csEnemy01.GetIsDead;
         }
         csTitan = goEnemy.GetComponent<CS_Titan>();
         if (csTitan != null)

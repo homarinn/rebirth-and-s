@@ -43,6 +43,10 @@ public partial class CS_Player : MonoBehaviour
     private float slidingTimer = 0;
 
     // 攻撃威力
+    [SerializeField, Header("Auto振り向きの範囲コライダー")]
+    CS_LookCollision csLookCollision;
+    [SerializeField, Header("攻撃用のコライダー")]
+    private Collider collider;
     [SerializeField, Header("攻撃１の威力")]
     private float attack1Power = 0;
     public float Attack1Power
@@ -55,12 +59,12 @@ public partial class CS_Player : MonoBehaviour
     [SerializeField, Header("攻撃2の威力")]
     private float attack2Power = 0;
     public float Attack2Power
-    { 
+    {
         get
         {
             return attack2Power;
         }
-    }    
+    }
     private float attackDamage = 0;
     public float AttackDamage
     {
@@ -102,12 +106,13 @@ public partial class CS_Player : MonoBehaviour
     [SerializeField]
     private bool isDifence = false;
 
-
     [SerializeField, Header("HPの最大値")]
     private float maxHP = 0;    // 最大HP
-    private float hp;           // 現在のHP
+    [SerializeField] private float hp;           // 現在のHP
     private bool isInvisible = false;
     private bool isDeath = false;
+    [SerializeField, Header("ダメージアニメーションを再生する攻撃")]
+    private float damageAtackOkAttack = 0;
     public bool IsDeath
     {
         get
@@ -115,7 +120,7 @@ public partial class CS_Player : MonoBehaviour
             return isDeath;
         }
     }
-    
+
     private Transform cameraTransform = null;       // カメラの位置
 
     // コンポーネント
@@ -182,6 +187,15 @@ public partial class CS_Player : MonoBehaviour
         }
     }
 
+    private bool action = true;
+    public bool Action
+    {
+        set
+        {
+            action = value;
+        }
+    }
+
     // =======================
     //
     // 関数
@@ -219,6 +233,10 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        if (isDeath || !action)
+        {
+            return;
+        }
         // インターバルを更新
         IntervalUpdate();
 
@@ -237,6 +255,24 @@ public partial class CS_Player : MonoBehaviour
                 // 攻撃入力
                 if (Input.GetMouseButtonDown(0) && attackTimer <= 0)
                 {
+                    if (csLookCollision.IsHit)
+                    {
+                        Vector3 pos = Vector3.Scale(csLookCollision.EnemyPos, new Vector3(1, 0, 1));
+                        transform.LookAt(pos);
+                        Debug.Log("向け" + pos.ToString());
+                    }
+                    else
+                    {
+                        Vector3 cameraForward = Vector3.Scale(cameraTransform.forward, new Vector3(1, 0, 1)).normalized;
+                        // 進行方向に回転
+                        if (cameraForward != Vector3.zero)
+                        {
+                            transform.rotation = Quaternion.LookRotation(cameraForward);
+                        }
+
+                    }
+
+                    rb.velocity = Vector3.zero;
                     state = State.Attack;
                     rb.velocity = Vector3.zero;
                     anim.SetTrigger("AttackTrigger");  // アニメーションを再生
@@ -251,19 +287,31 @@ public partial class CS_Player : MonoBehaviour
                 }
 
                 // 必殺入力
-                if(Input.GetKeyDown(KeyCode.Space) && ultTimer <= 0)
+                if (Input.GetKeyDown(KeyCode.Space) && ultTimer <= 0)
                 {
+                    Vector3 cameraForward = Vector3.Scale(cameraTransform.forward, new Vector3(1, 0, 1)).normalized;
+                    // 進行方向に回転
+                    if (cameraForward != Vector3.zero)
+                    {
+                        transform.rotation = Quaternion.LookRotation(cameraForward);
+                    }
+                    if (csLookCollision.IsHit)
+                    {
+                        Vector3 pos = Vector3.Scale(csLookCollision.EnemyPos, new Vector3(1, 0, 1));
+                        transform.LookAt(pos);
+                    }
+
                     state = State.Ult;
                     rb.velocity = Vector3.zero;
                     anim.SetTrigger("UltTrigger");
                 }
-                if(hp <= 0)
+                if (hp <= 0)
                 {
                     state = State.Death;
                     anim.SetTrigger("DeadTrigger");
                     hp = 0;
                 }
-                
+
                 // 移動処理
                 Move();
                 break;
@@ -276,6 +324,11 @@ public partial class CS_Player : MonoBehaviour
                 // 攻撃2の入力
                 if (Input.GetMouseButtonDown(0) && attack2Ok)
                 {
+                    if (csLookCollision.IsHit)
+                    {
+                        Vector3 pos = Vector3.Scale(csLookCollision.EnemyPos, new Vector3(1, 0, 1));
+                        transform.LookAt(pos);
+                    }
                     attack2Ok = false;
                     anim.SetTrigger("AttackTrigger");  // アニメーションを再生
                 }
@@ -288,25 +341,25 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void IntervalUpdate()
     {
-        if(attackTimer > 0)
+        if (attackTimer > 0)
         {
             attackTimer -= Time.deltaTime;
         }
 
         // スライディングのインターバルタイマーを減らす
-        if(slidingInterval > 0)
+        if (slidingInterval > 0)
         {
             slidingTimer -= Time.deltaTime;
         }
 
         // ディフェンスのインターバルタイマーを減らす
-        if(difenceTimer > 0)
+        if (difenceTimer > 0)
         {
             difenceTimer -= Time.deltaTime;
         }
 
         // 必殺のインターバルタイマーを減らす
-        if(ultTimer > 0)
+        if (ultTimer > 0)
         {
             ultTimer -= Time.deltaTime;
         }
@@ -400,6 +453,14 @@ public partial class CS_Player : MonoBehaviour
     private void AnimAttackSetPower()
     {
         attackDamage = attackDamage == 0 ? attack1Power : 0;
+        if (attackDamage == 0)
+        {
+            collider.enabled = false;
+        }
+        else if (attackDamage != 0)
+        {
+            collider.enabled = true;
+        }
     }
 
     /// <summary>
@@ -434,6 +495,15 @@ public partial class CS_Player : MonoBehaviour
     private void AnimAttack2SetPower()
     {
         attackDamage = attackDamage == 0 ? attack2Power : 0;
+        if (attackDamage == 0)
+        {
+            collider.enabled = false;
+        }
+        else if (attackDamage != 0)
+        {
+            collider.enabled = true;
+        }
+
     }
 
     /// <summary>
@@ -479,8 +549,16 @@ public partial class CS_Player : MonoBehaviour
     private void AnimUltAttackSetPower()
     {
         attackDamage = attackDamage == 0 ? ultPower : 0;
+        if (attackDamage == 0)
+        {
+            collider.enabled = false;
+        }
+        else if (attackDamage != 0)
+        {
+            collider.enabled = true;
+        }
     }
-    
+
     private void AnimUltAudioJump()
     {
         audio.PlayOneShot(SE_Jump);
@@ -502,11 +580,6 @@ public partial class CS_Player : MonoBehaviour
 
     #endregion
 
-    public void Damage(float damage)
-    {
-
-    }
-
     /// <summary>
     /// ダメージ処理
     /// 攻撃した人に読んでもらう
@@ -515,14 +588,14 @@ public partial class CS_Player : MonoBehaviour
     public void ReceiveDamage(float _damage)
     {
         // 無敵だったら何もしない
-        if(isInvisible)
+        if (isInvisible || hp <= 0 || state == State.Sliding || state == State.Ult)
         {
             return;
         }
 
         if (isDifence)
         {
-            Instantiate(Eff_Difence,transform);
+            Instantiate(Eff_Difence, transform);
             audio.PlayOneShot(SE_Difence);
             // ガード中ダメージ半減
             hp -= _damage * difenceDamageCut;
@@ -534,19 +607,26 @@ public partial class CS_Player : MonoBehaviour
             hp -= _damage;
         }
 
-        if(hp <= 0)
+        if (hp <= 0)
         {
             hp = 0;
         }
 
-        if(state == State.Difence || state == State.Ult)
+        if (state == State.Difence || state == State.Ult)
         {
             isInvisible = false;
             return;
         }
-        state = State.Damage;
-        rb.velocity = Vector3.zero;
-        anim.SetTrigger("DamageTrigger");
+        if (_damage >= damageAtackOkAttack)
+        {
+            attackDamage = 0;
+            state = State.Damage;
+            anim.SetTrigger("DamageTrigger");
+        }
+        else
+        {
+            isInvisible = false;
+        }
     }
 
     /// <summary>
@@ -556,8 +636,7 @@ public partial class CS_Player : MonoBehaviour
     /// <param name="power">飛ばす威力</param>
     public void BlowOff(Vector3 direcion, float power)
     {
-        rb.AddForce(direcion * power, ForceMode.Impulse);
-        if(state == State.Difence)
+        if (state == State.Difence || state == State.Ult)
         {
             return;
         }
@@ -576,6 +655,11 @@ public partial class CS_Player : MonoBehaviour
         attackDamage = 0;
     }
 
+    private void AnimDead()
+    {
+        isDeath = true;
+    }
+
 
     /// <summary>
     /// コリジョンと接触したとき
@@ -584,7 +668,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // 水たまり
-        if(other.gameObject.tag == "")
+        if (other.gameObject.tag == "Puddle")
         {
             isWaterOnThe = true;
         }
@@ -597,7 +681,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         // 水たまり
-        if (other.gameObject.tag == "")
+        if (other.gameObject.tag == "Puddle")
         {
             isWaterOnThe = false;
         }

@@ -922,7 +922,7 @@ MonoBehaviour:
   blowOffEffect: {fileID: 595032155927867903, guid: 374ec04769927254a8ec50c475ddf59d,
     type: 3}
   stageBoundary: {fileID: 0}
-  maxHp: 100
+  maxHp: 400
   rotateSpeed: 80
   maxAttackInterval: 2.5
   halfCircleRadius: 2

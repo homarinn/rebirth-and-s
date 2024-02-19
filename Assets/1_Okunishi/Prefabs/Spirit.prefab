@@ -9734,12 +9734,15 @@ MonoBehaviour:
   spiritPositionTransform: {fileID: 0}
   playerTransform: {fileID: 0}
   player: {fileID: 0}
+  healEffect: {fileID: 2436218079438090502, guid: 0ed689a1779d31348ad13972c57c8409,
+    type: 3}
   speed: 5
-  healSpiritPositionY: 0.5
-  rotationSpeed: 360
+  healSpiritPositionY: 0.7
+  rotationSpeed: 2
   healCoolTime: 10
-  healPercentage: 50
-  healTrrigerPercentage: 50
+  healPercentage: 20
+  healTrrigerPercentage: 80
+  healFlag: 0
   healing_SE: {fileID: 8300000, guid: 29d3bdb5973f22241ab7faad6e0c4595, type: 3}
 --- !u!82 &7333649945911786157
 AudioSource:
