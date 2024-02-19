@@ -710,34 +710,9 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
         type: 3}
-      propertyPath: chargeTimeMax
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
-        type: 3}
-      propertyPath: chargeTimeMin
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
-        type: 3}
       propertyPath: targetTransform
       value: 
       objectReference: {fileID: 485248333}
-    - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
-        type: 3}
-      propertyPath: rushDefaultPower
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
-        type: 3}
-      propertyPath: rushDefaultSpeed
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
-        type: 3}
-      propertyPath: rushSpeedDownCoefficient
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 5983585962459546817, guid: dc7860a1ed2317e4488f18d248925495,
         type: 3}
       propertyPath: m_LocalPosition.x
