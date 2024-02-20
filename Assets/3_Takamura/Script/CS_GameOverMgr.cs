@@ -25,6 +25,9 @@ public class CS_GameOverMgr : MonoBehaviour
     [SerializeField, Header("GameOverBGM")]
     AudioSource gameoverBGM;
 
+    [SerializeField, Header("Playerƒ‚ƒfƒ‹")]
+    GameObject goPlayer;
+
     //! @brief Ÿ‚ÌƒV[ƒ“–¼
     string nextScene = "";
 

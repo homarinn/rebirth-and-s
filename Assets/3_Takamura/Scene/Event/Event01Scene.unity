@@ -4828,6 +4828,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8347286842447484802, guid: 65feb285ec658904c953543a26db95e8,
         type: 3}
+      propertyPath: m_Volume
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8347286842447484802, guid: 65feb285ec658904c953543a26db95e8,
+        type: 3}
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: 8f6ea65c00b01994580bf433265695d6, type: 3}
@@ -4875,6 +4880,7 @@ MonoBehaviour:
   fadeSpeed: 1.5
   goDialogue: {fileID: 1693199303}
   eventBGM: {fileID: 7351492001273230534}
+  test: 0
 --- !u!224 &7409404837452298535
 RectTransform:
   m_ObjectHideFlags: 0

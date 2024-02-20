@@ -3426,6 +3426,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -2.5479622
       objectReference: {fileID: 0}
+    - target: {fileID: 195485775420812314, guid: dc7860a1ed2317e4488f18d248925495,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 199308174415345929, guid: dc7860a1ed2317e4488f18d248925495,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3670,6 +3675,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -11.833993
+      objectReference: {fileID: 0}
+    - target: {fileID: 932544012427014303, guid: dc7860a1ed2317e4488f18d248925495,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 993419649747631668, guid: dc7860a1ed2317e4488f18d248925495,
         type: 3}
@@ -5895,5 +5905,5 @@ SceneRoots:
   - {fileID: 74681333}
   - {fileID: 696815111}
   - {fileID: 510549741}
-  - {fileID: 622530829}
   - {fileID: 1111960026}
+  - {fileID: 622530829}
