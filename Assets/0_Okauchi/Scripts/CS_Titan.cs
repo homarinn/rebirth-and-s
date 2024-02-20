@@ -14,6 +14,7 @@ public class CS_Titan : MonoBehaviour
         RUSH,       //突進
         TURN,       //突進時の方向転換
         STOP,       //突進後の停止
+
         DOWN,       //ダウン
         DIE,        //死亡
     }
@@ -68,9 +69,9 @@ public class CS_Titan : MonoBehaviour
     [SerializeField, Header("溜め中のダメージカット率（0.0～1.0）")]
     private float damageCutPercentage = 0.0f;
     //アニメーション速度の調整
-    private const float animationSpeedChangingTime = 0.3f;
-    private const float animationSpeedResetRemainingTime = 0.633f;
-    private bool changedAnimationSpeed = false;
+    //private const float animationSpeedChangingTime = 0.3f;
+    //private const float animationSpeedResetRemainingTime = 0.633f;
+    //private bool changedAnimationSpeed = false;
 
     //突進中は若干追尾するのか突進開始時のプレイヤーの位置に突っ込むか
     //追尾無し
@@ -89,7 +90,7 @@ public class CS_Titan : MonoBehaviour
     private RushState rushState = RushState.FINISH;
     [SerializeField, Header("突進一回のインターバル")] 
     private float rushInterval = 0.0f;
-    [SerializeField, Header("突進の持続時間（最大速度の時間）")] 
+    [SerializeField, Header("突進の持続時間")] 
     private float rushTime = 0.0f;
     [SerializeField, Header("突進の初期威力")] 
     private float rushDefaultPower = 0.0f;
@@ -114,6 +115,11 @@ public class CS_Titan : MonoBehaviour
     private float rushSpeedDownCoefficient = 0.0f;
     private float rushSpeedLimit = 0.0f;
 
+    private float rushAnimationStartTime = 0.35f;
+    private float rushAnimationMiddleTime = 1.65f;
+    private float rushAnimationEndTime = 2.0f;
+    private float rushAnimationEndSpeed = 0.8f;
+
     //--------------------
     //停止
     //--------------------
@@ -134,25 +140,25 @@ public class CS_Titan : MonoBehaviour
     private float afterDownTimeCount = 0.0f;
     //コライダーいじる用
     private CapsuleCollider collider;
-    private const float colliderChangingTime = 1.0f;
     private float colliderRadius = 0.0f;
     private float colliderHeight = 0.0f;
-    private Vector3 downColliderCenter = new Vector3(0.4f, 0.44f, 0.05f);
-    private const float downColliderRadius = 0.44f;
-    private const float downColliderHeight = 0.5f;
 
     //--------------------
     //死亡
     //--------------------
     private float dieTimeCount = 0.0f;
     [SerializeField, Header("死亡判定にするまでの時間")]
-    private float dieTime = 0.0f; 
+    private float dieTime = 0.0f;
+    private const float colliderChangingTime = 4.3f;
+    private const float dieColliderRadius = 0.45f;
+    private const float dieColliderHeight = 1.5f;
+    private Vector3 dieColliderCenter = new Vector3(0.25f, 0.45f, 1.0f);
 
     //--------------------
     //SE
     //--------------------
     [SerializeField, Header("SE：移動")]
-    private AudioSource moveSE;
+    private AudioSource walkSE;
     [SerializeField, Header("SE：溜め")]
     private AudioSource chargeSE;
     private const float chargeSETime = 4.3f;
@@ -162,12 +168,18 @@ public class CS_Titan : MonoBehaviour
     //--------------------
     //エフェクト
     //--------------------
+    [SerializeField, Header("歩きエフェクト")]
+    private GameObject walkEffect;
     [SerializeField, Header("溜めエフェクト（地面から出てるやつ）")]
     private GameObject chargeEffectGround;
     [SerializeField, Header("溜めエフェクト（シールドっぽいやつ）")]
     private GameObject chargeEffectShield;
     [SerializeField, Header("突進エフェクト（衝撃波っぽいやつ）")]
     private GameObject rushEffect;
+    [SerializeField, Header("足の座標（右）")]
+    private Transform rightFootTransform;
+    [SerializeField, Header("足の座標（左）")]
+    private Transform leftFootTransform;
     [SerializeField, Header("突進エフェクトの生成y座標")]
     private float rushEffectPositionY;
     [SerializeField, Header("突進エフェクトの生成時間間隔")]
@@ -262,8 +274,6 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.WALK;
         animator.SetTrigger("triggerWalk");
-        //歩きのSEを再生
-        moveSE.Play();
         //攻撃のインターバルをリセット
         attackIntervalCount = attackInterval;
     }
@@ -274,7 +284,6 @@ public class CS_Titan : MonoBehaviour
         //攻撃のインターバルが終了 and ターゲットが攻撃範囲内なら
         if (attackIntervalCount <= 0.0f && toTargetVector.magnitude <= attackReactionDistance)
         {
-            moveSE.Stop();
             //溜めを始める
             StartCharge();
             return;
@@ -314,18 +323,18 @@ public class CS_Titan : MonoBehaviour
         rushPower += rushPowerChargingIncrement * Time.deltaTime;
         rushSpeedLimit += rushSpeedChargingIncrement * Time.deltaTime;
         //アニメーション速度を調整
-        if(chargeTime - chargeTimeCount >= animationSpeedChangingTime && chargeTime - chargeTimeCount < 1.0f && !changedAnimationSpeed)
-        {
-            float chargeRemainingTime = chargeTimeCount - animationSpeedResetRemainingTime;
-            float animationChargeRemainingTime = 1.0f - animationSpeedChangingTime;
-            animator.speed = animationChargeRemainingTime / chargeRemainingTime;
-            changedAnimationSpeed = true;
-        }
-        if(chargeTimeCount <= animationSpeedResetRemainingTime && changedAnimationSpeed)
-        {
-            animator.speed = 1.0f;
-            changedAnimationSpeed = false;
-        }
+        //if(chargeTime - chargeTimeCount >= animationSpeedChangingTime && chargeTime - chargeTimeCount < 1.0f && !changedAnimationSpeed)
+        //{
+        //    float chargeRemainingTime = chargeTimeCount - animationSpeedResetRemainingTime;
+        //    float animationChargeRemainingTime = 1.0f - animationSpeedChangingTime;
+        //    animator.speed = animationChargeRemainingTime / chargeRemainingTime;
+        //    changedAnimationSpeed = true;
+        //}
+        //if(chargeTimeCount <= animationSpeedResetRemainingTime && changedAnimationSpeed)
+        //{
+        //    animator.speed = 1.0f;
+        //    changedAnimationSpeed = false;
+        //}
         //溜めが終了したら
         if (chargeTimeCount <= 0.0f)
         {
@@ -354,6 +363,12 @@ public class CS_Titan : MonoBehaviour
     {
         //突進時間をカウント
         rushTimeCount += Time.deltaTime;
+        //突進アニメーションの時間を制御
+        if(rushTimeCount >= rushAnimationStartTime)
+        {
+            float rushRemainingTime = rushTime - rushAnimationStartTime;
+            animator.speed = (rushAnimationMiddleTime - rushAnimationStartTime) / rushRemainingTime;
+        }
         //突進時の速度を調整
         switch(rushState)
         {
@@ -362,7 +377,6 @@ public class CS_Titan : MonoBehaviour
                 if (rushSpeed > rushSpeedLimit)
                 {
                     rushSpeed = rushSpeedLimit;
-                    rushTimeCount = 0.0f;
                     rushState = RushState.SPEED_MAX;
                 }
                 break;
@@ -371,6 +385,7 @@ public class CS_Titan : MonoBehaviour
                 {
                     float speedDownTime = Mathf.Pow(rushSpeed / rushSpeedDownCoefficient, 1.0f / 3.0f);
                     rushTimeCount = -speedDownTime;
+                    animator.speed = rushAnimationEndSpeed;
                     rushState = RushState.SPEED_DOWN;
                 }
                 //エフェクト生成
@@ -383,6 +398,11 @@ public class CS_Titan : MonoBehaviour
                 break;
             case RushState.SPEED_DOWN:
                 rushSpeed = -1.0f * rushSpeedDownCoefficient * Mathf.Pow(rushTimeCount, 3.0f);
+                //減速時からプレイヤーの方に向かせる(最後の突進は例外)
+                if(rushCount - 1 != 0)
+                {
+                    TrackConstantRotation();
+                }
                 if (rushTimeCount >= 0.0f)
                 {
                     rushSpeed = 0.0f;
@@ -419,7 +439,6 @@ public class CS_Titan : MonoBehaviour
     {
         //Stateとアニメーションの遷移
         state = State.TURN;
-        animator.SetTrigger("triggerIdle");
         //突進のインターバルをリセット
         rushIntervalCount = rushInterval;
     }
@@ -465,10 +484,10 @@ public class CS_Titan : MonoBehaviour
     {
         //Stateとアニメーションの遷移
         state = State.DOWN;
-        animator.SetTrigger("triggerDown");
+        animator.SetTrigger("triggerStartDown");
         //ダウン時間のリセット
         downTimeCount = downTime;
-        moveSE.Stop();
+        walkSE.Stop();
     }
     private void Down()
     {
@@ -477,18 +496,18 @@ public class CS_Titan : MonoBehaviour
             //ダウン時間のカウント
             downTimeCount -= Time.deltaTime;
             //colliderの調整
-            if (downTime - downTimeCount >= colliderChangingTime)
-            {
-                SetDownColliderParameter();
-            }
+            //if (downTime - downTimeCount >= colliderChangingTime)
+            //{
+            //    SetDownColliderParameter();
+            //}
             //ダウン時間が終了したら
             if (downTimeCount < 0.0f)
             {
-                animator.SetTrigger("triggerIdle");
+                animator.SetTrigger("triggerFinishDown");
                 afterDownTimeCount = afterDownTime;
 
                 //collider戻す
-                SetDefaultColliderParameter();
+                //SetDefaultColliderParameter();
             }
         }
         else
@@ -509,14 +528,14 @@ public class CS_Titan : MonoBehaviour
         //Stateとアニメーションの遷移
         state = State.DIE;
         animator.SetTrigger("triggerDie");
-        moveSE.Stop();
+        walkSE.Stop();
     }
     private void Die()
     {
         dieTimeCount += Time.deltaTime;
         if (dieTimeCount >= colliderChangingTime)
         {
-            SetDownColliderParameter();
+            SetDieColliderParameter();
         }
         if(dieTimeCount >= dieTime)
         {
@@ -567,6 +586,22 @@ public class CS_Titan : MonoBehaviour
     //----------------------------------
     //エフェクトを生成する
     //----------------------------------
+    private void GenerateWalkEffect(Vector3 footPosition)
+    {
+        Vector3 generatingPosition = new Vector3(footPosition.x, 0.0f, footPosition.z);
+        Instantiate(walkEffect, generatingPosition, Quaternion.identity);
+    }
+
+    public void GenerateWalkEffectRight()
+    {
+        GenerateWalkEffect(rightFootTransform.position);
+    }
+
+    public void GenerateWalkEffectLeft()
+    {
+        GenerateWalkEffect(leftFootTransform.position);
+    }
+
     private void GenerateChargeEffect(float _chargeTime)
     {
         //地面から出てるやつ
@@ -576,7 +611,7 @@ public class CS_Titan : MonoBehaviour
         //int childCount = effectGround.transform.childCount;
         //ParticleSystem[] psGround = new ParticleSystem[childCount];
         ////時間変更
-        //for(int i = 0; i < childCount; i++)
+        //for (int i = 0; i < childCount; i++)
         //{
         //    psGround[i] = effectGround.transform.GetChild(i).gameObject.GetComponent<ParticleSystem>();
         //    psGround[i].Stop();
@@ -696,11 +731,21 @@ public class CS_Titan : MonoBehaviour
         collider.radius = colliderRadius;
         collider.height = colliderHeight;
     }
-    private void SetDownColliderParameter()
+    private void SetDieColliderParameter()
     {
-        collider.center = downColliderCenter;
-        collider.radius = downColliderRadius;
-        collider.height = downColliderHeight;
+        collider.center = dieColliderCenter;
+        collider.radius = dieColliderRadius;
+        collider.height = dieColliderHeight;
+        collider.direction = 2;   //Z方向
+    }
+
+    //-------------------------------------------
+    //アニメーション周り
+    //-------------------------------------------
+    //足音を鳴らすアニメーションイベント用関数
+    public void PlayWalkingSE()
+    {
+        walkSE.Play();
     }
 
     /// <summary>
