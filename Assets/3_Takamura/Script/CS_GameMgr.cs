@@ -243,7 +243,7 @@ public class CS_GameMgr : MonoBehaviour
         if (csPlayer.IsDeath) 
         {
             bGameOver = true;
-            if(csTitan != null)csTitan.StopMoving();
+            StopEnemy();
             ChangeState(eState.FadeShow);
         }
         //! EnemyScript‚©‚çHPŽæ“¾
@@ -365,6 +365,7 @@ public class CS_GameMgr : MonoBehaviour
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if (csEnemy01 != null)
         {
+             csEnemy01.CancelStandby();
             return true;
         }
         csTitan = goEnemy.GetComponent<CS_Titan>();
@@ -389,6 +390,7 @@ public class CS_GameMgr : MonoBehaviour
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if (csEnemy01 != null)
         {
+            csEnemy01.Standby();
             return true;
         }
         csTitan = goEnemy.GetComponent<CS_Titan>();
