@@ -671,7 +671,8 @@ public class CS_Titan : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //突進中にプレイヤーに衝突した場合
-        if(collision.gameObject.CompareTag("Player") && state == State.RUSH)
+        if(collision.gameObject.CompareTag("Player") && state == State.RUSH 
+            && (rushState == RushState.SPEED_UP || rushState == RushState.SPEED_MAX))
         {
             collision.gameObject.GetComponent<CS_Player>().ReceiveDamage((int)rushPower);
             //衝突した際のSEを再生

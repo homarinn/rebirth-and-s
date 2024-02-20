@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3459606417282762131}
-  - component: {fileID: 1526722194102387500}
+  - component: {fileID: 7072416603260295120}
   m_Layer: 8
   m_Name: WeaknessColliderPosition
   m_TagString: EnemyWeakness
@@ -25,15 +25,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3740623944961381023}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1, z: -0.6}
+  m_LocalRotation: {x: -0.13052624, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: -0.00000029802322, y: -0.15, z: -0.8}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9001294516975275272}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &1526722194102387500
-SphereCollider:
+  m_LocalEulerAnglesHint: {x: -15, y: 0, z: 0}
+--- !u!65 &7072416603260295120
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -47,11 +47,11 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.22
+  m_Size: {x: 0.35, y: 0.35, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7504750585594716044
 GameObject:
@@ -123,10 +123,10 @@ MonoBehaviour:
   rushPowerChargingIncrement: 7
   rushSpeedChargingIncrement: 4
   rushCountMin: 3
-  rushCountMax: 6
+  rushCountMax: 5
   rushSpeedUpCoefficient: 4000
   rushSpeedDownCoefficient: 50
-  stoppingTime: 5
+  stoppingTime: 7
   downTime: 6
   weakPointDamageIncrement: 20
   afterDownTime: 2
@@ -171,10 +171,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.42
   m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 0.9, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0.15}
 --- !u!54 &5940688705182382768
 Rigidbody:
   m_ObjectHideFlags: 0
