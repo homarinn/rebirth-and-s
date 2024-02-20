@@ -190,8 +190,10 @@ MonoBehaviour:
   createPositionY: 0.09
   maxCollisionY: 0.2
   existTime: 20
-  finishExpansionTime: 0.15
+  finishExpansionTime: 0.55
   disappearTime: 0.25
+  puddleMist: {fileID: 1482576541086686926, guid: f1a3b15328db0ae4f9e9330ba54b8f57,
+    type: 3}
   puddleSE: {fileID: 8300000, guid: 652bb6a1e76037b4b898dd22c0354a46, type: 3}
 --- !u!82 &7848239213853773825
 AudioSource:

@@ -2609,6 +2609,11 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
+      propertyPath: rotateSpeed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
       propertyPath: blowOffPower
       value: 15
       objectReference: {fileID: 0}
@@ -2713,7 +2718,7 @@ PrefabInstance:
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
       propertyPath: weakAttackProbability
-      value: 33
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
@@ -2727,13 +2732,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
+      propertyPath: weakMagicMissileNumber
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
       propertyPath: blowOffEffectPosition.y
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
       propertyPath: strongAttackProbability
-      value: 33
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
@@ -2748,7 +2758,12 @@ PrefabInstance:
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
       propertyPath: blowOffAttackProbability
-      value: 34
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
+      propertyPath: strongMagicMissileNumber
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}

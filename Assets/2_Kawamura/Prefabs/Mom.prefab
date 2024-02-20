@@ -925,7 +925,7 @@ MonoBehaviour:
     type: 3}
   stageBoundary: {fileID: 0}
   maxHp: 400
-  rotateSpeed: 80
+  rotateSpeed: 100
   maxAttackInterval: 2.5
   halfCircleRadius: 2
   magicMissileSpawnPos: {x: 0, y: 2, z: 0}

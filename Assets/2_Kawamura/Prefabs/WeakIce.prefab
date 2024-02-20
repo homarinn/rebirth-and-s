@@ -14567,7 +14567,7 @@ MonoBehaviour:
   puddle: {fileID: 4317912990116398507, guid: 9c2f8c263766c764380855e5ec072bc7, type: 3}
   hitEffect: {fileID: 5871352135790364307, guid: 9da9c46311afc2a41a41669c29a3b5ab,
     type: 3}
-  disappearTime: 0.15
+  disappearTime: 0.05
 --- !u!54 &6343489040496740858
 Rigidbody:
   m_ObjectHideFlags: 0

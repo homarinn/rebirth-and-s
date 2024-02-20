@@ -683,7 +683,7 @@ public class CS_Enemy1 : MonoBehaviour
 
         //実験用2
         Vector3 localScale = strongMagicMissile.transform.localScale;
-        script[magicMissileCount - 1].SetScaleRatioBasedOnY = scaleRatioBasedOnY;
+        //script[magicMissileCount - 1].SetScaleRatioBasedOnY = scaleRatioBasedOnY;
 
         //弾の種類をセット
         script[magicMissileCount - 1].SetMagicMissileType = SetMagicMissileType(type);
