@@ -45,7 +45,7 @@ public class CS_EventZero : MonoBehaviour
             if (bTransition/* && !eventSE.isPlaying*/)
             {
                 SEtext.SetActive(false);
-                goEventMgr.GetComponent<CS_Event01>().ChangeState(CS_Event01.eState.Standby);
+                goEventMgr.GetComponent<CS_Event01>().ChangeState(CS_Event01.eState.FadeHide);
             }
             else
             {

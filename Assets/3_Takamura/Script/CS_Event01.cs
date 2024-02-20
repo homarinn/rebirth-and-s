@@ -31,6 +31,8 @@ public class CS_Event01 : MonoBehaviour
 
     [SerializeField, Header("EventBGM")]
     AudioSource eventBGM;
+    [SerializeField]
+    float test;
 
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
@@ -51,12 +53,11 @@ public class CS_Event01 : MonoBehaviour
         switch (nextState)
         {
             case eState.FadeHide:
+                cgFade.alpha = 0.0f;
+                goMabataki.GetComponent<Animator>().SetBool("bMove", true);
                 break;
             case eState.Standby:
                 cgFade.alpha = 0.0f;
-                goDialogue.GetComponent<CS_Dialogue>().Benable = true;
-                eventBGM.volume = 0.0f;
-                eventBGM.Play();
                 break;
             case eState.FadeShow:
                 cgFade.blocksRaycasts = true;
@@ -83,10 +84,15 @@ public class CS_Event01 : MonoBehaviour
         switch (state)
         {
             case eState.FadeHide:
+                ChangeState(eState.Standby);
                 break;
             case eState.Standby:
-                goMabataki.GetComponent<Animator>().SetBool("bMove", true);
-
+                eventBGM.Play();
+                Animator animator = goMabataki.GetComponent<Animator>();
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Fade") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                {
+                    goDialogue.GetComponent<CS_Dialogue>().Benable = true;
+                }
                 if (eventBGM.volume <= 0.3f)
                 {
                     eventBGM.volume += 0.2f * Time.deltaTime;
