@@ -326,6 +326,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1562136316962758789}
   m_PrefabAsset: {fileID: 0}
+--- !u!225 &339455192
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339455188}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!225 &371191365 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 1163849583164973268, guid: 4599c73d429970747bac1312071a185e,
@@ -2092,6 +2104,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1051730430}
+    - targetCorrespondingSourceObject: {fileID: 7373355126303394673, guid: 4599c73d429970747bac1312071a185e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 339455192}
   m_SourcePrefab: {fileID: 100100000, guid: 4599c73d429970747bac1312071a185e, type: 3}
 --- !u!1001 &3002582498975325075
 PrefabInstance:
@@ -2201,6 +2217,11 @@ PrefabInstance:
       propertyPath: goDialogue
       value: 
       objectReference: {fileID: 339455188}
+    - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
+      propertyPath: cgDialogueUI
+      value: 
+      objectReference: {fileID: 339455192}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: goPlayerCamera

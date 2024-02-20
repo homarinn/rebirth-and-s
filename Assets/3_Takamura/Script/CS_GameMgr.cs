@@ -43,6 +43,7 @@ public class CS_GameMgr : MonoBehaviour
 
     float enemyHp;
     float enemyMaxHp;
+    bool isMovingEnemy = false;
     [SerializeField, Header("テキストパートに移る体力の割合")]
     float textPartHpParcentage;
     [SerializeField, Header("テキストパートに移る際の待ち時間")]
@@ -60,6 +61,8 @@ public class CS_GameMgr : MonoBehaviour
     CanvasGroup cgPlayerUI;
     [SerializeField, Header("EnemyUIのCanvasGroup")]
     CanvasGroup cgEnemyUI;
+    [SerializeField, Header("DialogueUIのCanvasGroup")]
+    CanvasGroup cgDialogueUI;
     [SerializeField, Header("UIのα値をFadeさせる速度")]
     float fadeSpeedUIAlpha;
 
@@ -115,7 +118,6 @@ public class CS_GameMgr : MonoBehaviour
                     stageBGM.volume = 0.1f;
                     stageBGM.Play();
                 }
-                StartEnemy();
                 break;
             case eState.HalfFadeShow:
                 StopEnemy();
@@ -126,6 +128,7 @@ public class CS_GameMgr : MonoBehaviour
             case eState.HalfFadeHide:
                 cgPlayerUI.alpha = 0.0f;
                 cgEnemyUI.alpha = 0.0f;
+                cgDialogueUI.alpha = 1.0f;
                 InitializeTransform();
                 break;
             case eState.SecondTextPart:
@@ -178,6 +181,14 @@ public class CS_GameMgr : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Quit();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if(!cgDialogueUI.gameObject.activeSelf)
+        {
+            cgDialogueUI.gameObject.SetActive(true);
         }
     }
 
@@ -268,14 +279,28 @@ public class CS_GameMgr : MonoBehaviour
                 }
                 break;
             case eState.Game:
-                if(cgPlayerUI.alpha < 1.0f)
+                if (!isMovingEnemy)
                 {
-                    cgPlayerUI.alpha += fadeSpeedUIAlpha * Time.deltaTime;
-                    cgEnemyUI.alpha += fadeSpeedUIAlpha * Time.deltaTime;
-                }               
+                    if (cgPlayerUI.alpha < 1.0f)
+                    {
+                        cgPlayerUI.alpha += fadeSpeedUIAlpha * Time.deltaTime;
+                        cgEnemyUI.alpha += fadeSpeedUIAlpha * Time.deltaTime;
+                        cgDialogueUI.alpha -= fadeSpeedUIAlpha * Time.deltaTime;
+                    }
+                    else if (cgPlayerUI.alpha >= 1.0f)
+                    {
+                        StartEnemy();
+                    }
+                }
+
                 if (GetEnemyHp() / enemyMaxHp <= textPartHpParcentage && !finishedTextPart)
                 {
                     ChangeState(eState.HalfFadeShow);
+                }
+                
+                if (GetEnemyHp() <= 0.0f)
+                {
+                    cgDialogueUI.alpha = 1.0f;
                 }
                 break;
             case eState.HalfFadeShow:
@@ -336,6 +361,7 @@ public class CS_GameMgr : MonoBehaviour
     //エネミーを動かす
     private bool StartEnemy()
     {
+        isMovingEnemy = true;
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if (csEnemy01 != null)
         {
@@ -359,6 +385,7 @@ public class CS_GameMgr : MonoBehaviour
     //エネミーを止める
     private bool StopEnemy()
     {
+        isMovingEnemy = false;
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if (csEnemy01 != null)
         {
