@@ -142,6 +142,21 @@ PrefabInstance:
       propertyPath: targetTransform
       value: 
       objectReference: {fileID: 1511620373}
+    - target: {fileID: 3459606417282762131, guid: dc7860a1ed2317e4488f18d248925495,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9848078
+      objectReference: {fileID: 0}
+    - target: {fileID: 3459606417282762131, guid: dc7860a1ed2317e4488f18d248925495,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.17364825
+      objectReference: {fileID: 0}
+    - target: {fileID: 3459606417282762131, guid: dc7860a1ed2317e4488f18d248925495,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -20
+      objectReference: {fileID: 0}
     - target: {fileID: 5983585962459546817, guid: dc7860a1ed2317e4488f18d248925495,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -191,6 +206,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7072416603260295120, guid: dc7860a1ed2317e4488f18d248925495,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7504750585594716044, guid: dc7860a1ed2317e4488f18d248925495,
         type: 3}
@@ -2188,7 +2208,7 @@ PrefabInstance:
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: fadeSpeedUIAlpha
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}

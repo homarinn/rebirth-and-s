@@ -283,9 +283,9 @@ public class CS_GameMgr : MonoBehaviour
                 {
                     if (cgPlayerUI.alpha < 1.0f)
                     {
-                        cgPlayerUI.alpha += fadeSpeedUIAlpha * Time.deltaTime;
-                        cgEnemyUI.alpha += fadeSpeedUIAlpha * Time.deltaTime;
-                        cgDialogueUI.alpha -= fadeSpeedUIAlpha * Time.deltaTime;
+                        cgPlayerUI.alpha += Time.deltaTime / fadeSpeedUIAlpha;
+                        cgEnemyUI.alpha += Time.deltaTime / fadeSpeedUIAlpha;
+                        cgDialogueUI.alpha -= Time.deltaTime / fadeSpeedUIAlpha;
                     }
                     else if (cgPlayerUI.alpha >= 1.0f)
                     {
