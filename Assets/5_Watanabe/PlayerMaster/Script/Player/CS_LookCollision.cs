@@ -33,7 +33,7 @@ public class CS_LookCollision : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.tag == "Enemy")
+        if(other.gameObject.tag == "Enemy" || other.gameObject.tag == "MagicMissile")
         {
             isHit = true;
             enemyTrs = other.transform;
@@ -42,7 +42,7 @@ public class CS_LookCollision : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Enemy")
+        if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "MagicMissile")
         {
             isHit = false;
             enemyTrs = null;

@@ -154,6 +154,7 @@ public partial class CS_Player : MonoBehaviour
     [SerializeField, Header("防御エフェクト")]
     private GameObject Eff_Difence;
 
+
     // =======================
     //
     // ゲッター・セッター
@@ -415,8 +416,14 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimMoveAudio()
     {
-        Instantiate(puddleEffect, lefTrs);
-        audio.PlayOneShot(SE_Move);
+        if (isWaterOnThe)
+        {
+            Instantiate(puddleEffect, lefTrs);
+        }
+        else
+        {
+            audio.PlayOneShot(SE_Move);
+        }
     }
 
     #endregion
@@ -673,7 +680,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // 水たまり
-        if (other.gameObject.tag == "Puddle" && gameObject.tag =="Player")
+        if (other.gameObject.tag == "Puddle")
         {
             isWaterOnThe = true;
         }
@@ -686,7 +693,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         // 水たまり
-        if (other.gameObject.tag == "Puddle" && gameObject.tag == "Player")
+        if (other.gameObject.tag == "Puddle")
         {
             isWaterOnThe = false;
         }
