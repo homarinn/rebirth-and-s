@@ -32,6 +32,10 @@ public partial class CS_Player : MonoBehaviour
     [SerializeField, Header("水たまり上の移動速度低下(0～1)")]
     private float waterOnTheMoveSpeedCut = 0;
     private bool isWaterOnThe = false;
+    [SerializeField, Header("水たまりエフェクト")]
+    private GameObject puddleEffect;
+    [SerializeField, Header("水たまり足場")]
+    private Transform lefTrs;
 
     private bool moveOK = true;    // 移動許可
 
@@ -411,6 +415,7 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimMoveAudio()
     {
+        Instantiate(puddleEffect, lefTrs);
         audio.PlayOneShot(SE_Move);
     }
 

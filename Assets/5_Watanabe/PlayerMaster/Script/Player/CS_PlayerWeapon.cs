@@ -17,6 +17,9 @@ public class CS_PlayerWeapon : MonoBehaviour
     [SerializeField, Header("跳ね返す玉2")]
     private GameObject reflctBullet2;
 
+    [SerializeField, Header("跳ね返しエフェクト")]
+    private GameObject reflctEffect;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -104,6 +107,7 @@ public class CS_PlayerWeapon : MonoBehaviour
                 return;        // AudioSouceがない
             }
             audio.PlayOneShot(SE_Reflect);
+            Instantiate(reflctEffect, transform);
         }
         else
         {
