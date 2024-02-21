@@ -30,6 +30,8 @@ public class CS_Dialogue : MonoBehaviour
     //! @brief 一文表示終了フラグ
     bool bFinishString;
 
+    bool bOnce = false;
+
     //! @brief 表示処理が有効かどうか
     bool bEnable = false;
     public bool Benable
@@ -52,8 +54,9 @@ public class CS_Dialogue : MonoBehaviour
     {
         if (bEnable == false) return;
 
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || bOnce == false) 
         {
+            bOnce = true;
             if (!bFinishString)
             {
                 //! 文字列を一括表示する
