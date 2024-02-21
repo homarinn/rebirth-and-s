@@ -225,6 +225,7 @@ public class CS_Enemy1 : MonoBehaviour
 
     bool isStartReadyStandby;  //演出待機の準備開始
     bool isStandby;  //演出待機しているか？
+    bool isStartGame;
     bool isFall;  //降下中か？
     bool isWaitFall;  //降下準備中か？
     float timeArriveNormalPos;
@@ -375,7 +376,8 @@ public class CS_Enemy1 : MonoBehaviour
 
         //演出待機用
         isStartReadyStandby = false;
-        isStandby = false;
+        isStandby = true;  //初期状態は待機
+        isStartGame = false;
         isFall = false;
         isWaitFall = false;
         timeArriveNormalPos = timeReturnNormalPos;
@@ -384,6 +386,7 @@ public class CS_Enemy1 : MonoBehaviour
         //エフェクト用
         trailScript = trail.GetComponent<CS_Enemy1Trail>();
         trail.Stop();
+        mist.Stop();
         isPlayDustCloudEffect = false;
 
         //死亡時用
@@ -394,29 +397,29 @@ public class CS_Enemy1 : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            hp = maxHp * 0.5f;
-        }
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            hp = 0.0f;
-        }
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            ReduceHp(downedDamageAmount + 1.0f);
-            //hp -= downedDamageAmount + 1.0f;
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            CancelStandby();
-            hp = maxHp;
-        }
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    hp = maxHp * 0.5f;
+        //}
+        //if (Input.GetKeyDown(KeyCode.B))
+        //{
+        //    hp = 0.0f;
+        //}
+        //if (Input.GetKeyDown(KeyCode.H))
+        //{
+        //    ReduceHp(downedDamageAmount + 1.0f);
+        //    //hp -= downedDamageAmount + 1.0f;
+        //}
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    CancelStandby();
+        //    hp = maxHp;
+        //}
 
-        if ((!isStandby && !isStartReadyStandby) && hp <= maxHp * 0.5f)
-        {
-            Standby();
-        }
+        //if ((!isStandby && !isStartReadyStandby) && hp <= maxHp * 0.5f)
+        //{
+        //    Standby();
+        //}
 
 
         //if (shotCount > 0)
@@ -1662,8 +1665,15 @@ public class CS_Enemy1 : MonoBehaviour
     {
         isStandby = false;
 
-        //攻撃の種類を決定
-        ChooseAttackType();
+        //初回以外は攻撃種類を決定
+        if (isStartGame)
+        {
+            ChooseAttackType();
+        }
+        else
+        {
+            isStartGame = true;
+        }
 
         //エフェクト再生
         mist.Play();
