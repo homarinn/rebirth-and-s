@@ -603,6 +603,7 @@ GameObject:
   - component: {fileID: 1876338613865074335}
   - component: {fileID: 7614062408334916607}
   - component: {fileID: 4522967223254549001}
+  - component: {fileID: 8909980354650070868}
   m_Layer: 5
   m_Name: DialogueUI
   m_TagString: Untagged
@@ -749,3 +750,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!225 &8909980354650070868
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673037096403646882}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

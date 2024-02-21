@@ -29,13 +29,8 @@ public class CS_Dialogue : MonoBehaviour
     Coroutine showCoroutine;
     //! @brief 一文表示終了フラグ
     bool bFinishString;
-    [SerializeField, Header("表示終了時のアイコンテキスト")]
-    GameObject goFinish;
     [SerializeField, Header("自動送り機能")]
     bool bAuto;
-
-    [SerializeField, Header("効果音")]
-    AudioSource se;
 
     //! @brief 一度だけ処理を行うフラグ
     bool bOnce = false;
@@ -50,13 +45,8 @@ public class CS_Dialogue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (!bAuto)
-        {
-            waitSecond = 0.5f;
-        }
-        bEnable = false;
+        bEnable = true;
         bFinishString = true;
-        goFinish.SetActive(false);
         LoadText();
         SplitString();
     }
@@ -65,26 +55,33 @@ public class CS_Dialogue : MonoBehaviour
     void Update()
     {
         if (bEnable == false) return;
-        bool tmp = bAuto ? (bFinishString == true) : ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && (bFinishString == true));
-        if(bOnce == false)
+
+        bool tmp = bAuto ? (bFinishString == true) : (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return));
+        if (bOnce == false)
         {
             tmp = true;
             bOnce = true;
         }
         if (tmp)
         {
-            if(textIndex < splitText.Length - 1)
+            if (!bFinishString)
+            {
+                //! 文字列を一括表示する
+                StopCoroutine(showCoroutine);
+                dialogueText.maxVisibleCharacters = dialogueText.text.Length;
+                bFinishString = true;
+            }
+            else if (textIndex < splitText.Length - 1)
             {
                 if (!string.IsNullOrEmpty(splitText[textIndex]))
                 {
-                    //! コマンド判定
-                    int indexName = splitText[textIndex].IndexOf("/");
-                    int indexPause = splitText[textIndex].IndexOf("（");
-                    int indexSe = splitText[textIndex].IndexOf("#");
-                    if (indexName != -1)
+                    //! 名前判定
+                    int index = splitText[textIndex].IndexOf("/");
+                    int index0 = splitText[textIndex].IndexOf("（");
+                    if (index != -1)
                     {
                         //! 名前更新
-                        talkernameText.text = splitText[textIndex].Replace("/","");
+                        talkernameText.text = splitText[textIndex].Replace("/", "");
 
                         //! セリフ表示
                         dialogueText.text = splitText[++textIndex];
@@ -92,7 +89,7 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                     }
-                    else if(indexPause != -1)
+                    else if (index0 != -1)
                     {
                         //! 名前非表示
                         talkernameText.text = " ";
@@ -102,13 +99,7 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                         bEnable = false;
-                    }
-                    else if(indexSe != -1)
-                    {
-                        dialogueText.text = splitText[textIndex].Replace("#", "");
-                        if (se != null) se.Play();
-                        //Show();
-                        textIndex++;
+                        Debug.Log("()文");
                     }
                     else
                     {
@@ -124,9 +115,7 @@ public class CS_Dialogue : MonoBehaviour
             {
                 this.gameObject.SetActive(false);
             }
-
         }
-        goFinish.SetActive(bFinishString);
     }
 
     //! @brief テキストファイルを読み込む
@@ -171,13 +160,14 @@ public class CS_Dialogue : MonoBehaviour
             //! 一定時間待機
             yield return delay;
         }
+
+        yield return new WaitForSeconds(waitSecond);
+
         //! 演出が終わったらすべての文字を表示
         dialogueText.maxVisibleCharacters = length;
 
-        //! 全文表示後の待機
-        yield return new WaitForSeconds(waitSecond);        
-
         bFinishString = true;
+
         showCoroutine = null;
     }
 }

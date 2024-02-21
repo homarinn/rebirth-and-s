@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3459606417282762131}
-  - component: {fileID: 1526722194102387500}
+  - component: {fileID: 7072416603260295120}
   m_Layer: 8
   m_Name: WeaknessColliderPosition
   m_TagString: EnemyWeakness
@@ -25,15 +25,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3740623944961381023}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.18234676, y: -0.20612785, z: 0.032586012, w: 0.9608325}
-  m_LocalPosition: {x: 0.31632525, y: -0.31530508, z: -0.6286367}
+  m_LocalRotation: {x: -0.13052624, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: -0.00000029802322, y: -0.15, z: -0.8}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9001294516975275272}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &1526722194102387500
-SphereCollider:
+  m_LocalEulerAnglesHint: {x: -15, y: 0, z: 0}
+--- !u!65 &7072416603260295120
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -47,11 +47,11 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.2
+  m_Size: {x: 0.35, y: 0.35, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7504750585594716044
 GameObject:
@@ -113,33 +113,37 @@ MonoBehaviour:
   attackReactionDistance: 15
   attackInterval: 5
   constantTrackingAngle: 540
-  chargeTimeMin: 2
-  chargeTimeMax: 4
+  chargeTimeMin: 3
+  chargeTimeMax: 5
   damageCutPercentage: 0.75
-  rushInterval: 0.23
+  rushInterval: 0.18
   rushTime: 0.52
-  rushDefaultPower: 30
-  rushDefaultSpeed: 20
+  rushDefaultPower: 25
+  rushDefaultSpeed: 16
   rushPowerChargingIncrement: 7
   rushSpeedChargingIncrement: 4
   rushCountMin: 3
-  rushCountMax: 6
+  rushCountMax: 5
   rushSpeedUpCoefficient: 4000
-  rushSpeedDownCoefficient: 400
-  stoppingTime: 5
+  rushSpeedDownCoefficient: 50
+  stoppingTime: 7
   downTime: 6
   weakPointDamageIncrement: 20
   afterDownTime: 2
-  dieTime: 4
+  dieTime: 6.5
   walkSE: {fileID: 778428322481626259}
   chargeSE: {fileID: 195485775420812314}
   clashSE: {fileID: 932544012427014303}
+  walkEffect: {fileID: 983776887676040390, guid: f86a1e8b795af874aa49dd8d5142589a,
+    type: 3}
   chargeEffectGround: {fileID: 1369818264248206858, guid: 32b34a20c23a2f6459b88867179b29ce,
     type: 3}
   chargeEffectShield: {fileID: 8049982260223953395, guid: 4d3dc4ee01cfce2488a0f7d184f8c001,
     type: 3}
   rushEffect: {fileID: 2893964678148829097, guid: 429e197ccc3dcd64d9881db8740cfbee,
     type: 3}
+  rightFootTransform: {fileID: 2935372630201229291}
+  leftFootTransform: {fileID: 1687883145754796781}
   rushEffectPositionY: 1.2
   rushEffectGeneratingSpan: 0.15
   hitEffect: {fileID: 6519204570333860391, guid: 162ac94be8abaaf4faa3c3edf9a5d215,
@@ -167,10 +171,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.42
   m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 0.9, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0.15}
 --- !u!54 &5940688705182382768
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -652,6 +656,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1645923591360585006}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1687883145754796781 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 124955158905814979, guid: de0977ce72ae29e4cbffd5a1f5a6a278,
+    type: 3}
+  m_PrefabInstance: {fileID: 1645923591360585006}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1879715289717186687 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: de0977ce72ae29e4cbffd5a1f5a6a278,
@@ -691,6 +701,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6ee17fd08eb26949876c49772df83a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2935372630201229291 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4725411718908886331, guid: de0977ce72ae29e4cbffd5a1f5a6a278,
+    type: 3}
+  m_PrefabInstance: {fileID: 1645923591360585006}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9001294516975275272 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1568242895629053914, guid: de0977ce72ae29e4cbffd5a1f5a6a278,

@@ -16,9 +16,17 @@ public class CS_TitanAnimatorEvent : MonoBehaviour
         
     }
 
-    public void PlayWalkingSE()
+    public void PlayRightStampEvent()
     {
         CS_Titan titan = GetComponentInParent<CS_Titan>();
         titan.PlayWalkingSE();
+        titan.GenerateWalkEffectRight();
+    }
+
+    public void PlayLeftStampEvent()
+    {
+        CS_Titan titan = GetComponentInParent<CS_Titan>();
+        titan.PlayWalkingSE();
+        titan.GenerateWalkEffectLeft();
     }
 }

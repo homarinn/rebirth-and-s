@@ -20,6 +20,9 @@ public class CS_Enemy1Puddle : MonoBehaviour
     [Header("消滅するスピード（秒）")]
     [SerializeField] float disappearTime;
 
+    [Header("水溜まり生成時のエフェクト")]
+    [SerializeField] ParticleSystem puddleMist;
+
     [Header("水溜り生成時のSE")]
     [SerializeField] AudioClip puddleSE;
 
@@ -76,6 +79,11 @@ public class CS_Enemy1Puddle : MonoBehaviour
         elapsedForExpansion = 0.0f;
 
         material = GetComponent<MeshRenderer>().material;
+
+        //エフェクトの再生
+        Vector3 pos = transform.position;
+        pos.y = 0.0f;
+        Instantiate(puddleMist, pos, Quaternion.Euler(90.0f, 0.0f, 0.0f));
     }
 
     // Update is called once per frame

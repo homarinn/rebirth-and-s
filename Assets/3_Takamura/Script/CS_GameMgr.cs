@@ -11,8 +11,11 @@ public class CS_GameMgr : MonoBehaviour
     {
         None,
         FadeHide,
-        TextPart,
+        FirstTextPart,
         Game,
+        HalfFadeShow,
+        HalfFadeHide,
+        SecondTextPart,
         FadeShow,
     }
     [SerializeField] eState state;
@@ -27,6 +30,8 @@ public class CS_GameMgr : MonoBehaviour
 
     [SerializeField,Header("Playerスクリプト")]
     CS_Player csPlayer;
+    [SerializeField, Header("PlayerCameraのオブジェクト")]
+    GameObject goPlayerCamera;
     [SerializeField, Header("EnemyのPrefab")]
     GameObject goEnemy;
     //! @brief 巨人のスクリプト
@@ -38,13 +43,28 @@ public class CS_GameMgr : MonoBehaviour
 
     float enemyHp;
     float enemyMaxHp;
+    bool isMovingEnemy = false;
     [SerializeField, Header("テキストパートに移る体力の割合")]
     float textPartHpParcentage;
+    [SerializeField, Header("テキストパートに移る際の待ち時間")]
+    float textPartWaitTime;
+    float textPartWaitTimeCount;
+    bool finishedTextPart = false;
 
-    [SerializeField, Header("プレイヤーの初期位置")]
+    //プレイヤーとエネミーの初期配置
     Vector3 playerInitialPosition;
-    [SerializeField, Header("エネミーの初期位置")]
     Vector3 enemyInitialPosition;
+    Quaternion playerInitialRotation;
+    Quaternion enemyInitialRotation;
+
+    [SerializeField, Header("PlayerUIのCanvasGroup")]
+    CanvasGroup cgPlayerUI;
+    [SerializeField, Header("EnemyUIのCanvasGroup")]
+    CanvasGroup cgEnemyUI;
+    [SerializeField, Header("DialogueUIのCanvasGroup")]
+    CanvasGroup cgDialogueUI;
+    [SerializeField, Header("UIのα値をFadeさせる速度")]
+    float fadeSpeedUIAlpha;
 
     //! @brief ゲームオーバーフラグ
     bool bGameOver;
@@ -70,11 +90,18 @@ public class CS_GameMgr : MonoBehaviour
                 cgFade.blocksRaycasts = false;
                 cgFade.interactable = false;
                 break;
-            case eState.TextPart:
+            case eState.FirstTextPart:  break;
+            case eState.Game:           break;
+            case eState.HalfFadeShow:   break;
+            case eState.HalfFadeHide:
+                cgFade.blocksRaycasts = false;
+                cgFade.interactable = false;
                 break;
-            case eState.Game:
+            case eState.SecondTextPart:
+                finishedTextPart = true;
                 break;
-            case eState.FadeShow:
+            case eState.FadeShow:       break;
+            default:
                 break;
         }
 
@@ -82,18 +109,38 @@ public class CS_GameMgr : MonoBehaviour
         {
             case eState.FadeHide:
                 break;
-            case eState.TextPart:
+            case eState.FirstTextPart:
                 if (goDialogue != null) goDialogue.GetComponent<CS_Dialogue>().Benable = true;
                 break;
             case eState.Game:
-                if(stageBGM != null) stageBGM.Play();
-                if(csTitan != null)csTitan.StartMoving();
+                if (stageBGM != null)
+                {
+                    stageBGM.volume = 0.1f;
+                    stageBGM.Play();
+                }
+                break;
+            case eState.HalfFadeShow:
+                StopEnemy();
+                if (stageBGM != null) stageBGM.Stop();
+                cgFade.blocksRaycasts = true;
+                cgFade.interactable = true;
+                break;
+            case eState.HalfFadeHide:
+                cgPlayerUI.alpha = 0.0f;
+                cgEnemyUI.alpha = 0.0f;
+                cgDialogueUI.alpha = 1.0f;
+                InitializeTransform();
+                break;
+            case eState.SecondTextPart:
+                if (goDialogue != null) goDialogue.GetComponent<CS_Dialogue>().Benable = true;
                 break;
             case eState.FadeShow:
                 if (stageBGM != null) stageBGM.Stop();
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
                 CS_GameOverMgr.SetCurrentSceneName();
+                break;
+            default:
                 break;
         }
 
@@ -109,6 +156,12 @@ public class CS_GameMgr : MonoBehaviour
         cgFade.alpha = 1.0f;
         cgFade.blocksRaycasts = true;
         cgFade.interactable = true;
+
+        cgPlayerUI.alpha = 0.0f;
+        cgEnemyUI.alpha = 0.0f;
+
+        //プレイヤーとエネミーの初期配置を覚えておく
+        SetInitialTransform();
 
         enemyMaxHp = GetEnemyHp();
 
@@ -128,6 +181,14 @@ public class CS_GameMgr : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Quit();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if(!cgDialogueUI.gameObject.activeSelf)
+        {
+            cgDialogueUI.gameObject.SetActive(true);
         }
     }
 
@@ -182,7 +243,7 @@ public class CS_GameMgr : MonoBehaviour
         if (csPlayer.IsDeath) 
         {
             bGameOver = true;
-            if(csTitan != null)csTitan.StopMoving();
+            StopEnemy();
             ChangeState(eState.FadeShow);
         }
         //! EnemyScriptからHP取得
@@ -205,22 +266,70 @@ public class CS_GameMgr : MonoBehaviour
                 //! Fade終了
                 if (cgFade.alpha <= 0.0f)
                 {
-                    ChangeState(eState.TextPart);
+                    ChangeState(eState.FirstTextPart);
                 }
                 break;
-            case eState.TextPart:
+            case eState.FirstTextPart:
                 if (goDialogue != null)
                 {
-                    if(!goDialogue.GetComponent<CS_Dialogue>().Benable)
+                    if (!goDialogue.GetComponent<CS_Dialogue>().Benable)
                     {
                         ChangeState(eState.Game);
                     }
                 }
                 break;
             case eState.Game:
-                if (GetEnemyHp() / enemyMaxHp <= textPartHpParcentage)
+                if (!isMovingEnemy)
                 {
-                    ChangeState(eState.TextPart);
+                    if (cgPlayerUI.alpha < 1.0f)
+                    {
+                        cgPlayerUI.alpha += fadeSpeedUIAlpha * Time.deltaTime;
+                        cgEnemyUI.alpha += fadeSpeedUIAlpha * Time.deltaTime;
+                        cgDialogueUI.alpha -= fadeSpeedUIAlpha * Time.deltaTime;
+                    }
+                    else if (cgPlayerUI.alpha >= 1.0f)
+                    {
+                        StartEnemy();
+                    }
+                }
+
+                if (GetEnemyHp() / enemyMaxHp <= textPartHpParcentage && !finishedTextPart)
+                {
+                    ChangeState(eState.HalfFadeShow);
+                }
+                
+                if (GetEnemyHp() <= 0.0f)
+                {
+                    cgDialogueUI.alpha = 1.0f;
+                }
+                break;
+            case eState.HalfFadeShow:
+                stageBGM.volume -= 0.1f * Time.deltaTime;
+                cgFade.alpha += Time.deltaTime / fadeSpeed;
+                if (cgFade.alpha >= 1.0f && stageBGM.volume <= 0.0f)
+                {
+                    textPartWaitTimeCount += Time.deltaTime;
+                    if(textPartWaitTimeCount >= textPartWaitTime)
+                    {
+                        ChangeState(eState.HalfFadeHide);
+                    }
+                }
+                break;
+            case eState.HalfFadeHide:
+                cgFade.alpha -= Time.deltaTime / fadeSpeed;
+                //! Fade終了
+                if (cgFade.alpha <= 0.0f)
+                {
+                    ChangeState(eState.SecondTextPart);
+                }
+                break;
+            case eState.SecondTextPart:
+                if (goDialogue != null)
+                {
+                    if (!goDialogue.GetComponent<CS_Dialogue>().Benable)
+                    {
+                        ChangeState(eState.Game);
+                    }
                 }
                 break;
             case eState.FadeShow:
@@ -230,6 +339,8 @@ public class CS_GameMgr : MonoBehaviour
                 {
                     SceneManager.LoadScene(nextScene);
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -247,14 +358,73 @@ public class CS_GameMgr : MonoBehaviour
         }
     }
 
-    private void StartEnemy()
+    //エネミーを動かす
+    private bool StartEnemy()
     {
-
+        isMovingEnemy = true;
+        csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
+        if (csEnemy01 != null)
+        {
+             csEnemy01.CancelStandby();
+            return true;
+        }
+        csTitan = goEnemy.GetComponent<CS_Titan>();
+        if (csTitan != null)
+        {
+            csTitan.StartMoving();
+            return true;
+        }
+        csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
+        if (csEnPlayer != null)
+        {
+            return true;
+        }
+        Debug.Log("エネミー動かないンゴ");
+        return false;
     }
 
-    private void StopEnemy()
+    //エネミーを止める
+    private bool StopEnemy()
     {
+        isMovingEnemy = false;
+        csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
+        if (csEnemy01 != null)
+        {
+            csEnemy01.Standby();
+            return true;
+        }
+        csTitan = goEnemy.GetComponent<CS_Titan>();
+        if (csTitan != null)
+        {
+            csTitan.StopMoving();
+            return true;
+        }
+        csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
+        if (csEnPlayer != null)
+        {
+            return true;
+        }
+        Debug.Log("エネミー止まらないンゴ");
+        return false;
+    }
 
+    //位置と姿勢を覚えておく
+    private void SetInitialTransform()
+    {
+        playerInitialPosition = csPlayer.gameObject.transform.position;
+        playerInitialRotation = csPlayer.gameObject.transform.rotation;
+        enemyInitialPosition = goEnemy.transform.position;
+        enemyInitialRotation = goEnemy.transform.rotation;
+    }
+
+    //位置と姿勢を初期の状態に戻す
+    private void InitializeTransform()
+    {
+        csPlayer.gameObject.transform.position = playerInitialPosition;
+        csPlayer.gameObject.transform.rotation = playerInitialRotation;
+        goEnemy.transform.position = enemyInitialPosition;
+        goEnemy.transform.rotation = enemyInitialRotation;
+        goPlayerCamera.transform.rotation = Quaternion.identity;
     }
 
     //! @brief アプリケーション終了

@@ -140,19 +140,19 @@ public class CS_Titan : MonoBehaviour
     private float afterDownTimeCount = 0.0f;
     //コライダーいじる用
     private CapsuleCollider collider;
-    private const float colliderChangingTime = 1.0f;
     private float colliderRadius = 0.0f;
     private float colliderHeight = 0.0f;
-    private Vector3 downColliderCenter = new Vector3(0.4f, 0.44f, 0.05f);
-    private const float downColliderRadius = 0.44f;
-    private const float downColliderHeight = 0.5f;
 
     //--------------------
     //死亡
     //--------------------
     private float dieTimeCount = 0.0f;
     [SerializeField, Header("死亡判定にするまでの時間")]
-    private float dieTime = 0.0f; 
+    private float dieTime = 0.0f;
+    private const float colliderChangingTime = 4.3f;
+    private const float dieColliderRadius = 0.45f;
+    private const float dieColliderHeight = 1.5f;
+    private Vector3 dieColliderCenter = new Vector3(0.25f, 0.45f, 1.0f);
 
     //--------------------
     //SE
@@ -168,12 +168,18 @@ public class CS_Titan : MonoBehaviour
     //--------------------
     //エフェクト
     //--------------------
+    [SerializeField, Header("歩きエフェクト")]
+    private GameObject walkEffect;
     [SerializeField, Header("溜めエフェクト（地面から出てるやつ）")]
     private GameObject chargeEffectGround;
     [SerializeField, Header("溜めエフェクト（シールドっぽいやつ）")]
     private GameObject chargeEffectShield;
     [SerializeField, Header("突進エフェクト（衝撃波っぽいやつ）")]
     private GameObject rushEffect;
+    [SerializeField, Header("足の座標（右）")]
+    private Transform rightFootTransform;
+    [SerializeField, Header("足の座標（左）")]
+    private Transform leftFootTransform;
     [SerializeField, Header("突進エフェクトの生成y座標")]
     private float rushEffectPositionY;
     [SerializeField, Header("突進エフェクトの生成時間間隔")]
@@ -490,10 +496,10 @@ public class CS_Titan : MonoBehaviour
             //ダウン時間のカウント
             downTimeCount -= Time.deltaTime;
             //colliderの調整
-            if (downTime - downTimeCount >= colliderChangingTime)
-            {
-                SetDownColliderParameter();
-            }
+            //if (downTime - downTimeCount >= colliderChangingTime)
+            //{
+            //    SetDownColliderParameter();
+            //}
             //ダウン時間が終了したら
             if (downTimeCount < 0.0f)
             {
@@ -501,7 +507,7 @@ public class CS_Titan : MonoBehaviour
                 afterDownTimeCount = afterDownTime;
 
                 //collider戻す
-                SetDefaultColliderParameter();
+                //SetDefaultColliderParameter();
             }
         }
         else
@@ -529,7 +535,7 @@ public class CS_Titan : MonoBehaviour
         dieTimeCount += Time.deltaTime;
         if (dieTimeCount >= colliderChangingTime)
         {
-            SetDownColliderParameter();
+            SetDieColliderParameter();
         }
         if(dieTimeCount >= dieTime)
         {
@@ -580,6 +586,22 @@ public class CS_Titan : MonoBehaviour
     //----------------------------------
     //エフェクトを生成する
     //----------------------------------
+    private void GenerateWalkEffect(Vector3 footPosition)
+    {
+        Vector3 generatingPosition = new Vector3(footPosition.x, 0.0f, footPosition.z);
+        Instantiate(walkEffect, generatingPosition, Quaternion.identity);
+    }
+
+    public void GenerateWalkEffectRight()
+    {
+        GenerateWalkEffect(rightFootTransform.position);
+    }
+
+    public void GenerateWalkEffectLeft()
+    {
+        GenerateWalkEffect(leftFootTransform.position);
+    }
+
     private void GenerateChargeEffect(float _chargeTime)
     {
         //地面から出てるやつ
@@ -649,7 +671,8 @@ public class CS_Titan : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //突進中にプレイヤーに衝突した場合
-        if(collision.gameObject.CompareTag("Player") && state == State.RUSH)
+        if(collision.gameObject.CompareTag("Player") && state == State.RUSH 
+            && (rushState == RushState.SPEED_UP || rushState == RushState.SPEED_MAX))
         {
             collision.gameObject.GetComponent<CS_Player>().ReceiveDamage((int)rushPower);
             //衝突した際のSEを再生
@@ -709,11 +732,12 @@ public class CS_Titan : MonoBehaviour
         collider.radius = colliderRadius;
         collider.height = colliderHeight;
     }
-    private void SetDownColliderParameter()
+    private void SetDieColliderParameter()
     {
-        collider.center = downColliderCenter;
-        collider.radius = downColliderRadius;
-        collider.height = downColliderHeight;
+        collider.center = dieColliderCenter;
+        collider.radius = dieColliderRadius;
+        collider.height = dieColliderHeight;
+        collider.direction = 2;   //Z方向
     }
 
     //-------------------------------------------
