@@ -123,8 +123,7 @@ MonoBehaviour:
   cpUlt: {fileID: 4312558994954206004}
   goEnemy: {fileID: 0}
   cpEnemyHP: {fileID: 1776172266089444940}
-  enemyHpMax: 0
-  enemyHp: 0
+  goDialogue: {fileID: 0}
 --- !u!1001 &2166154602673746643
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -211,12 +210,12 @@ PrefabInstance:
     - target: {fileID: 1876338613865074335, guid: 80154821c16d27f4993f1906174cfabd,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 1876338613865074335, guid: 80154821c16d27f4993f1906174cfabd,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 33
       objectReference: {fileID: 0}
     - target: {fileID: 1876338613865074335, guid: 80154821c16d27f4993f1906174cfabd,
         type: 3}

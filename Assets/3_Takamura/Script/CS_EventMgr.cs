@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class CS_EventMgr : MonoBehaviour
 {
     //! @brief ステートマシン
-    enum eState
+    public enum eState
     {
         None,
         FadeHide,   //! フェードが明ける
@@ -14,6 +14,11 @@ public class CS_EventMgr : MonoBehaviour
         FadeShow,   //! フェードが掛かる
     }
     eState state;
+    public eState State
+    {
+        get { return state; }
+        set { state = value; }
+    }
 
     [SerializeField, Header("FadeImage")]
     CanvasGroup cgFade;
@@ -51,9 +56,10 @@ public class CS_EventMgr : MonoBehaviour
                 break;
             case eState.Standby:
                 goDialogue.GetComponent<CS_Dialogue>().Benable = true;
+                eventBGM.volume = 0.0f;
+                eventBGM.Play();
                 break;
             case eState.FadeShow:
-
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
                 break;
@@ -64,7 +70,7 @@ public class CS_EventMgr : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         state = eState.FadeHide;
 
@@ -74,9 +80,6 @@ public class CS_EventMgr : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        eventBGM.volume = 0.0f;
-        eventBGM.Play();
     }
 
     // Update is called once per frame
