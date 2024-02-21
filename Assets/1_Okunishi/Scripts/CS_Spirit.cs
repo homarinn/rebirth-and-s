@@ -45,7 +45,7 @@ public class CS_Spirit : MonoBehaviour
     private float healTrrigerPercentage = 50.0f;
 
     private float healAmount = 0.0f;                //回復量
-    [SerializeField] private bool healFlag = false;                  //回復フラグ
+    private bool healFlag = false; //回復フラグ
 
     //===音声===
     [SerializeField, Header("回復音声")]
@@ -58,6 +58,7 @@ public class CS_Spirit : MonoBehaviour
     private float effectDuration = 0.1f;        //エフェクトの持続時間
     private float effectPositionYOffset = 2.2f; //エフェクトのY調整
     private bool log = true;                    //デバッグ表示用
+    private bool healStop = false;              //回復停止関数用
 
     void Start()
     {
@@ -112,15 +113,19 @@ public class CS_Spirit : MonoBehaviour
                     healFlag = true;
                 }
 
-                //回復しまーす
-                if (healFlag && player.Hp > 0)
+                //回復可能状態なら
+                if (!healStop)
                 {
-                    PlayerHealing();
-                    ApplyHealEffect();
-                }
-                else
-                {
-                    healFlag = false;
+                    //回復する
+                    if (healFlag && player.Hp > 0)
+                    {
+                        PlayerHealing();
+                        ApplyHealEffect();
+                    }
+                    else
+                    {
+                        healFlag = false;
+                    }
                 }
 
                 //クールタイム減少
@@ -208,9 +213,18 @@ public class CS_Spirit : MonoBehaviour
         }
     }
 
-    //回復するときに外部から呼び出す用
-    public void StartHeal()
+    /// <summary>
+    /// イベントシーン等で回復を停止する
+    /// </summary>
+    public void EventHealStop()
     {
-        healFlag = true;
+        healStop = true;
+    }
+    /// <summary>
+    /// 回復を再開する
+    /// </summary>
+    public void EventHealStart()
+    {
+        healStop = false;
     }
 }

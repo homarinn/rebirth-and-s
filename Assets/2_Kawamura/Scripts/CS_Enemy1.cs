@@ -166,6 +166,21 @@ public class CS_Enemy1 : MonoBehaviour
     //[SerializeField] float timeFallToGroundByDeath;
     //[Header("==========")]
 
+    [Header("接地検知オブジェクト")]
+    [SerializeField] GameObject groundDetection;
+
+    [Header("もやエフェクト")]
+    [SerializeField] ParticleSystem mist;
+
+    [Header("放出もやエフェクト")]
+    [SerializeField] ParticleSystem releaseMist;
+
+    [Header("溜めエフェクト")]
+    [SerializeField] ParticleSystem trail;
+
+    [Header("土煙エフェクト")]
+    [SerializeField] ParticleSystem dustCloud;
+
     [Header("弾を撃つSE")]
     [SerializeField] private AudioClip shotSE;
 
@@ -207,6 +222,18 @@ public class CS_Enemy1 : MonoBehaviour
     bool canFall;  //アニメーション一時停止用
 
     bool isWaitRise;  //LookAtが作動してしまうため
+
+    bool isStartReadyStandby;  //演出待機の準備開始
+    bool isStandby;  //演出待機しているか？
+    bool isStartGame;
+    bool isFall;  //降下中か？
+    bool isWaitFall;  //降下準備中か？
+    float timeArriveNormalPos;
+    Coroutine waitFall;
+
+    //エフェクト用
+    CS_Enemy1Trail trailScript;
+    bool isPlayDustCloudEffect;
 
     //float shotCount = 0;
 
@@ -346,11 +373,55 @@ public class CS_Enemy1 : MonoBehaviour
 
         //LookAtが作動するため
         isWaitRise = false;
+
+        //演出待機用
+        isStartReadyStandby = false;
+        isStandby = true;  //初期状態は待機
+        isStartGame = false;
+        isFall = false;
+        isWaitFall = false;
+        timeArriveNormalPos = timeReturnNormalPos;
+        waitFall = StartCoroutine(WaitFall());
+
+        //エフェクト用
+        trailScript = trail.GetComponent<CS_Enemy1Trail>();
+        trail.Stop();
+        mist.Stop();
+        isPlayDustCloudEffect = false;
+
+        //死亡時用
+        groundDetection.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    hp = maxHp * 0.5f;
+        //}
+        //if (Input.GetKeyDown(KeyCode.B))
+        //{
+        //    hp = 0.0f;
+        //}
+        //if (Input.GetKeyDown(KeyCode.H))
+        //{
+        //    ReduceHp(downedDamageAmount + 1.0f);
+        //    //hp -= downedDamageAmount + 1.0f;
+        //}
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    CancelStandby();
+        //    hp = maxHp;
+        //}
+
+        //if ((!isStandby && !isStartReadyStandby) && hp <= maxHp * 0.5f)
+        //{
+        //    Standby();
+        //}
+
+
         //if (shotCount > 0)
         //{
         //    return;
@@ -359,7 +430,7 @@ public class CS_Enemy1 : MonoBehaviour
         //float damage = Time.deltaTime;
         //if (downCount % 2 != 0) { damage *= 3.0f; }
         //ReduceHp(damage);
-        ////Debug.Log("HP = " + hp);
+        //Debug.Log("HP = " + hp);
 
         //if (Input.GetKeyDown(KeyCode.G))
         //{
@@ -367,12 +438,18 @@ public class CS_Enemy1 : MonoBehaviour
         //    //hp = 0.0f;
         //}
 
-        Debug.Log("isDead = " + isDead);
+        //Debug.Log("isDead = " + isDead);
 
         //死亡
         if (hp <= 0.0f)
         {
             Death();
+            return;
+        }
+
+        //演出待機
+        if (isStandby && !isStartReadyStandby)
+        {
             return;
         }
 
@@ -386,7 +463,7 @@ public class CS_Enemy1 : MonoBehaviour
         //定位置に戻る
         if (isReturningNormalPos)
         {
-            Debug.Log("定位置に戻る");
+            //Debug.Log("定位置に戻る");
             ReturnNormalPos();
             return;
         }
@@ -609,7 +686,7 @@ public class CS_Enemy1 : MonoBehaviour
 
         //実験用2
         Vector3 localScale = strongMagicMissile.transform.localScale;
-        script[magicMissileCount - 1].SetScaleRatioBasedOnY = scaleRatioBasedOnY;
+        //script[magicMissileCount - 1].SetScaleRatioBasedOnY = scaleRatioBasedOnY;
 
         //弾の種類をセット
         script[magicMissileCount - 1].SetMagicMissileType = SetMagicMissileType(type);
@@ -667,6 +744,10 @@ public class CS_Enemy1 : MonoBehaviour
             creationInterval[num] = 0.0f;
 
             myAnimator.SetBool("Attack", true);  //モーション発動
+
+            trail.Play();  //エフェクト再生
+            trailScript.GetSetIsPlay = true;
+            Debug.Log("trail再生生成終わり");
         }
     }
 
@@ -798,6 +879,12 @@ public class CS_Enemy1 : MonoBehaviour
         isAttack = true;  //攻撃開始
         myAnimator.SetBool("Attack", true);  //モーション発動
 
+        if (!trailScript.GetSetIsPlay)
+        {
+            trail.Play();  //エフェクト再生
+            trailScript.GetSetIsPlay = true;
+        }
+
         ////blowOffCount -= Time.deltaTime;
         ////if(blowOffCount <= 0.0f)
         ////{
@@ -855,6 +942,31 @@ public class CS_Enemy1 : MonoBehaviour
         if(attackType == AttackType.BlowOff)
         {
             canBlowOff = true;//吹き飛ばし可能
+            trail.Stop();  //エフェクト停止
+            trailScript.GetSetIsPlay = false;
+        }
+    }
+
+    /// <summary>
+    /// AnimationEvent用の関数(ダウン時用)
+    /// </summary>
+    void DownedEvent()
+    {
+        //演出待機準備中かつダウン中
+        if(isStartReadyStandby && isDowned)
+        {
+            canFall = false;
+            //降下準備中の時に演出待機になったとき、強制的に
+            if (isFall)
+            {
+                canFall = true;
+            }
+            Standby();  //ダウン時の変数処理を使用
+
+            //こっちでいけるかも
+            //もしくはStandby()のみ
+            //canFall = false;
+            //Standby();  //ダウン時の変数処理を使用
         }
     }
 
@@ -863,11 +975,17 @@ public class CS_Enemy1 : MonoBehaviour
     /// </summary>
     void RiseEvent()
     {
-        //ダウンでなければ(もしくは降下中でなければ)上昇
-        if (!isDowned)
+        //ダウンでなければ(もしくは降下中でなければ)上昇、かつ降下準備中でないとき
+        if (!isDowned && !isWaitFall)
         {
             isReturningNormalPos = true;
             isWaitRise = false;
+        }
+
+        //通常時かつ上昇時だけエフェクト再生
+        if (!isStartReadyStandby && !isStandby && !isDowned)
+        {
+            PlayDustCloudEffect();
         }
     }
 
@@ -912,11 +1030,23 @@ public class CS_Enemy1 : MonoBehaviour
                     {
                         //モーションに合わせて発射
                         Shoot(type);
+
+                        if (trailScript.GetSetIsPlay)
+                        {
+                            trail.Stop();
+                            trailScript.GetSetIsPlay = false;
+                        }
                     }
                     else
                     {
                         //範囲内に入ったのでモーションを再度再生
                         myAnimator.SetBool("Attack", true);
+
+                        if (!trailScript.GetSetIsPlay)
+                        {
+                            trail.Play();
+                            trailScript.GetSetIsPlay = true;
+                        }
                     }
                 }
                 //一定距離離れていたら発射とモーション中止
@@ -925,6 +1055,12 @@ public class CS_Enemy1 : MonoBehaviour
                     canShoot = false;
                     myAnimator.SetBool("Attack", false);
                     myAnimator.SetFloat("AnimationSpeed", 1);  //速度を戻す
+
+                    if (trailScript.GetSetIsPlay)
+                    {
+                        trail.Stop();
+                        trailScript.GetSetIsPlay = false;
+                    }
                 }
 
                 //if (isShooting) 
@@ -1111,6 +1247,19 @@ public class CS_Enemy1 : MonoBehaviour
             Collider boneCollider = transform.GetChild(3).GetComponent<Collider>();
             boneCollider.enabled = true;
 
+            //接地検知オブジェクト有効化
+            groundDetection.SetActive(true);
+
+            //エフェクト停止
+            mist.Stop();
+            trail.Stop();
+            trailScript.GetSetIsPlay = false;
+
+            //エフェクト再生
+            Vector3 pos = transform.position;
+            pos.y += 2.0f;
+            Instantiate(releaseMist, pos, Quaternion.identity);
+
             //地面に下ろす(重力落下にしたので要らない)
             //目標までの距離から割合を算出してtimeArriveGroundの数値を変える
             // = 降下スピードが変わらない
@@ -1145,10 +1294,10 @@ public class CS_Enemy1 : MonoBehaviour
                 totalReturnTime = 0.0f;
                 //myAnimator.SetBool("Rise", false);
                 myAnimator.SetBool("Fall", true);
-                Debug.Log("totalFallTime" + totalFallTime);
             }
 
             isDowned = true;
+            isPlayDustCloudEffect = false;
             //myRigidbody.useGravity = true;
 
             //変数の初期化（弾関連は絶対）
@@ -1169,11 +1318,16 @@ public class CS_Enemy1 : MonoBehaviour
             myAnimator.SetBool("Attack", false);
             myAnimator.SetFloat("AnimationSpeed", 1);  //速度を戻す
 
+            //エフェクトの停止
+            mist.Stop();
+            trail.Stop();
+            trailScript.GetSetIsPlay = false;
+
             //地面に下ろす
             //目標までの距離から割合を算出してtimeArriveGroundの数値を変える
             // = 降下スピードが変わらない
             isGround = false;
-            timeArriveGround = timeFallToGroundByDown * DistanceRatioToGround();
+            timeArriveGround = timeFallToGroundByDown * DistanceRatioToDestination(atGroundPosition.y);
             currentPosition = transform.position;
 
             //myRigidbody.useGravity = true;
@@ -1200,7 +1354,6 @@ public class CS_Enemy1 : MonoBehaviour
         totalDownedTime += Time.deltaTime;
         if(totalDownedTime > downedTime)
         {
-            Debug.Log("ダウン終了");
             isDowned = false;
             downedPos = transform.position;
             //myRigidbody.useGravity = false;
@@ -1211,9 +1364,13 @@ public class CS_Enemy1 : MonoBehaviour
             myAnimator.SetBool("Rise", true);
             myAnimator.SetBool("Down", false);
 
+            //エフェクトの再生
+            mist.Play();
+
             //定位置に戻す
             //isReturningNormalPos = true;
             isWaitRise = true;
+            timeArriveNormalPos = timeReturnNormalPos * DistanceRatioToDestination(normalPos.y);
 
             //攻撃の種類を決定
             ChooseAttackType();
@@ -1234,19 +1391,33 @@ public class CS_Enemy1 : MonoBehaviour
     }
 
     /// <summary>
-    /// 現在の位置が地面までどれくらいの距離割合なのか計算する
+    /// 現在の位置が目的地までどれくらいの距離割合なのか計算する
     /// </summary>
     /// <returns>距離割合</returns>
-    float DistanceRatioToGround()
+    float DistanceRatioToDestination(float destinationY)
     {
         float currentY = transform.position.y;
-        if(currentY <= atGroundPosition.y)
-        //if(currentY == 0.0f)
+        //上昇、降下で処理を変える
+        if (isGround)
         {
-            return 0.0f;
-        }
+            if (currentY >= destinationY)
+            {
+                return 0.0f;
+            }
 
-        return currentY / normalPos.y;  //割合
+            //最高値が逆になるため割合も逆
+            return 1.0f - (currentY / normalPos.y);  
+        }
+        else
+        {
+            if (currentY <= destinationY)
+            //if(currentY <= atGroundPosition.y)
+            {
+                return 0.0f;
+            }
+
+            return currentY / normalPos.y;  //割合
+        }
     }
 
     /// <summary>
@@ -1254,14 +1425,37 @@ public class CS_Enemy1 : MonoBehaviour
     /// </summary>
     void FallToGround()
     {
+        isFall = true;
+
         //移動処理
         totalFallTime += Time.deltaTime;
         float t = Mathf.Clamp01(totalFallTime / timeArriveGround);
         transform.position = Vector3.Lerp(currentPosition, atGroundPosition, t);
 
-        if (t >= 1)
+        //演出待機準備中の場合、降下させない
+        if (isStartReadyStandby)
         {
-            transform.position = atGroundPosition;
+            t = 1.0f;
+        }
+
+        //着地より少し早めにエフェクト再生
+        if(t >= 0.96f && t < 1)
+        {
+            if(!isPlayDustCloudEffect && !isStartReadyStandby)
+            {
+                //エフェクト生成
+                PlayDustCloudEffect();
+                isPlayDustCloudEffect = true;
+            }
+        }
+        else if (t >= 1)
+        {
+            //演出待機準備中以外の時に地面の座標を入れる
+            if (!isStartReadyStandby)
+            {
+                transform.position = atGroundPosition;
+                isFall = false;
+            }
             isGround = true;
             totalFallTime = 0.0f;
 
@@ -1287,7 +1481,7 @@ public class CS_Enemy1 : MonoBehaviour
     {
         //移動処理
         totalReturnTime += Time.deltaTime;
-        float t = Mathf.Clamp01(totalReturnTime / timeReturnNormalPos);
+        float t = Mathf.Clamp01(totalReturnTime / timeArriveNormalPos);
         transform.position = Vector3.Lerp(downedPos, normalPos, t);
 
         if(t >= 1)
@@ -1297,7 +1491,25 @@ public class CS_Enemy1 : MonoBehaviour
             totalReturnTime = 0.0f;
             transform.position = normalPos;
             myAnimator.SetBool("Rise", false);
+
+            //演出待機準備状態なら演出待機を始める
+            if (isStartReadyStandby)
+            {
+                isStartReadyStandby = false;
+                isStandby = true;
+            }
         }
+    }
+
+    /// <summary>
+    /// 土煙エフェクトを再生する
+    /// </summary>
+    void PlayDustCloudEffect()
+    {
+        Vector3 pos = new Vector3(transform.position.y, 0.2f, transform.position.z);
+        ParticleSystem p = Instantiate(dustCloud, pos, Quaternion.Euler(-90.0f, 0.0f, 0.0f));
+
+        p.Play();
     }
 
     /// <summary>
@@ -1334,6 +1546,12 @@ public class CS_Enemy1 : MonoBehaviour
             return;
         }
 
+        //演出待機中は処理しない
+        if(isStandby || isStartReadyStandby)
+        {
+            return;
+        }
+
         hp -= attackPower;
         AddDamageAmount(attackPower);
 
@@ -1341,6 +1559,130 @@ public class CS_Enemy1 : MonoBehaviour
         {
             hp = 0;
         }
+    }
+
+    /// <summary>
+    /// 演出待機する
+    /// </summary>
+    public void Standby()
+    {
+        isStartReadyStandby = true;  //待機準備開始
+
+        //攻撃中もしくは攻撃準備中
+        if(isAttack || attackInterval <= 0)
+        {
+            //変数の初期化
+            isAttack = false;
+            attackInterval = maxAttackInterval;
+            magicMissileCount = 1;
+            evenCount = oddCount = 0;
+            for (int i = 0; i < 2; ++i)
+            {
+                creationInterval[i] = 0.0f;
+            }
+
+            //弾の消去
+            DestroyMagicMissile();
+
+            //アニメーション設定
+            myAnimator.SetBool("Attack", false);
+
+            //演出待機開始
+            isStartReadyStandby = false;
+            isStandby = true;
+
+            Debug.Log("攻撃または攻撃準備中");
+        }
+        else if(isDowned)
+        {
+            //降下待機中
+            if (!canFall)
+            {
+                //変数の初期化
+                isDowned = false;
+                damageAmount = 0.0f;
+                StopCoroutine(waitFall);
+
+                //アニメーション設定
+                myAnimator.SetBool("Down", false);
+                myAnimator.SetBool("Fall", false);
+
+                //演出待機開始
+                isStartReadyStandby = false;
+                isStandby = true;
+                isWaitFall = true;
+
+                Debug.Log("降下待機中");
+            }
+            //降下中
+            else if (!isGround)
+            {
+                Debug.Log("降下中");
+            }
+            //ダウン中
+            else
+            {
+                //変数の初期化
+                isDowned = false;
+                downedPos = transform.position;
+                damageAmount = 0.0f;
+                totalDownedTime = 0.0f;
+
+                //定位置に戻す
+                isWaitRise = true;
+
+                //アニメーション設定
+                myAnimator.SetBool("Rise", true);
+                myAnimator.SetBool("Down", false);
+
+                Debug.Log("ダウン中");
+            }
+        }
+        //空中待機中
+        else if(!isWaitRise && !isReturningNormalPos)
+        {
+            //変数の初期化
+            attackInterval = maxAttackInterval;
+
+            //演出待機開始
+            isStartReadyStandby = false;
+            isStandby = true;
+
+            Debug.Log("空中待機中");
+        }
+
+        //エフェクト停止
+        mist.Stop();
+        trail.Stop();
+        trailScript.GetSetIsPlay = false;
+
+    }
+
+    /// <summary>
+    /// 演出待機を解除する
+    /// </summary>
+    public void CancelStandby()
+    {
+        isStandby = false;
+
+        //初回以外は攻撃種類を決定
+        if (isStartGame)
+        {
+            ChooseAttackType();
+        }
+        else
+        {
+            isStartGame = true;
+        }
+
+        //エフェクト再生
+        mist.Play();
+
+        damageAmount = 0.0f;
+        canShoot = false;  //発射不可
+        canBlowOff = false;//吹き飛ばし不可
+        isFall = false;  //降下中でない
+        isWaitFall = false;  //降下準備中でない
     }
 
     //private void OnCollisionEnter(Collision collision)

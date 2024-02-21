@@ -32,9 +32,6 @@ public class CS_Dialogue : MonoBehaviour
     [SerializeField, Header("自動送り機能")]
     bool bAuto;
 
-    [SerializeField, Header("効果音")]
-    AudioSource se;
-
     //! @brief 一度だけ処理を行うフラグ
     bool bOnce = false;
     //! @brief 表示処理が有効かどうか
@@ -48,7 +45,7 @@ public class CS_Dialogue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bEnable = false;
+        bEnable = true;
         bFinishString = true;
         LoadText();
         SplitString();
@@ -58,26 +55,33 @@ public class CS_Dialogue : MonoBehaviour
     void Update()
     {
         if (bEnable == false) return;
-        bool tmp = bAuto ? (bFinishString == true) : ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)) && (bFinishString == true));
-        if(bOnce == false)
+
+        bool tmp = bAuto ? (bFinishString == true) : (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return));
+        if (bOnce == false)
         {
             tmp = true;
             bOnce = true;
         }
         if (tmp)
         {
-            if(textIndex < splitText.Length - 1)
+            if (!bFinishString)
+            {
+                //! 文字列を一括表示する
+                StopCoroutine(showCoroutine);
+                dialogueText.maxVisibleCharacters = dialogueText.text.Length;
+                bFinishString = true;
+            }
+            else if (textIndex < splitText.Length - 1)
             {
                 if (!string.IsNullOrEmpty(splitText[textIndex]))
                 {
                     //! 名前判定
                     int index = splitText[textIndex].IndexOf("/");
-                    int indexP = splitText[textIndex].IndexOf("（");
-                    int indexS = splitText[textIndex].IndexOf("#");
+                    int index0 = splitText[textIndex].IndexOf("（");
                     if (index != -1)
                     {
                         //! 名前更新
-                        talkernameText.text = splitText[textIndex].Replace("/","");
+                        talkernameText.text = splitText[textIndex].Replace("/", "");
 
                         //! セリフ表示
                         dialogueText.text = splitText[++textIndex];
@@ -85,7 +89,7 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                     }
-                    else if(indexP != -1)
+                    else if (index0 != -1)
                     {
                         //! 名前非表示
                         talkernameText.text = " ";
@@ -95,13 +99,7 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                         bEnable = false;
-                    }
-                    else if(indexS != -1)
-                    {
-                        dialogueText.text = splitText[textIndex].Replace("#", "");
-                        if (se != null) se.Play();
-                        //Show();
-                        textIndex++;
+                        Debug.Log("()文");
                     }
                     else
                     {
@@ -117,7 +115,6 @@ public class CS_Dialogue : MonoBehaviour
             {
                 this.gameObject.SetActive(false);
             }
-
         }
     }
 
@@ -165,7 +162,7 @@ public class CS_Dialogue : MonoBehaviour
         }
 
         yield return new WaitForSeconds(waitSecond);
-        
+
         //! 演出が終わったらすべての文字を表示
         dialogueText.maxVisibleCharacters = length;
 

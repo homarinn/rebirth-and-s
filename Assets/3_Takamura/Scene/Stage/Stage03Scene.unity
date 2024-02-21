@@ -287,6 +287,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpiritPosition
       objectReference: {fileID: 0}
+    - target: {fileID: 6814755633824491253, guid: 5b3b285e9917512468e1b576dc1bf3f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -333,12 +338,12 @@ PrefabInstance:
     - target: {fileID: 724804287250010321, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 790.67993
+      value: 778
       objectReference: {fileID: 0}
     - target: {fileID: 724804287250010321, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -197.98999
+      value: -295
       objectReference: {fileID: 0}
     - target: {fileID: 767292631817329978, guid: 4599c73d429970747bac1312071a185e,
         type: 3}
@@ -1228,9 +1233,9 @@ SceneRoots:
   m_Roots:
   - {fileID: 2105914997}
   - {fileID: 1768370325}
-  - {fileID: 653676860}
   - {fileID: 158842062}
   - {fileID: 1575079037}
   - {fileID: 1708030538}
   - {fileID: 747799029}
   - {fileID: 967103284}
+  - {fileID: 653676860}
