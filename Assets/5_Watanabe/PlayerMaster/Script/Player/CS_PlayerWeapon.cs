@@ -17,6 +17,11 @@ public class CS_PlayerWeapon : MonoBehaviour
     [SerializeField, Header("跳ね返す玉2")]
     private GameObject reflctBullet2;
 
+    [SerializeField, Header("跳ね返しエフェクト")]
+    private GameObject reflctEffect;
+    [SerializeField]
+    private Transform reflectTrs;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -82,7 +87,8 @@ public class CS_PlayerWeapon : MonoBehaviour
         else if(other.gameObject.tag == "MagicMissile")
         {
             Debug.Log("ヒット");
-            if(other.GetComponent<CS_Enemy1MagicMissile>() != null)
+            Instantiate(reflctEffect, reflectTrs);
+            if (other.GetComponent<CS_Enemy1MagicMissile>() != null)
             {
                 var type = other.GetComponent<CS_Enemy1MagicMissile>().GetMagicMissileType;
                 if(type == "Weak")
