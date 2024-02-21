@@ -30,6 +30,8 @@ public class CS_GameMgr : MonoBehaviour
 
     [SerializeField,Header("Playerスクリプト")]
     CS_Player csPlayer;
+    [SerializeField, Header("精霊スクリプト")]
+    CS_Spirit csSpirit;
     [SerializeField, Header("PlayerCameraのオブジェクト")]
     GameObject goPlayerCamera;
     [SerializeField, Header("EnemyのPrefab")]
@@ -120,7 +122,7 @@ public class CS_GameMgr : MonoBehaviour
                 }
                 break;
             case eState.HalfFadeShow:
-                StopEnemy();
+                StopCharacter();
                 if (stageBGM != null) stageBGM.Stop();
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
@@ -160,6 +162,7 @@ public class CS_GameMgr : MonoBehaviour
         cgPlayerUI.alpha = 0.0f;
         cgEnemyUI.alpha = 0.0f;
 
+        csPlayer.Action = false;
         //プレイヤーとエネミーの初期配置を覚えておく
         SetInitialTransform();
 
@@ -243,7 +246,7 @@ public class CS_GameMgr : MonoBehaviour
         if (csPlayer.IsDeath) 
         {
             bGameOver = true;
-            StopEnemy();
+            StopCharacter();
             ChangeState(eState.FadeShow);
         }
         //! EnemyScriptからHP取得
@@ -289,7 +292,7 @@ public class CS_GameMgr : MonoBehaviour
                     }
                     else if (cgPlayerUI.alpha >= 1.0f)
                     {
-                        StartEnemy();
+                        StartCharacter();
                     }
                 }
 
@@ -359,8 +362,10 @@ public class CS_GameMgr : MonoBehaviour
     }
 
     //エネミーを動かす
-    private bool StartEnemy()
+    private bool StartCharacter()
     {
+        csPlayer.Action = true;
+        csSpirit.EventHealStart();
         isMovingEnemy = true;
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if (csEnemy01 != null)
@@ -377,6 +382,7 @@ public class CS_GameMgr : MonoBehaviour
         csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
         if (csEnPlayer != null)
         {
+            csEnPlayer.CancelStandby();
             return true;
         }
         Debug.Log("エネミー動かないンゴ");
@@ -384,8 +390,10 @@ public class CS_GameMgr : MonoBehaviour
     }
 
     //エネミーを止める
-    private bool StopEnemy()
+    private bool StopCharacter()
     {
+        csPlayer.Action = false;
+        csSpirit.EventHealStop();
         isMovingEnemy = false;
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if (csEnemy01 != null)
@@ -402,6 +410,7 @@ public class CS_GameMgr : MonoBehaviour
         csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
         if (csEnPlayer != null)
         {
+            csEnPlayer.Standby();
             return true;
         }
         Debug.Log("エネミー止まらないンゴ");
@@ -422,6 +431,7 @@ public class CS_GameMgr : MonoBehaviour
     {
         csPlayer.gameObject.transform.position = playerInitialPosition;
         csPlayer.gameObject.transform.rotation = playerInitialRotation;
+        csSpirit.gameObject.transform.position = playerInitialPosition;
         goEnemy.transform.position = enemyInitialPosition;
         goEnemy.transform.rotation = enemyInitialRotation;
         goPlayerCamera.transform.rotation = Quaternion.identity;

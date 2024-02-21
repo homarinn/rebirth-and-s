@@ -691,6 +691,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: stage2
       objectReference: {fileID: 0}
+    - target: {fileID: 4544745109884020998, guid: 893376047b36d31408339a615df78d36,
+        type: 3}
+      propertyPath: m_TagString
+      value: Stage
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -861,9 +866,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
+      propertyPath: mist
+      value: 
+      objectReference: {fileID: 1125158045}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
       propertyPath: maxHp
       value: 207
       objectReference: {fileID: 0}
+    - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
+        type: 3}
+      propertyPath: trail
+      value: 
+      objectReference: {fileID: 1946159247}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
       propertyPath: player
@@ -1047,6 +1062,12 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 1163849583164973268, guid: 4599c73d429970747bac1312071a185e,
     type: 3}
   m_PrefabInstance: {fileID: 608803283}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1125158045 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1249699291698164934, guid: 9868515b684dd96438cd0625006c21c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 998474941}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1363662483
 PrefabInstance:
@@ -1352,6 +1373,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!198 &1946159247 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1691829724014928414, guid: 9868515b684dd96438cd0625006c21c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 998474941}
+  m_PrefabAsset: {fileID: 0}
 --- !u!20 &1990289614 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 1839967511998124424, guid: ed4f576053ab8d14784403b9b7a76853,
