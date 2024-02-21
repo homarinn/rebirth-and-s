@@ -403,6 +403,7 @@ GameObject:
   - component: {fileID: 5141234283029988823}
   - component: {fileID: 5155727150018060087}
   - component: {fileID: 6545941894283809608}
+  - component: {fileID: 5216614932766401883}
   - component: {fileID: 3466569981927529051}
   - component: {fileID: 7574821035289772116}
   - component: {fileID: 2571286890000043425}
@@ -473,6 +474,102 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!82 &5216614932766401883
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271042575669801200}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!54 &3466569981927529051
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -519,10 +616,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.21
-  m_Height: 1.67
+  m_Radius: 0.3
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: -0.24, z: 0}
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!114 &2571286890000043425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,7 +639,8 @@ MonoBehaviour:
     chaseMax: 5
     chaseAcceleration: 10
   attackParameter:
-    power: 20
+    power_attack1: 10
+    power_attack2: 20
     triggerDistance: 3
     interval: 5
     percent: 10
@@ -565,6 +663,17 @@ MonoBehaviour:
     attack1: {fileID: 7400000, guid: 539042840a7da314ab1f0fce875c1490, type: 2}
     attack2: {fileID: 7400000, guid: 424e3166b18c51b44a133d49648c310c, type: 2}
     dead: {fileID: 7400000, guid: 687911b984ec9e14a92ab23ef092343c, type: 2}
+  sound:
+    attack: {fileID: 8300000, guid: 45802b6f67e4c2749ad68d99bb8c140d, type: 3}
+    hit_attack1: {fileID: 8300000, guid: 1b7fda63d5a21b242b050ee30ad9071c, type: 3}
+    hit_attack2: {fileID: 8300000, guid: 1e802b44c6e9304428104a74924e099a, type: 3}
+    ult_jump: {fileID: 8300000, guid: bac96cdc050fb7a4798ded787aab72a1, type: 3}
+    ult: {fileID: 8300000, guid: 585e95ad89c4b8e4d9779e09ac667a7b, type: 3}
+    sliding: {fileID: 8300000, guid: 95add280840fbe34fadd0d2f189a53f2, type: 3}
+    guardStart: {fileID: 8300000, guid: 2c946662cd44f1a49b44d151a309f8db, type: 3}
+    guard: {fileID: 8300000, guid: 74c9a2a857b9e5a4fa1285dc06826342, type: 3}
+    receiveDamage: {fileID: 8300000, guid: d08f0325b2eecf043bb0f08d02d32825, type: 3}
+    dead: {fileID: 8300000, guid: 3946c216b06c6b34987343b1f6b2f73b, type: 3}
 --- !u!1 &1393033421661020282
 GameObject:
   m_ObjectHideFlags: 0

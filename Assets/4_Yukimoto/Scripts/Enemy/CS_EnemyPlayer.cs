@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,8 +27,11 @@ public class CS_EnemyPlayer : MonoBehaviour
         /// <summary> 行動を選択 </summary>
         SelectAction,
 
-        /// <summary> 攻撃 </summary>
-        Attack,
+        /// <summary> 攻撃1 </summary>
+        Attack1,
+
+        /// <summary> 攻撃2 </summary>
+        Attack2,
 
         /// <summary> 必殺技 </summary>
         Ult,
@@ -63,6 +67,13 @@ public class CS_EnemyPlayer : MonoBehaviour
 
     /// <summary> プレイヤー管理用(与ダメージで使う) </summary>
     private CS_Player playerManager;
+
+    // ---------------------------
+    // 動き制御用
+    // ---------------------------
+
+    /// <summary> 動きを止める場合はtrueにする </summary>
+    private bool isStop = false;
 
     // ---------------------------
     // HP
@@ -112,9 +123,13 @@ public class CS_EnemyPlayer : MonoBehaviour
     [System.Serializable]
     private struct AttackParameter
     {
-        /// <summary> 攻撃力 </summary>
-        [Header("攻撃力")]
-        public float power;
+        /// <summary> 攻撃1の攻撃力 </summary>
+        [Header("攻撃1の攻撃力")]
+        public float power_attack1;
+
+        /// <summary> 攻撃2の攻撃力 </summary>
+        [Header("攻撃2の攻撃力")]
+        public float power_attack2;
 
         /// <summary> 
         /// 攻撃のトリガーとなるプレイヤーとの距離
@@ -130,9 +145,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         [Header("攻撃した後に再攻撃する確率(%)")]
         public float percent;
 
-        /// <summary>
-        /// 攻撃時にスーパーアーマーをつけるかどうか
-        /// </summary>
+        /// <summary> 攻撃時にスーパーアーマーをつけるかどうか </summary>
         [Header("攻撃時にスーパーアーマーをつけるかどうか")]
         public bool hasSuperArmor;
 
@@ -166,7 +179,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         public float interval;
 
         /// <summary> 必殺技の速度 </summary>
-        [Header("必殺技の速度"), Range(1.0f, 10.0f)]
+        [Header("必殺技の速度"), Range(1.0f, 3.0f)]
         public float speed;
 
         /// <summary> 必殺技が使用可能ならtrue </summary>
@@ -217,6 +230,9 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         /// <summary> 防御可能ならtrue </summary>
         [NonSerialized] public bool canGuard;
+
+        /// <summary> 防御中ならtrue </summary>
+        [NonSerialized] public bool isGuard;
     }
 
     /// <summary> 防御関係のパラメータ </summary> 
@@ -350,6 +366,72 @@ public class CS_EnemyPlayer : MonoBehaviour
     private readonly string deadTrigger = "DeadTrigger";
 
     // -----------------------
+    // サウンド
+    // -----------------------
+
+    /// <summary> サウンド </summary>
+    [System.Serializable]
+    private struct Sound
+    {
+        /// <summary> 攻撃時SE </summary>
+        [Header("攻撃時SE")]
+        public AudioClip attack;
+
+        /// <summary> 攻撃1のヒット時SE </summary>
+        [Header("攻撃1のヒット時SE")]
+        public AudioClip hit_attack1;
+
+        /// <summary> 攻撃2のヒット時SE </summary>
+        [Header("攻撃2のヒット時SE")]
+        public AudioClip hit_attack2;
+
+        /// <summary> 必殺技のジャンプ時SE </summary>
+        [Header("必殺技のジャンプ時SE")]
+        public AudioClip ult_jump;
+
+        /// <summary> 必殺技SE </summary>
+        [Header("必殺技SE")]
+        public AudioClip ult;
+
+        /// <summary> 回避SE </summary>
+        [Header("回避SE")]
+        public AudioClip sliding;
+
+        /// <summary> 防御開始SE </summary>
+        [Header("防御開始SE")]
+        public AudioClip guardStart;
+
+        /// <summary> 防御SE </summary>
+        [Header("防御SE")]
+        public AudioClip guard;
+
+        /// <summary> 被ダメージSE </summary>
+        [Header("被ダメージSE")]
+        public AudioClip receiveDamage;
+
+        /// <summary> 死亡SE </summary>
+        [Header("死亡SE")]
+        public AudioClip dead;
+    }
+
+    /// <summary> サウンド </summary>
+    [Header("サウンド")]
+    [SerializeField] private Sound sound;
+
+    /// <summary> サウンド用コンポーネント </summary>
+    private AudioSource audioSource;
+
+    // ------------------------------
+    // エフェクト
+    // ------------------------------
+
+    [System.Serializable]
+    private struct Effect
+    {
+        public GameObject hit;
+    }
+
+    // -----------------------
     // タイマー
     // -----------------------
 
@@ -400,8 +482,11 @@ public class CS_EnemyPlayer : MonoBehaviour
         // 当たり判定制御用コンポーネントを取得
         capsuleCollider = gameObject.GetComponent<CapsuleCollider>();
 
-        // 待機状態から始める
-        ChangeState(State.Idle);
+        // サウンド用コンポーネントを取得
+        audioSource = gameObject.GetComponent<AudioSource>();
+
+        // 動きを止めた状態から始める
+        Standby();
     }
 
     // Update is called once per frame
@@ -471,9 +556,16 @@ public class CS_EnemyPlayer : MonoBehaviour
                 break;
 
             // ------------------------
-            // 攻撃
+            // 攻撃1
             // ------------------------
-            case State.Attack:
+            case State.Attack1:
+
+                break;
+
+            // ------------------------
+            // 攻撃2
+            // ------------------------
+            case State.Attack2:
 
                 break;
 
@@ -541,6 +633,12 @@ public class CS_EnemyPlayer : MonoBehaviour
             return;
         }
 
+        // 動きを止めているので待機
+        if (isStop)
+        {
+            return;
+        }
+
         // 追尾状態に移行
         ChangeState(State.Chase);
     }
@@ -589,7 +687,7 @@ public class CS_EnemyPlayer : MonoBehaviour
             attackTimer = 0;
 
             // 攻撃状態に移行
-            ChangeState(State.Attack);
+            ChangeState(State.Attack1);
             return;
         }
 
@@ -632,7 +730,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         // 攻撃の確率を引き当てたら攻撃
         if (attackParameter.isPercent)
         {
-            ChangeState(State.Attack);
+            ChangeState(State.Attack1);
             return;
         }
 
@@ -688,11 +786,6 @@ public class CS_EnemyPlayer : MonoBehaviour
 
     #region 攻撃イベント
 
-    private void AnimAttackOk()
-    {
-        return;
-    }
-
     /// <summary>
     /// 攻撃1の開始イベント
     /// </summary>
@@ -701,7 +794,16 @@ public class CS_EnemyPlayer : MonoBehaviour
         // 武器が当たるようにする
         canWeaponHit = true;
 
+        // プレイヤーの方を向く
         LookTarget(player);
+
+        // 攻撃SE
+        PlayOneSound(sound.attack);
+    }
+
+    private void AnimAttackOk()
+    {
+        return;
     }
 
     /// <summary>
@@ -712,7 +814,8 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーがまだ近くにいる場合
         if (IsNear(player))
         {
-            // 連続攻撃するので状態を維持する
+            // 攻撃2に移行
+            ChangeState(State.Attack2);
             return;
         }
 
@@ -739,6 +842,9 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // プレイヤーの方を向く
         LookTarget(player);
+
+        // 攻撃SE
+        PlayOneSound(sound.attack);
     }
 
     /// <summary>
@@ -782,6 +888,9 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーが下を通れるように
         // 衝突判定を無しにする
         capsuleCollider.isTrigger = true;
+
+        // 必殺技サウンド
+        PlayOneSound(sound.ult);
     }
 
     /// <summary>
@@ -804,6 +913,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     {
         // タイマーリセット
         ultTimer = 0;
+
+        // アニメーション速度を初期化
+        enemyAnimator.speed = 1;
 
         // 待機状態に移行
         ChangeState(State.Idle);
@@ -830,7 +942,16 @@ public class CS_EnemyPlayer : MonoBehaviour
     #region 防御イベント
 
     /// <summary>
-    /// 防御の終了イベント
+    /// 防御判定の終了イベント
+    /// </summary>
+    private void GuardFinish()
+    {
+        // 防御終了
+        guardParameter.isGuard = false;
+    }
+
+    /// <summary>
+    /// 防御アニメーションの終了イベント
     /// </summary>
     private void AnimGuardFailed()
     {
@@ -853,6 +974,11 @@ public class CS_EnemyPlayer : MonoBehaviour
     #endregion
 
     #region 死亡イベント
+
+    private void DeadSound()
+    {
+        PlayOneSound(sound.dead);
+    }
 
     private void AnimDeadFailed()
     {
@@ -895,21 +1021,27 @@ public class CS_EnemyPlayer : MonoBehaviour
             return;
         }
 
-        // 防御中ならtrue
-        bool isGuard = currentState == State.Guard;
-
         // 防御中
-        if (isGuard)
+        if (guardParameter.isGuard)
         {
             // ダメージの軽減値
             float cut = damage * (guardParameter.cutRatio / 100);
+
+            // ダメージを軽減したうえで
+            // HPを減らす
             damage -= cut;
             hp -= damage;
+
+            // 防御SE
+            PlayOneSound(sound.guard);
         }
         else
         {
             // ダメージ分HPを減らす
             hp -= damage;
+
+            // 被ダメージSE
+            PlayOneSound(sound.receiveDamage);
         }
 
         // HPが無くなったら死亡
@@ -921,14 +1053,15 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // スーパーアーマーなら攻撃中に
         // 被ダメージモーションはしない
-        if (currentState == State.Attack &&
-            attackParameter.hasSuperArmor)
+        if (currentState == State.Attack1 ||
+            currentState == State.Attack2)
         {
-            return;
+            if (attackParameter.hasSuperArmor)
+                return;
         }
 
         // 防御中なら被ダメージモーションはしない
-        if (isGuard)
+        if (guardParameter.isGuard)
         {
             return;
         }
@@ -952,11 +1085,24 @@ public class CS_EnemyPlayer : MonoBehaviour
         // 多段防止で攻撃が当たらないようにする
         canWeaponHit = false;
 
-        // 通常の攻撃
-        if (currentState == State.Attack)
+        // 攻撃1
+        if (currentState == State.Attack1)
         {
-            // 通常の攻撃力を参照
-            playerManager.ReceiveDamage(attackParameter.power);
+            // 攻撃1の攻撃力を参照
+            playerManager.ReceiveDamage(attackParameter.power_attack1);
+
+            // 攻撃1のサウンド
+            PlayOneSound(sound.hit_attack1);
+        }
+
+        // 攻撃2
+        if (currentState == State.Attack2)
+        {
+            // 攻撃2の攻撃力を参照
+            playerManager.ReceiveDamage(attackParameter.power_attack2);
+
+            // 攻撃2サウンド
+            PlayOneSound(sound.hit_attack2);
         }
 
         // 必殺技
@@ -965,6 +1111,28 @@ public class CS_EnemyPlayer : MonoBehaviour
             // 必殺技の威力を参照
             playerManager.ReceiveDamage(ultParameter.power);
         }
+    }
+
+    #endregion
+
+    #region 動き制御用
+
+    /// <summary>
+    /// 動きを止める
+    /// </summary>
+    public void Standby()
+    {
+        ChangeState(State.Idle);
+        isStop = true;
+    }
+
+    /// <summary>
+    /// 停止状態を解除する
+    /// </summary>
+    public void CancelStandby()
+    {
+        ChangeState(State.Idle);
+        isStop = false;
     }
 
     #endregion
@@ -1237,6 +1405,43 @@ public class CS_EnemyPlayer : MonoBehaviour
 
     #endregion
 
+    #region サウンド
+
+    /// <summary>
+    /// サウンドが設定されているか確認する
+    /// </summary>
+    /// <param name="clip"> 確認するサウンド </param>
+    /// <returns>
+    /// <para> true : サウンドがある </para>
+    /// <para> true : サウンドまたは、サウンド用コンポーネントがない </para>
+    /// </returns>
+    bool CheckSound(AudioClip clip)
+    {
+        // サウンド用コンポーネント
+        // またはサウンドクリップが設定されていない
+        if (!audioSource || !clip)
+        {
+            Debug.Log("SEまたは、AudioSorceコンポーネントがありません");
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// 1回だけサウンドを鳴らす
+    /// </summary>
+    /// <param name="clip"> 鳴らしたいサウンド </param>
+    void PlayOneSound(AudioClip clip)
+    {
+        if (CheckSound(clip))
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
+    #endregion
+
     /// <summary>
     /// 状態を移行する
     /// </summary>
@@ -1251,11 +1456,10 @@ public class CS_EnemyPlayer : MonoBehaviour
             // -------------------------
             case State.Idle:
 
-                // アニメーション速度を初期化
-                enemyAnimator.speed = 1;
-
                 // ダッシュモーション終了
                 enemyAnimator.SetBool(isRun, false);
+
+                enemyAi.speed = 0;
 
                 // 待機状態に移行
                 currentState = State.Idle;
@@ -1293,18 +1497,31 @@ public class CS_EnemyPlayer : MonoBehaviour
                 break;
 
             // -----------------------
-            // 攻撃状態に移行
+            // 攻撃1状態に移行
             // -----------------------
-            case State.Attack:
+            case State.Attack1:
 
-                // 攻撃アニメーション開始
+                // 攻撃1アニメーション開始
                 enemyAnimator.SetBool(isAttack, true);
 
-                // 攻撃状態に移行
-                currentState = State.Attack;
+                // 攻撃1状態に移行
+                currentState = State.Attack1;
 
                 break;
 
+            // -----------------------
+            // 攻撃2状態に移行
+            // -----------------------
+            case State.Attack2:
+
+                // 攻撃2状態に移行
+                currentState = State.Attack2;
+
+                break;
+
+            // -----------------------
+            // 必殺技状態に移行
+            // -----------------------
             case State.Ult:
 
                 // 必殺技の速度を設定
@@ -1312,6 +1529,9 @@ public class CS_EnemyPlayer : MonoBehaviour
 
                 // 必殺技アニメーション開始
                 enemyAnimator.SetTrigger(ultTirgger);
+
+                // 必殺技のジャンプ時SE
+                PlayOneSound(sound.ult_jump);
 
                 // 必殺技状態に移行
                 currentState = State.Ult;
@@ -1326,6 +1546,9 @@ public class CS_EnemyPlayer : MonoBehaviour
                 // 回避アニメーション開始
                 enemyAnimator.SetTrigger(slidingTrigger);
 
+                // 回避SE
+                PlayOneSound(sound.sliding);
+
                 // 回避状態に移行
                 currentState = State.Sliding;
 
@@ -1336,8 +1559,14 @@ public class CS_EnemyPlayer : MonoBehaviour
             // ------------------------
             case State.Guard:
 
+                // 防御開始
+                guardParameter.isGuard = true;
+
                 // 防御アニメーション開始
                 enemyAnimator.SetTrigger(guardTrigger);
+
+                // 防御SE
+                PlayOneSound(sound.guardStart);
 
                 // 防御状態に移行
                 currentState = State.Guard;
