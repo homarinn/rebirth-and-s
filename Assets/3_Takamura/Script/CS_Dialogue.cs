@@ -29,11 +29,9 @@ public class CS_Dialogue : MonoBehaviour
     Coroutine showCoroutine;
     //! @brief 一文表示終了フラグ
     bool bFinishString;
-    [SerializeField, Header("自動送り機能")]
-    bool bAuto;
 
-    //! @brief 一度だけ処理を行うフラグ
     bool bOnce = false;
+
     //! @brief 表示処理が有効かどうか
     bool bEnable = false;
     public bool Benable
@@ -45,7 +43,7 @@ public class CS_Dialogue : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bEnable = true;
+        //bEnable = true;
         bFinishString = true;
         LoadText();
         SplitString();
@@ -56,14 +54,9 @@ public class CS_Dialogue : MonoBehaviour
     {
         if (bEnable == false) return;
 
-        bool tmp = bAuto ? (bFinishString == true) : (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return));
-        if (bOnce == false)
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || bOnce == false) 
         {
-            tmp = true;
             bOnce = true;
-        }
-        if (tmp)
-        {
             if (!bFinishString)
             {
                 //! 文字列を一括表示する
