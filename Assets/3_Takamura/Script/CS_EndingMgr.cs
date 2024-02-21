@@ -55,7 +55,6 @@ public class CS_EndingMgr : MonoBehaviour
                 if (endingBGM != null) endingBGM.Play();
                 break;
             case eState.FadeShow:
-
                 cgFade.blocksRaycasts = true;
                 cgFade.interactable = true;
                 break;
