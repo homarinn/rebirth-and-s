@@ -43,9 +43,9 @@ public partial class CS_Player : MonoBehaviour
     private float slidingTimer = 0;
 
     // 攻撃威力
-    [SerializeField]
+    [SerializeField, Header("Auto振り向きの範囲コライダー")]
     CS_LookCollision csLookCollision;
-    [SerializeField]
+    [SerializeField, Header("攻撃用のコライダー")]
     private Collider collider;
     [SerializeField, Header("攻撃１の威力")]
     private float attack1Power = 0;
@@ -457,7 +457,7 @@ public partial class CS_Player : MonoBehaviour
         {
             collider.enabled = false;
         }
-        else if(attackDamage != 0)
+        else if (attackDamage != 0)
         {
             collider.enabled = true;
         }
@@ -668,7 +668,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // 水たまり
-        if (other.gameObject.tag == "Puddle")
+        if (other.gameObject.tag == "Puddle" && gameObject.tag =="Player")
         {
             isWaterOnThe = true;
         }
@@ -681,7 +681,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         // 水たまり
-        if (other.gameObject.tag == "Puddle")
+        if (other.gameObject.tag == "Puddle" && gameObject.tag == "Player")
         {
             isWaterOnThe = false;
         }
