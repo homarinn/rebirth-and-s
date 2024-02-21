@@ -75,7 +75,6 @@ public class CS_UIControl : MonoBehaviour
 
         if ((enemyHp <= (enemyHpMax * 0.5f)) && (bOnce == false) && (goDialogue.GetComponent<CS_Dialogue>().Benable == false))
         {
-            goDialogue.GetComponent<CS_Dialogue>().Benable = true;
             bOnce = true;
         }
         Debug.Log("once : " + bOnce);
