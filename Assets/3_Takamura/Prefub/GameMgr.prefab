@@ -45,11 +45,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 458c5a6dc8383254b986965ba63118da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 1
   cgFade: {fileID: 0}
   fadeSpeed: 1.5
+  goDialogue: {fileID: 0}
   csPlayer: {fileID: 0}
+  csSpirit: {fileID: 0}
+  goPlayerCamera: {fileID: 0}
   goEnemy: {fileID: 0}
-  nextStage: 
+  textPartHpParcentage: 0.5
+  textPartWaitTime: 1.5
+  cgPlayerUI: {fileID: 0}
+  cgEnemyUI: {fileID: 0}
+  cgDialogueUI: {fileID: 0}
+  fadeSpeedUIAlpha: 1.5
+  nextStage: Event02Scene
   stageBGM: {fileID: 1087999330061287681}
 --- !u!82 &1087999330061287681
 AudioSource:
@@ -61,9 +71,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: e28f1df9f8cfe164095626128f5bbc9c, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.3
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 1
   Mute: 0
