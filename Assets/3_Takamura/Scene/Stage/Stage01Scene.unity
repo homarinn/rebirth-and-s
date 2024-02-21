@@ -218,6 +218,11 @@ PrefabInstance:
       objectReference: {fileID: 686374641}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
+      propertyPath: csSpirit
+      value: 
+      objectReference: {fileID: 1730844323}
+    - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
+        type: 3}
       propertyPath: stageBGM
       value: 
       objectReference: {fileID: 14568961}
@@ -254,7 +259,7 @@ PrefabInstance:
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
       propertyPath: fadeSpeedUIAlpha
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5029837664360770261, guid: 8b466077f633f26469db791f7106095b,
         type: 3}
@@ -1284,6 +1289,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d6f2437da527814c9d0e4e1d80a1c45, type: 3}
+--- !u!114 &1730844323 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2846856139396490668, guid: 3d6f2437da527814c9d0e4e1d80a1c45,
+    type: 3}
+  m_PrefabInstance: {fileID: 1730844322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b49cb570f0abfad4eaf3dde41f6e4021, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1755531047
 GameObject:
   m_ObjectHideFlags: 0
