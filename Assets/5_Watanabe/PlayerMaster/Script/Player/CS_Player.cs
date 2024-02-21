@@ -32,6 +32,10 @@ public partial class CS_Player : MonoBehaviour
     [SerializeField, Header("水たまり上の移動速度低下(0～1)")]
     private float waterOnTheMoveSpeedCut = 0;
     private bool isWaterOnThe = false;
+    [SerializeField, Header("水たまりエフェクト")]
+    private GameObject puddleEffect;
+    [SerializeField, Header("水たまり足場")]
+    private Transform lefTrs;
 
     private bool moveOK = true;    // 移動許可
 
@@ -149,6 +153,7 @@ public partial class CS_Player : MonoBehaviour
     // Effect
     [SerializeField, Header("防御エフェクト")]
     private GameObject Eff_Difence;
+
 
     // =======================
     //
@@ -411,7 +416,14 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimMoveAudio()
     {
-        audio.PlayOneShot(SE_Move);
+        if (isWaterOnThe)
+        {
+            Instantiate(puddleEffect, lefTrs);
+        }
+        else
+        {
+            audio.PlayOneShot(SE_Move);
+        }
     }
 
     #endregion
@@ -668,7 +680,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // 水たまり
-        if (other.gameObject.tag == "Puddle" && gameObject.tag =="Player")
+        if (other.gameObject.tag == "Puddle")
         {
             isWaterOnThe = true;
         }
@@ -681,7 +693,7 @@ public partial class CS_Player : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         // 水たまり
-        if (other.gameObject.tag == "Puddle" && gameObject.tag == "Player")
+        if (other.gameObject.tag == "Puddle")
         {
             isWaterOnThe = false;
         }
