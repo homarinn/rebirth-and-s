@@ -5,6 +5,8 @@ using UnityEngine;
 public class CS_Animation : MonoBehaviour
 {
     Animator anim;
+    [SerializeField, Header("dialogueのオブジェクト")]
+    GameObject goDialogue;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +16,8 @@ public class CS_Animation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return))
+        int index = goDialogue.GetComponent<CS_Dialogue>().TextIndex;
+        if(index == 3)
         {
             anim.SetBool("bMove", true);
         }
