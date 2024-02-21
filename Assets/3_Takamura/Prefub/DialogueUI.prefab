@@ -101,7 +101,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 4
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -651,9 +651,6 @@ MonoBehaviour:
   file: {fileID: 0}
   delayDuration: 0.15
   waitSecond: 1
-  goFinish: {fileID: 5563637220593179310}
-  bAuto: 0
-  se: {fileID: 4522967223254549001}
 --- !u!82 &4522967223254549001
 AudioSource:
   m_ObjectHideFlags: 0
