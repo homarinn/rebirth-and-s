@@ -25,13 +25,14 @@ public class CS_EnemyPlayerWeapon : MonoBehaviour
         }
 
         // ƒvƒŒƒCƒ„[‚É“–‚½‚Á‚Ä‚È‚¢‚È‚ç‰½‚à‚µ‚È‚¢
-        if(other.tag != "Player")
+        if (other.tag != "Player")
         {
             return;
         }
 
-        // UŒ‚’†E•KE‹Z’†‚Å‚È‚¢‚È‚ç‰½‚à‚µ‚È‚¢
-        if (enemyPlayer.CurrentState != CS_EnemyPlayer.State.Attack &&
+        // UŒ‚‚ğ—^‚¦‚és“®‚ğ‚µ‚Ä‚¢‚È‚¢‚È‚ç‰½‚à‚µ‚È‚¢
+        if (enemyPlayer.CurrentState != CS_EnemyPlayer.State.Attack1 &&
+            enemyPlayer.CurrentState != CS_EnemyPlayer.State.Attack2 &&
             enemyPlayer.CurrentState != CS_EnemyPlayer.State.Ult)
         {
             return;
