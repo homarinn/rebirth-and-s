@@ -175,6 +175,8 @@ public partial class CS_Player : MonoBehaviour
     private GameObject Eff_Attack02;
     [SerializeField, Header("必殺着地")]
     private GameObject Eff_UltTachi;
+    [SerializeField, Header("必殺エフェクト")]
+    private GameObject Eff_Ult;
 
     // =======================
     //
@@ -603,6 +605,8 @@ public partial class CS_Player : MonoBehaviour
         {
             attackOk = true;
             collider.enabled = true;
+            var eff = Instantiate(Eff_Ult, effectTrs);
+            Destroy(eff, 2);
         }
     }
 
