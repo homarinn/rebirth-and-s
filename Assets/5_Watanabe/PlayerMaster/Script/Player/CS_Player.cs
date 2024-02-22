@@ -77,6 +77,18 @@ public partial class CS_Player : MonoBehaviour
             return attackDamage;
         }
     }
+    bool attackOk = true;
+    public bool AttackOk
+    {
+        get
+        {
+            return attackOk;
+        }
+        set
+        {
+            attackOk = value;
+        }
+    }
 
     [SerializeField, Header("攻撃1インターバル")]
     private float attack1Interval = 0;
@@ -201,6 +213,10 @@ public partial class CS_Player : MonoBehaviour
     private bool action = true;
     public bool Action
     {
+        get
+        {
+            return action;
+        }
         set
         {
             action = value;
@@ -473,11 +489,13 @@ public partial class CS_Player : MonoBehaviour
         attackDamage = attackDamage == 0 ? attack1Power : 0;
         if (attackDamage == 0)
         {
+            attackOk = false;
             collider.enabled = false;
         }
         else if (attackDamage != 0)
         {
             collider.enabled = true;
+            attackOk = true;
             Instantiate(Eff_Attack01, transform);
         }
     }
@@ -517,10 +535,12 @@ public partial class CS_Player : MonoBehaviour
         if (attackDamage == 0)
         {
             collider.enabled = false;
+            attackOk = false;
         }
         else if (attackDamage != 0)
         {
             collider.enabled = true;
+            attackOk = true;
             Instantiate(Eff_Attack02, transform);
         }
 
