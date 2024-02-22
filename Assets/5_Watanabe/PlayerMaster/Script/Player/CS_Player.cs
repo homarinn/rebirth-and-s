@@ -5,11 +5,6 @@ using UnityEngine;
 /// </summary>
 public partial class CS_Player : MonoBehaviour
 {
-    // =======================
-    //
-    // 変数
-    //
-    // =======================
 
     enum State
     {
@@ -28,16 +23,8 @@ public partial class CS_Player : MonoBehaviour
     private float moveSpeed = 0;
     [SerializeField, Header("プレイヤーの旋回速度")]
     private float rotationSpeed = 0;
-
-    [SerializeField, Header("水たまり上の移動速度低下(0～1)")]
-    private float waterOnTheMoveSpeedCut = 0;
-    private bool isWaterOnThe = false;
-    [SerializeField, Header("水たまりエフェクト")]
-    private GameObject puddleEffect;
-    [SerializeField, Header("水たまり足場")]
-    private Transform lefTrs;
-
     private bool moveOK = true;    // 移動許可
+
 
     // スライディング
     [SerializeField, Header("スライディング速度")]
@@ -46,13 +33,33 @@ public partial class CS_Player : MonoBehaviour
     private float slidingInterval = 0;
     private float slidingTimer = 0;
 
-    // 攻撃威力
-    [SerializeField, Header("Auto振り向きの範囲コライダー")]
-    CS_LookCollision csLookCollision;
-    [SerializeField, Header("攻撃用のコライダー")]
-    private Collider collider;
+    [SerializeField, Header("水たまり上の移動速度低下(0～1)")]
+    private float waterOnTheMoveSpeedCut = 0;
+    private bool isWaterOnThe = false;
+
+    // 攻撃
     [SerializeField, Header("攻撃１の威力")]
     private float attack1Power = 0;
+    [SerializeField, Header("攻撃2の威力")]
+    private float attack2Power = 0;
+    [SerializeField, Header("必殺技の威力")]
+    private float ultPower = 0;
+    [SerializeField, Header("攻撃1インターバル")]
+    private float attack1Interval = 0;
+    [SerializeField, Header("攻撃2インターバル")]
+    private float attack2Interval = 0;
+    [SerializeField, Header("必殺技のインターバル")]
+    private float ultInterval = 0;
+
+    [SerializeField, Header("攻撃用のコライダー")]
+    private Collider collider;
+    private float attackDamage = 0;         // 現在の攻撃力
+    private float attackTimer = 0;          // 攻撃のタイマー
+    private float ultTimer = 0;             // 必殺のタイマー
+    private bool attackOk = true;           // 攻撃可能かどうか
+    private bool attack2Ok = false;         // 攻撃２が発動可能か
+
+    // ゲッターセッター
     public float Attack1Power
     {
         get
@@ -60,8 +67,6 @@ public partial class CS_Player : MonoBehaviour
             return attack1Power;
         }
     }
-    [SerializeField, Header("攻撃2の威力")]
-    private float attack2Power = 0;
     public float Attack2Power
     {
         get
@@ -69,7 +74,13 @@ public partial class CS_Player : MonoBehaviour
             return attack2Power;
         }
     }
-    private float attackDamage = 0;
+    public float UltPower
+    {
+        get
+        {
+            return ultPower;
+        }
+    }
     public float AttackDamage
     {
         get
@@ -77,7 +88,6 @@ public partial class CS_Player : MonoBehaviour
             return attackDamage;
         }
     }
-    bool attackOk = true;
     public bool AttackOk
     {
         get
@@ -89,29 +99,14 @@ public partial class CS_Player : MonoBehaviour
             attackOk = value;
         }
     }
-
-    [SerializeField, Header("攻撃1インターバル")]
-    private float attack1Interval = 0;
-    [SerializeField, Header("攻撃2インターバル")]
-    private float attack2Interval = 0;
-    private float attackTimer = 0;
-
-    // 攻撃２が発動可能か
-    private bool attack2Ok = false;
-
-    // 必殺
-    [SerializeField, Header("必殺技の威力")]
-    private float ultPower = 0;
-    public float UltPower
+    public float UltTimer
     {
         get
         {
-            return ultPower;
+            return Mathf.Clamp(ultTimer, 0, 5);
         }
     }
-    [SerializeField, Header("必殺技のインターバル")]
-    private float ultInterval = 0;
-    private float ultTimer = 0;
+
 
     // 防御
     [SerializeField, Header("防御インターバル")]
@@ -119,7 +114,8 @@ public partial class CS_Player : MonoBehaviour
     private float difenceTimer = 0;
     [SerializeField, Header("防御中のダメージカット%")]
     private float difenceDamageCut = 0;
-    [SerializeField]
+    [SerializeField, Header("ダメージアニメーションを再生する攻撃")]
+    private float damageAtackOkAttack = 0;
     private bool isDifence = false;
 
     [SerializeField, Header("HPの最大値")]
@@ -127,8 +123,8 @@ public partial class CS_Player : MonoBehaviour
     [SerializeField] private float hp;           // 現在のHP
     private bool isInvisible = false;
     private bool isDeath = false;
-    [SerializeField, Header("ダメージアニメーションを再生する攻撃")]
-    private float damageAtackOkAttack = 0;
+    private bool action = true;     // 行動可能か true=可能 ; false=不可
+
     public bool IsDeath
     {
         get
@@ -136,15 +132,43 @@ public partial class CS_Player : MonoBehaviour
             return isDeath;
         }
     }
+    public float MaxHP
+    {
+        get
+        {
+            return maxHP;
+        }
+    }
+    public float Hp
+    {
+        get
+        {
+            return hp;
+        }
+        set
+        {
+            hp = value;
+        }
+    }
+    public bool Action
+    {
+        get
+        {
+            return action;
+        }
+        set
+        {
+            action = value;
+        }
+    }
 
-    private Transform cameraTransform = null;       // カメラの位置
-    [SerializeField]
-    private Transform weaponTransform;
 
     // コンポーネント
-    private Rigidbody rb;
-    private Animator anim;
-    private AudioSource audio;
+    private Rigidbody rb = null;
+    private Animator anim = null;
+    private AudioSource audio = null;
+    private Transform cameraTransform = null;       // カメラの位置
+    private CS_LookCollision csLookCollision = null;
 
     // SE
     [SerializeField, Header("移動SE")]
@@ -163,74 +187,40 @@ public partial class CS_Player : MonoBehaviour
     private AudioClip SE_Ult;
     [SerializeField, Header("必殺ジャンプSE")]
     private AudioClip SE_Jump;
+    [SerializeField, Header("攻撃SE")]
+    public AudioClip SE_Attack01;
+    
 
     // Effect
-    [SerializeField, Header("エフェクト位置")]
-    private Transform effectTrs;
+    [SerializeField, Header("通常攻撃01エフェクト")]
+    private GameObject effAttack01;
+    [SerializeField, Header("通常攻撃02エフェクト")]
+    private GameObject effttack02;
+    [SerializeField, Header("跳ね返しエフェクト")]
+    private GameObject effReflct;
     [SerializeField, Header("防御エフェクト")]
-    private GameObject Eff_Difence;
-    [SerializeField, Header("通常攻撃01")]
-    private GameObject Eff_Attack01;
-    [SerializeField, Header("通常攻撃02")]
-    private GameObject Eff_Attack02;
-    [SerializeField, Header("必殺エフェクト")]
-    private GameObject Eff_Ult;
+    private GameObject effDifence;
+    [SerializeField, Header("水たまりエフェクト")]
+    private GameObject effPuddle;
+    [SerializeField, Header("防御エフェクト位置")]
+    private Transform trsReflectEffect;
+    [SerializeField, Header("水たまりエフェクト位置")]
+    private Transform trsPuddleEffect;
 
-    // =======================
-    //
-    // ゲッター・セッター
-    //
-    // =======================
-
-    // HPの最大値
-    public float MaxHP
+    public Transform TrsReflectEffect
+    { 
+        get
+        {
+            return trsReflectEffect;
+        }
+    }
+    public GameObject EffReflct
     {
         get
         {
-            return maxHP;
+            return effReflct;
         }
     }
-
-    // HP
-    public float Hp
-    {
-        get
-        {
-            return hp;
-        }
-        set
-        {
-            hp = value;
-        }
-    }
-
-    // 必殺技タイマー
-    public float UltTimer
-    {
-        get
-        {
-            return Mathf.Clamp(ultTimer, 0, 5);
-        }
-    }
-
-    private bool action = true;
-    public bool Action
-    {
-        get
-        {
-            return action;
-        }
-        set
-        {
-            action = value;
-        }
-    }
-
-    // =======================
-    //
-    // 関数
-    //
-    // =======================
 
 
     /// <summary>
@@ -256,6 +246,7 @@ public partial class CS_Player : MonoBehaviour
 
         // カメラの位置を取得
         cameraTransform = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Transform>();
+        csLookCollision = gameObject.GetComponentInChildren<CS_LookCollision>();
     }
 
     /// <summary>
@@ -442,7 +433,7 @@ public partial class CS_Player : MonoBehaviour
     {
         if (isWaterOnThe)
         {
-            var eff = Instantiate(puddleEffect, lefTrs);
+            var eff = Instantiate(effPuddle, trsPuddleEffect);
             Destroy(eff, 1);
         }
         else
@@ -477,7 +468,6 @@ public partial class CS_Player : MonoBehaviour
     {
         state = State.Normal;
         slidingTimer = slidingInterval;
-        //rb.velocity = Vector3.zero;
     }
 
     #endregion
@@ -499,7 +489,7 @@ public partial class CS_Player : MonoBehaviour
         {
             collider.enabled = true;
             attackOk = true;
-            var eff = Instantiate(Eff_Attack01, transform);
+            var eff = Instantiate(effAttack01, transform);
             Destroy(eff, 1);
         }
     }
@@ -545,7 +535,7 @@ public partial class CS_Player : MonoBehaviour
         {
             collider.enabled = true;
             attackOk = true;
-            var eff = Instantiate(Eff_Attack02, transform);
+            var eff = Instantiate(effttack02, transform);
             Destroy(eff, 1);
         }
 
@@ -596,11 +586,12 @@ public partial class CS_Player : MonoBehaviour
         attackDamage = attackDamage == 0 ? ultPower : 0;
         if (attackDamage == 0)
         {
-            Eff_Ult.GetComponent<TrailRenderer>().enabled = false;
+            attackOk = false;
             collider.enabled = false;
         }
         else if (attackDamage != 0)
         {
+            attackOk = true;
             collider.enabled = true;
         }
     }
@@ -613,7 +604,6 @@ public partial class CS_Player : MonoBehaviour
     private void AnimUltAudio()
     {
         audio.PlayOneShot(SE_Ult);
-        Eff_Ult.GetComponent<TrailRenderer>().enabled = true;
     }
 
     /// <summary>
@@ -642,7 +632,7 @@ public partial class CS_Player : MonoBehaviour
 
         if (isDifence)
         {
-            var eff = Instantiate(Eff_Difence, effectTrs);
+            var eff = Instantiate(effDifence, trsReflectEffect);
             Destroy(eff, 1);
             audio.PlayOneShot(SE_Difence);
             // ガード中ダメージ半減

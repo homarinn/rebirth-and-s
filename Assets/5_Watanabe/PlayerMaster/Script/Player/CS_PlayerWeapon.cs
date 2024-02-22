@@ -17,15 +17,27 @@ public class CS_PlayerWeapon : MonoBehaviour
     [SerializeField, Header("跳ね返す玉2")]
     private GameObject reflctBullet2;
 
-    [SerializeField, Header("跳ね返しエフェクト")]
-    private GameObject reflctEffect;
-    [SerializeField]
-    private Transform reflectTrs;
+    private CS_Player cs_Player = null;
+    private GameObject effReflect = null;
+    private Transform trsReflectEffect = null;
 
+    /// <summary>
+    /// スタートイベント
+    /// </summary>
+    private void Start()
+    {
+        // Playerのスクリプトを取得
+        cs_Player = GetComponentInParent<CS_Player>();
+        effReflect = cs_Player.EffReflct;
+        trsReflectEffect = cs_Player.TrsReflectEffect;
+    }
 
+    /// <summary>
+    /// 衝突処理
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        var cs_Player = GetComponentInParent<CS_Player>();
         float attackDamage = cs_Player.AttackDamage;
         if (attackDamage == 0)
         {
@@ -90,11 +102,15 @@ public class CS_PlayerWeapon : MonoBehaviour
         }
         else if(other.gameObject.tag == "MagicMissile")
         {
-            Debug.Log("ヒット");
-            Instantiate(reflctEffect, reflectTrs);
+            // エフェクト作成
+            var eff = Instantiate(effReflect, trsReflectEffect);
+            Destroy(eff);
+
             if (other.GetComponent<CS_Enemy1MagicMissile>() != null)
             {
+                // 弾の種類を取得
                 var type = other.GetComponent<CS_Enemy1MagicMissile>().GetMagicMissileType;
+                // 弾の種類に応じて跳ね返しの弾を作成
                 if(type == "Weak")
                 {
                     Instantiate(reflctBullet, transform);
@@ -103,6 +119,8 @@ public class CS_PlayerWeapon : MonoBehaviour
                 {
                     Instantiate(reflctBullet2, transform);
                 }
+
+                // 飛んできた弾を削除
                 Destroy(other.gameObject);
             }
 
@@ -111,7 +129,7 @@ public class CS_PlayerWeapon : MonoBehaviour
             if (audio == null)
             {
                 Debug.Log("AudioSouceないよ");
-                return;        // AudioSouceがない
+                return;
             }
             audio.PlayOneShot(SE_Reflect);
         }
