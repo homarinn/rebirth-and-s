@@ -173,6 +173,8 @@ public partial class CS_Player : MonoBehaviour
     private GameObject Eff_Attack01;
     [SerializeField, Header("’ÊíUŒ‚02")]
     private GameObject Eff_Attack02;
+    [SerializeField, Header("•KE’…’n")]
+    private GameObject Eff_UltTachi;
 
     // =======================
     //
@@ -621,6 +623,12 @@ public partial class CS_Player : MonoBehaviour
     {
         state = State.Normal;
         ultTimer = ultInterval;
+    }
+
+    private void AnimUltTachi()
+    {
+        var eff = Instantiate(Eff_UltTachi, lefTrs);
+        Destroy(eff, 2);
     }
 
     #endregion
