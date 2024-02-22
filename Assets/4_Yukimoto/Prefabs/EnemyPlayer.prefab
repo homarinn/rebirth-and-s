@@ -616,8 +616,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.3
-  m_Height: 2
+  m_Radius: 0.5
+  m_Height: 3
   m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!114 &2571286890000043425
@@ -654,7 +654,6 @@ MonoBehaviour:
   guardParameter:
     cutRatio: 80
     interval: 2
-  invincibleTime: 3
   receptionTime:
     attack: 1
     ult: 0.2
@@ -662,7 +661,7 @@ MonoBehaviour:
     ult: {fileID: 7400000, guid: 320a71571419a994394ddb7f9468cfbf, type: 2}
     attack1: {fileID: 7400000, guid: 539042840a7da314ab1f0fce875c1490, type: 2}
     attack2: {fileID: 7400000, guid: 424e3166b18c51b44a133d49648c310c, type: 2}
-    dead: {fileID: 7400000, guid: 687911b984ec9e14a92ab23ef092343c, type: 2}
+    dead: {fileID: 7400000, guid: 60e99c8d74fab1749853c98da2677cbb, type: 2}
   sound:
     attack: {fileID: 8300000, guid: 45802b6f67e4c2749ad68d99bb8c140d, type: 3}
     hit_attack1: {fileID: 8300000, guid: 1b7fda63d5a21b242b050ee30ad9071c, type: 3}
@@ -674,6 +673,15 @@ MonoBehaviour:
     guard: {fileID: 8300000, guid: 74c9a2a857b9e5a4fa1285dc06826342, type: 3}
     receiveDamage: {fileID: 8300000, guid: d08f0325b2eecf043bb0f08d02d32825, type: 3}
     dead: {fileID: 8300000, guid: 3946c216b06c6b34987343b1f6b2f73b, type: 3}
+  effect:
+    attack1: {fileID: 7825825217749650993, guid: 4204727f164f60b4e823e92f7befadad,
+      type: 3}
+    attack2: {fileID: 206095068332160183, guid: c810d246ed9ab92488c04d1f0d275ff8,
+      type: 3}
+    ult_sword: {fileID: 1393149056801700881, guid: 47f531abfb3fff742a06f4b47240c8da,
+      type: 3}
+    guard: {fileID: 5024009746357069194, guid: 906bfa2689d2bdf459ccae71ee04b536, type: 3}
+    guardParent: {fileID: 4323001346262687098}
 --- !u!1 &1393033421661020282
 GameObject:
   m_ObjectHideFlags: 0
@@ -4163,6 +4171,12 @@ PrefabInstance:
 --- !u!4 &1359968851553552166 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 38466e931d7b39b45985061afc0721a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1537184370682454221}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4323001346262687098 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3362869351048461751, guid: 38466e931d7b39b45985061afc0721a9,
     type: 3}
   m_PrefabInstance: {fileID: 1537184370682454221}
   m_PrefabAsset: {fileID: 0}

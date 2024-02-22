@@ -684,7 +684,7 @@ PrefabInstance:
         type: 3}
       propertyPath: spiritPositionTransform
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1708030543}
     - target: {fileID: 7353786134980448413, guid: 3d6f2437da527814c9d0e4e1d80a1c45,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1015,6 +1015,12 @@ MonoBehaviour:
 --- !u!1 &1708030542 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4359912037376918856, guid: ed4f576053ab8d14784403b9b7a76853,
+    type: 3}
+  m_PrefabInstance: {fileID: 1708030538}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1708030543 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8579464826684879496, guid: ed4f576053ab8d14784403b9b7a76853,
     type: 3}
   m_PrefabInstance: {fileID: 1708030538}
   m_PrefabAsset: {fileID: 0}
