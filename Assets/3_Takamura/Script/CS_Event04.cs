@@ -20,6 +20,9 @@ public class CS_Event04 : MonoBehaviour
         if (index == 3)
         {
             anim.SetBool("bMove04", true);
+        }else if (index == 25)
+        {
+            anim.SetBool("bFall", true);
         }
     }
 }
