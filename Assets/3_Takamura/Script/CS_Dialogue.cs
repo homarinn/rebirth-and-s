@@ -99,10 +99,11 @@ public class CS_Dialogue : MonoBehaviour
                         textIndex++;
                         bEnable = false;
                         bOnce = false;
-                    } else if(indexSE != -1)
+                    } 
+                    else if(indexSE != -1)
                     {
                         talkernameText.text = " ";
-                        dialogueText.text = splitText[textIndex].Replace("#", "");
+                        dialogueText.text = " ";
                         //! •¶Žš—ñ‚ðˆêŠ‡•\Ž¦‚·‚é
                         StopCoroutine(showCoroutine);
                         dialogueText.maxVisibleCharacters = dialogueText.text.Length;
