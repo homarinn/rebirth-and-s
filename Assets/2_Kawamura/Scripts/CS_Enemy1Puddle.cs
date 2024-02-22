@@ -82,7 +82,7 @@ public class CS_Enemy1Puddle : MonoBehaviour
 
         //エフェクトの再生
         Vector3 pos = transform.position;
-        pos.y = 0.0f;
+        pos.y = 0.5f;
         Instantiate(puddleMist, pos, Quaternion.Euler(90.0f, 0.0f, 0.0f));
     }
 
