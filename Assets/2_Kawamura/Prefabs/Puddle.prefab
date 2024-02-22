@@ -187,14 +187,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db426999e50cc54c85f2db2cea01802, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createPositionY: 0.01
+  createPositionY: 0.09
   maxCollisionY: 0.2
   existTime: 20
-  finishExpansionTime: 0.675
+  finishExpansionTime: 0.55
   disappearTime: 0.25
   puddleMist: {fileID: 1482576541086686926, guid: f1a3b15328db0ae4f9e9330ba54b8f57,
     type: 3}
-  puddleSE: {fileID: 8300000, guid: 3dd4cac8ef4e7194ea51d5b96a321177, type: 3}
+  puddleSE: {fileID: 8300000, guid: 652bb6a1e76037b4b898dd22c0354a46, type: 3}
 --- !u!82 &7848239213853773825
 AudioSource:
   m_ObjectHideFlags: 0
@@ -205,9 +205,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 3dd4cac8ef4e7194ea51d5b96a321177, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 652bb6a1e76037b4b898dd22c0354a46, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.21
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0

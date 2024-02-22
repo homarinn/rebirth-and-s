@@ -954,10 +954,10 @@ MonoBehaviour:
   timeReturnNormalPos: 2.5
   timeFallToGroundByDown: 2.5
   groundDetection: {fileID: 4370816249867088279}
-  mist: {fileID: 1249699291698164934}
+  mist: {fileID: 5319876123566716538, guid: 77a5b763b92852e4bbe7a755bff47e39, type: 3}
   releaseMist: {fileID: 500267683214192943, guid: 8877033199096b74a83c346a5b144bd6,
     type: 3}
-  trail: {fileID: 1691829724014928414}
+  trail: {fileID: 3414275608572861911, guid: c09f8780b97816842b6c87d5ed36b7f9, type: 3}
   dustCloud: {fileID: 5860969346795156465, guid: 2e15f8d08c7cd93439935958f57e280d,
     type: 3}
   shotSE: {fileID: 8300000, guid: 7052a61263230f94fa6e4a35f38ea463, type: 3}
@@ -3250,7 +3250,6 @@ GameObject:
   - component: {fileID: 1894029669319935188}
   - component: {fileID: 8018234040892672595}
   - component: {fileID: 4542983773516957701}
-  - component: {fileID: 7393653482780060162}
   m_Layer: 0
   m_Name: GroundDetectionCollider
   m_TagString: Untagged
@@ -3308,103 +3307,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dustCloud: {fileID: 5860969346795156465, guid: 2e15f8d08c7cd93439935958f57e280d,
     type: 3}
-  deathSE: {fileID: 8300000, guid: 3d9d9c5f6fbc7b94c951701e2cde09cb, type: 3}
---- !u!82 &7393653482780060162
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4370816249867088279}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 3d9d9c5f6fbc7b94c951701e2cde09cb, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &4412142923928770862
 GameObject:
   m_ObjectHideFlags: 0
@@ -7119,12 +7021,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c09f8780b97816842b6c87d5ed36b7f9, type: 3}
---- !u!198 &1691829724014928414 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 3414275608572861911, guid: c09f8780b97816842b6c87d5ed36b7f9,
-    type: 3}
-  m_PrefabInstance: {fileID: 4042939130837958601}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1943570938256291111 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2514016571984612078, guid: c09f8780b97816842b6c87d5ed36b7f9,
@@ -7199,12 +7095,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77a5b763b92852e4bbe7a755bff47e39, type: 3}
---- !u!198 &1249699291698164934 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 5319876123566716538, guid: 77a5b763b92852e4bbe7a755bff47e39,
-    type: 3}
-  m_PrefabInstance: {fileID: 6378273294113522364}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7052002222163068285 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4132496225569392577, guid: 77a5b763b92852e4bbe7a755bff47e39,
