@@ -145,7 +145,7 @@ PrefabInstance:
         type: 3}
       propertyPath: eventBGM
       value: 
-      objectReference: {fileID: 374489536}
+      objectReference: {fileID: 374489540}
     - target: {fileID: 3306875740934769144, guid: 65feb285ec658904c953543a26db95e8,
         type: 3}
       propertyPath: nextScene
@@ -206,117 +206,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8347286842447484802, guid: 65feb285ec658904c953543a26db95e8,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2434121521717191919, guid: 65feb285ec658904c953543a26db95e8,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 374489536}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65feb285ec658904c953543a26db95e8, type: 3}
---- !u!1 &374489535 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2434121521717191919, guid: 65feb285ec658904c953543a26db95e8,
+--- !u!82 &374489540 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8347286842447484802, guid: 65feb285ec658904c953543a26db95e8,
     type: 3}
   m_PrefabInstance: {fileID: 374489533}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &374489536
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 374489535}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 8f6ea65c00b01994580bf433265695d6, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &401538738
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,6 +904,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: WinkFade
       objectReference: {fileID: 0}
+    - target: {fileID: 8372836457150777958, guid: 6ac559fa1085d7a4bb2fcfd325207cd5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1507,6 +1417,21 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: b5bfa5a50dcf13a46a4cfea303fd5a28, type: 2}
+    - target: {fileID: 5216614932766401883, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6545941894283809608, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7574821035289772116, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
