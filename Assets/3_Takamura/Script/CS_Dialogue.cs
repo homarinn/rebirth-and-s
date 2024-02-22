@@ -20,7 +20,10 @@ public class CS_Dialogue : MonoBehaviour
     string[] nameText;
     //! @brief テキスト配列のインデックス
     int textIndex;
-
+    public int TextIndex
+    {
+        get { return textIndex; }
+    }
     [SerializeField, Header("次の文字を表示するまでの時間(秒)")]
     float delayDuration;
     [SerializeField, Header("1文表示完了後の待機時間(秒)")]
