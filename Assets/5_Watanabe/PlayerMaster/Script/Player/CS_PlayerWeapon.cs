@@ -27,7 +27,6 @@ public class CS_PlayerWeapon : MonoBehaviour
     {
         var cs_Player = GetComponentInParent<CS_Player>();
         float attackDamage = cs_Player.AttackDamage;
-        //Debug.Log(attackDamage);
         if (attackDamage == 0)
         {
             return;
@@ -43,6 +42,11 @@ public class CS_PlayerWeapon : MonoBehaviour
         }
         else if (other.gameObject.tag == "Enemy")
         {
+            if(!cs_Player.AttackOk)
+            {
+                return;
+            }
+            cs_Player.AttackOk = false;
             // •ê
             if(other.GetComponent<CS_Enemy1>() != null)
             {

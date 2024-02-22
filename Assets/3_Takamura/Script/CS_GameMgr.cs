@@ -30,6 +30,8 @@ public class CS_GameMgr : MonoBehaviour
 
     [SerializeField,Header("Playerスクリプト")]
     CS_Player csPlayer;
+    [SerializeField, Header("精霊スクリプト")]
+    CS_Spirit csSpirit;
     [SerializeField, Header("PlayerCameraのオブジェクト")]
     GameObject goPlayerCamera;
     [SerializeField, Header("EnemyのPrefab")]
@@ -160,6 +162,7 @@ public class CS_GameMgr : MonoBehaviour
         cgPlayerUI.alpha = 0.0f;
         cgEnemyUI.alpha = 0.0f;
 
+        csPlayer.Action = false;
         //プレイヤーとエネミーの初期配置を覚えておく
         SetInitialTransform();
 
@@ -361,6 +364,8 @@ public class CS_GameMgr : MonoBehaviour
     //エネミーを動かす
     private bool StartEnemy()
     {
+        csPlayer.Action = true;
+        csSpirit.EventHealStart();
         isMovingEnemy = true;
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if (csEnemy01 != null)
@@ -386,6 +391,8 @@ public class CS_GameMgr : MonoBehaviour
     //エネミーを止める
     private bool StopEnemy()
     {
+        csPlayer.Action = false;
+        csSpirit.EventHealStop();
         isMovingEnemy = false;
         csEnemy01 = goEnemy.GetComponent<CS_Enemy1>();
         if (csEnemy01 != null)
@@ -422,6 +429,7 @@ public class CS_GameMgr : MonoBehaviour
     {
         csPlayer.gameObject.transform.position = playerInitialPosition;
         csPlayer.gameObject.transform.rotation = playerInitialRotation;
+        csSpirit.gameObject.transform.position = playerInitialPosition;
         goEnemy.transform.position = enemyInitialPosition;
         goEnemy.transform.rotation = enemyInitialRotation;
         goPlayerCamera.transform.rotation = Quaternion.identity;
