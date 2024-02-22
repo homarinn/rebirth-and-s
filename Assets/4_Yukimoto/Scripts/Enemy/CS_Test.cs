@@ -6,8 +6,6 @@ public class CS_ATest : MonoBehaviour
 {
     [SerializeField] private GameObject enemy;
 
-    [SerializeField] private GameObject effect;
-
     private CS_EnemyPlayer enemyPlayer;
 
     // Start is called before the first frame update
@@ -25,16 +23,9 @@ public class CS_ATest : MonoBehaviour
         {
             return;
         }
-        
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            var effectObject = Instantiate(effect, enemyPlayer.transform);
-            Destroy(effectObject, 1.0f);
-        } 
-        
+
         if(Input.GetKeyDown(KeyCode.F))
         {
-            enemyPlayer.CancelStandby();
         }
     }
 }

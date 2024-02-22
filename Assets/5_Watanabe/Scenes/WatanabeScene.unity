@@ -131,11 +131,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 366026324116675369, guid: ed4f576053ab8d14784403b9b7a76853,
-        type: 3}
-      propertyPath: reflectTrs
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 3286177031333464908, guid: ed4f576053ab8d14784403b9b7a76853,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -190,11 +185,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerAndCamera
-      objectReference: {fileID: 0}
-    - target: {fileID: 6676384815485972441, guid: ed4f576053ab8d14784403b9b7a76853,
-        type: 3}
-      propertyPath: effectTrs
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
