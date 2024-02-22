@@ -1005,7 +1005,7 @@ PrefabInstance:
     - target: {fileID: 4918383551993912867, guid: e4a4514c8cc68b94f86c59b742760f74,
         type: 3}
       propertyPath: boundaryCircleRadius
-      value: 25
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 4918383551993912867, guid: e4a4514c8cc68b94f86c59b742760f74,
         type: 3}
