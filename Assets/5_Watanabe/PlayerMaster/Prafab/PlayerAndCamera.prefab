@@ -1285,6 +1285,37 @@ CapsuleCollider:
   m_Height: 1.67
   m_Direction: 1
   m_Center: {x: 0, y: -0.24, z: 0}
+--- !u!1 &3396398889369824568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4030148390725037107}
+  m_Layer: 6
+  m_Name: EffPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4030148390725037107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3396398889369824568}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.225, z: 0.516}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3646504384406178735}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3410629194126974632
 GameObject:
   m_ObjectHideFlags: 0
@@ -2297,6 +2328,7 @@ Transform:
   - {fileID: 7253664972775090042}
   - {fileID: 3537095877884140875}
   - {fileID: 8579464826684879496}
+  - {fileID: 4030148390725037107}
   m_Father: {fileID: 3286177031333464908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6538219712663919972
@@ -2363,7 +2395,7 @@ MonoBehaviour:
   SE_Damage: {fileID: 8300000, guid: 776151ead8eabe14189a292b1877484c, type: 3}
   SE_Ult: {fileID: 8300000, guid: 98edc1f76e7e2c94a9e679cde73a3bb7, type: 3}
   SE_Jump: {fileID: 8300000, guid: 637a3a7e930ca464aa1140d8062d02f8, type: 3}
-  effectTrs: {fileID: 0}
+  effectTrs: {fileID: 4030148390725037107}
   Eff_Difence: {fileID: 5024009746357069194, guid: eb395517415e8b54db4af8d27ceb4935,
     type: 3}
   Eff_Attack01: {fileID: 7825825217749650993, guid: 88d8e31db18c9cb4d89c6a7cafd74e2f,
@@ -2372,6 +2404,7 @@ MonoBehaviour:
     type: 3}
   Eff_UltTachi: {fileID: 4932088507883938021, guid: 0e5709a7ddb77924090c112cf73bb98a,
     type: 3}
+  Eff_Ult: {fileID: 1393149056801700881, guid: b394e9eea4d533947b71db502c355207, type: 3}
 --- !u!54 &3757920466159725578
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2397,7 +2430,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!136 &692343522685268105
 CapsuleCollider:
