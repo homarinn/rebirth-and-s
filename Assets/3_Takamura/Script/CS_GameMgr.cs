@@ -382,6 +382,7 @@ public class CS_GameMgr : MonoBehaviour
         csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
         if (csEnPlayer != null)
         {
+            csEnPlayer.CancelStandby();
             return true;
         }
         Debug.Log("エネミー動かないンゴ");
@@ -409,6 +410,7 @@ public class CS_GameMgr : MonoBehaviour
         csEnPlayer = goEnemy.GetComponent<CS_EnemyPlayer>();
         if (csEnPlayer != null)
         {
+            csEnPlayer.Standby();
             return true;
         }
         Debug.Log("エネミー止まらないンゴ");

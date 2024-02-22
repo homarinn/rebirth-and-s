@@ -25,9 +25,6 @@ public class CS_GameOverMgr : MonoBehaviour
     [SerializeField, Header("GameOverBGM")]
     AudioSource gameoverBGM;
 
-    [SerializeField, Header("Playerƒ‚ƒfƒ‹")]
-    GameObject goPlayer;
-
     //! @brief ŽŸ‚ÌƒV[ƒ“–¼
     string nextScene = "";
 
@@ -93,10 +90,19 @@ public class CS_GameOverMgr : MonoBehaviour
                 }
                 break;
             case eState.Standby:
+                if (gameoverBGM != null)
+                {
+                    gameoverBGM.Play();
+                }
                 break;
             case eState.FadeShow:
+                if (gameoverBGM != null)
+                {
+                    gameoverBGM.volume -= 0.1f * Time.deltaTime; 
+                }
                 cgFade.alpha += Time.deltaTime / fadeSpeed;
-                if (cgFade.alpha >= 1.0f)
+                bool tmp = gameoverBGM != null ? cgFade.alpha >= 1.0f && gameoverBGM.volume <= 0.0f : cgFade.alpha >= 1.0f;
+                if (tmp)
                 {
                     SceneManager.LoadScene(nextScene);
                 }

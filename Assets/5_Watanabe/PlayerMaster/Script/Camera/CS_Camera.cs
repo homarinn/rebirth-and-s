@@ -53,12 +53,16 @@ public class CS_Camera : MonoBehaviour
     private void CameraMove(float mouseX, float mouseY)
     {
         // ƒvƒŒƒCƒ„[‚ªæ“¾‚Å‚«‚Ä‚È‚¢ê‡‰½‚à‚µ‚È‚¢
-        if(playerTransform == null || !playerTransform.GetComponent<CS_Player>().Action)
+        if(playerTransform == null)
         {
             return;
         }
 
         transform.position = playerTransform.position +  transform.rotation * offsetPos;
+        if(!playerTransform.GetComponent<CS_Player>().Action)
+        {
+            return;
+        }
         // X•ûŒü‚Éˆê’è—ÊˆÚ“®‚µ‚Ä‚¢‚ê‚Î‰¡‰ñ“]
         if (Mathf.Abs(mouseX) > 0.001f)
         {
