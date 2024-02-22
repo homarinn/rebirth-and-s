@@ -6,6 +6,8 @@ public class CS_ATest : MonoBehaviour
 {
     [SerializeField] private GameObject enemy;
 
+    [SerializeField] private GameObject effect;
+
     private CS_EnemyPlayer enemyPlayer;
 
     // Start is called before the first frame update
@@ -23,9 +25,10 @@ public class CS_ATest : MonoBehaviour
         {
             return;
         }
-
+        
         if(Input.GetKeyDown(KeyCode.F))
         {
+            Instantiate(effect, enemyPlayer.transform);
         }
     }
 }
