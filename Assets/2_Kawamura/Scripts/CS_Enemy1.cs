@@ -401,10 +401,10 @@ public class CS_Enemy1 : MonoBehaviour
         //{
         //    hp = maxHp * 0.5f;
         //}
-        //if (Input.GetKeyDown(KeyCode.B))
-        //{
-        //    hp = 0.0f;
-        //}
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            hp = 0.0f;
+        }
         //if (Input.GetKeyDown(KeyCode.H))
         //{
         //    ReduceHp(downedDamageAmount + 1.0f);

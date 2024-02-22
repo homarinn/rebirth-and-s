@@ -587,12 +587,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a27cac37a921b545afd03e35129ef6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &740665005 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7384723645401430328, guid: ed4f576053ab8d14784403b9b7a76853,
-    type: 3}
-  m_PrefabInstance: {fileID: 2059818515}
-  m_PrefabAsset: {fileID: 0}
 --- !u!225 &743849987 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 1321822688568068381, guid: 4599c73d429970747bac1312071a185e,
@@ -615,17 +609,17 @@ PrefabInstance:
     - target: {fileID: 874965397485311589, guid: 893376047b36d31408339a615df78d36,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 2.1
       objectReference: {fileID: 0}
     - target: {fileID: 874965397485311589, guid: 893376047b36d31408339a615df78d36,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 2.1
       objectReference: {fileID: 0}
     - target: {fileID: 874965397485311589, guid: 893376047b36d31408339a615df78d36,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 2.1
       objectReference: {fileID: 0}
     - target: {fileID: 874965397485311589, guid: 893376047b36d31408339a615df78d36,
         type: 3}
@@ -762,7 +756,7 @@ PrefabInstance:
     - target: {fileID: 4918383551993912867, guid: e4a4514c8cc68b94f86c59b742760f74,
         type: 3}
       propertyPath: boundaryCircleRadius
-      value: 19
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 4918383551993912867, guid: e4a4514c8cc68b94f86c59b742760f74,
         type: 3}
@@ -903,7 +897,7 @@ PrefabInstance:
         type: 3}
       propertyPath: weakMagicMissile
       value: 
-      objectReference: {fileID: 3123686247595820355, guid: 6b59c1be67aec4d48895f770f8d82ef2,
+      objectReference: {fileID: 3123686247595820355, guid: a4463a8f7daf6dd4d9fca6e0910653a8,
         type: 3}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
@@ -914,7 +908,7 @@ PrefabInstance:
         type: 3}
       propertyPath: strongMagicMissile
       value: 
-      objectReference: {fileID: 8864793513164471864, guid: 2687c560a5b41394b9c187d6e826d22b,
+      objectReference: {fileID: 8864793513164471864, guid: 914a79fe4147efd4eb80e83a703554a4,
         type: 3}
     - target: {fileID: 6496792523407261475, guid: 9868515b684dd96438cd0625006c21c2,
         type: 3}
@@ -1121,7 +1115,7 @@ PrefabInstance:
         type: 3}
       propertyPath: spiritPositionTransform
       value: 
-      objectReference: {fileID: 740665005}
+      objectReference: {fileID: 1960676380}
     - target: {fileID: 7353786134980448413, guid: 3d6f2437da527814c9d0e4e1d80a1c45,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1318,6 +1312,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1960676380 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3353208891639695734, guid: ed4f576053ab8d14784403b9b7a76853,
+    type: 3}
+  m_PrefabInstance: {fileID: 2059818515}
+  m_PrefabAsset: {fileID: 0}
 --- !u!20 &1990289614 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 1839967511998124424, guid: ed4f576053ab8d14784403b9b7a76853,
