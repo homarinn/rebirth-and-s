@@ -50,7 +50,7 @@ public class CS_EnemyPlayer : MonoBehaviour
     }
 
     /// <summary> 現在の状態 </summary>
-    [SerializeField] private State currentState;
+    private State currentState;
 
     /// <summary>
     /// 現在の状態
@@ -424,6 +424,10 @@ public class CS_EnemyPlayer : MonoBehaviour
         /// <summary> 攻撃2エフェクト </summary>
         [Header("攻撃2エフェクト")]
         public GameObject attack2;
+
+        /// <summary> 必殺技(剣)エフェクト </summary> 
+        [Header("必殺技(剣)エフェクト")]
+        public GameObject ult_sword;
 
         /// <summary> 防御エフェクト </summary>
         [Header("防御エフェクト")]
@@ -905,6 +909,11 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // 必殺技サウンド
         PlayOneSound(sound.ult);
+    }
+
+    private void UltSlash()
+    {
+        CreateEffect(effect.ult_sword, transform);
     }
 
     /// <summary>
