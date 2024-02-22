@@ -587,12 +587,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a27cac37a921b545afd03e35129ef6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &740665005 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7384723645401430328, guid: ed4f576053ab8d14784403b9b7a76853,
-    type: 3}
-  m_PrefabInstance: {fileID: 2059818515}
-  m_PrefabAsset: {fileID: 0}
 --- !u!225 &743849987 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 1321822688568068381, guid: 4599c73d429970747bac1312071a185e,
@@ -1081,6 +1075,12 @@ ParticleSystem:
     type: 3}
   m_PrefabInstance: {fileID: 998474941}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1343201349 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8579464826684879496, guid: ed4f576053ab8d14784403b9b7a76853,
+    type: 3}
+  m_PrefabInstance: {fileID: 2059818515}
+  m_PrefabAsset: {fileID: 0}
 --- !u!225 &1473577862 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 2561701546597947005, guid: 4599c73d429970747bac1312071a185e,
@@ -1121,7 +1121,7 @@ PrefabInstance:
         type: 3}
       propertyPath: spiritPositionTransform
       value: 
-      objectReference: {fileID: 740665005}
+      objectReference: {fileID: 1343201349}
     - target: {fileID: 7353786134980448413, guid: 3d6f2437da527814c9d0e4e1d80a1c45,
         type: 3}
       propertyPath: m_LocalPosition.x
