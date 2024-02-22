@@ -99,11 +99,13 @@ public class CS_Event01 : MonoBehaviour
                 }
                 break;
             case eState.FadeShow:
-                if (eventBGM != null) eventBGM.volume -= 0.1f * Time.deltaTime;
+                if (eventBGM != null) 
+                { 
+                    eventBGM.volume -= 0.1f * Time.deltaTime;
+                }
                 cgFade.alpha += Time.deltaTime / fadeSpeed;
-                var flag = true;
-                if (eventBGM != null) flag = eventBGM.volume <= 0.0f;
-                if (cgFade.alpha >= 1.0f && flag)
+                bool tmp = eventBGM != null ? cgFade.alpha >= 1.0f && eventBGM.volume <= 0.0f : cgFade.alpha >= 1.0f;
+                if (cgFade.alpha >= 1.0f && tmp)
                 {
                     //titleBGM.Stop();
                     SceneManager.LoadScene(nextScene);

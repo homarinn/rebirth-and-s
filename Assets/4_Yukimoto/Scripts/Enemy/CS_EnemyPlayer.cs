@@ -50,7 +50,7 @@ public class CS_EnemyPlayer : MonoBehaviour
     }
 
     /// <summary> 現在の状態 </summary>
-    [SerializeField] private State currentState;
+    private State currentState;
 
     /// <summary>
     /// 現在の状態
@@ -424,6 +424,14 @@ public class CS_EnemyPlayer : MonoBehaviour
         /// <summary> 攻撃2エフェクト </summary>
         [Header("攻撃2エフェクト")]
         public GameObject attack2;
+
+        /// <summary> 必殺技(剣)エフェクト </summary> 
+        [Header("必殺技(剣)エフェクト")]
+        public GameObject ult_sword;
+
+        /// <summary> 必殺技終了時エフェクト </summary>
+        [Header("必殺技終了時エフェクト")]
+        public GameObject ult_finish;
 
         /// <summary> 防御エフェクト </summary>
         [Header("防御エフェクト")]
@@ -907,6 +915,11 @@ public class CS_EnemyPlayer : MonoBehaviour
         PlayOneSound(sound.ult);
     }
 
+    private void UltSlash()
+    {
+        CreateEffect(effect.ult_sword, transform);
+    }
+
     /// <summary>
     /// 必殺技の判定終了イベント
     /// </summary>
@@ -918,6 +931,9 @@ public class CS_EnemyPlayer : MonoBehaviour
         // 敵を貫通しないように
         // 衝突判定を戻す
         capsuleCollider.isTrigger = false;
+
+        // 必殺技終了時エフェクト
+        CreateEffect(effect.ult_finish, transform);
     }
 
     /// <summary>
