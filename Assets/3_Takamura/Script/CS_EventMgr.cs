@@ -56,6 +56,8 @@ public class CS_EventMgr : MonoBehaviour
                 break;
             case eState.Standby:
                 goDialogue.GetComponent<CS_Dialogue>().Benable = true;
+                eventBGM.volume = 0.0f;
+                eventBGM.Play();
                 break;
             case eState.FadeShow:
                 cgFade.blocksRaycasts = true;
@@ -93,9 +95,8 @@ public class CS_EventMgr : MonoBehaviour
                     ChangeState(eState.Standby);
                 }
                 break;
-            case eState.Standby:
-                eventBGM.Play();
-                if (eventBGM.volume <= 0.3f)
+            case eState.Standby:       
+                if(eventBGM.volume <= 0.3f)
                 {
                     eventBGM.volume += 0.2f * Time.deltaTime;
                 }
