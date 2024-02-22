@@ -12,7 +12,6 @@ TagManager:
   - MagicMissile
   - FxTemporaire
   - PlayerWeapon
-  - TransparentStage"
   layers:
   - Default
   - TransparentFX
