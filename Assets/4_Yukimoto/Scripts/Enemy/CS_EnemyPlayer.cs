@@ -429,6 +429,10 @@ public class CS_EnemyPlayer : MonoBehaviour
         [Header("必殺技(剣)エフェクト")]
         public GameObject ult_sword;
 
+        /// <summary> 必殺技終了時エフェクト </summary>
+        [Header("必殺技終了時エフェクト")]
+        public GameObject ult_finish;
+
         /// <summary> 防御エフェクト </summary>
         [Header("防御エフェクト")]
         public GameObject guard;
@@ -927,6 +931,9 @@ public class CS_EnemyPlayer : MonoBehaviour
         // 敵を貫通しないように
         // 衝突判定を戻す
         capsuleCollider.isTrigger = false;
+
+        // 必殺技終了時エフェクト
+        CreateEffect(effect.ult_finish, transform);
     }
 
     /// <summary>
