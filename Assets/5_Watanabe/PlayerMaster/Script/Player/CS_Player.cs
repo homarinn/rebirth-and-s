@@ -173,8 +173,6 @@ public partial class CS_Player : MonoBehaviour
     private GameObject Eff_Attack01;
     [SerializeField, Header("通常攻撃02")]
     private GameObject Eff_Attack02;
-    [SerializeField, Header("必殺エフェクト")]
-    private GameObject Eff_Ult;
 
     // =======================
     //
@@ -596,11 +594,12 @@ public partial class CS_Player : MonoBehaviour
         attackDamage = attackDamage == 0 ? ultPower : 0;
         if (attackDamage == 0)
         {
-            Eff_Ult.GetComponent<TrailRenderer>().enabled = false;
+            attackOk = false;
             collider.enabled = false;
         }
         else if (attackDamage != 0)
         {
+            attackOk = true;
             collider.enabled = true;
         }
     }
@@ -613,7 +612,6 @@ public partial class CS_Player : MonoBehaviour
     private void AnimUltAudio()
     {
         audio.PlayOneShot(SE_Ult);
-        Eff_Ult.GetComponent<TrailRenderer>().enabled = true;
     }
 
     /// <summary>

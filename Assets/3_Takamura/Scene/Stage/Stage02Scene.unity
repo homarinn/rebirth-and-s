@@ -338,12 +338,6 @@ CanvasGroup:
     type: 3}
   m_PrefabInstance: {fileID: 1562136316962758789}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1011725806 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3353208891639695734, guid: ed4f576053ab8d14784403b9b7a76853,
-    type: 3}
-  m_PrefabInstance: {fileID: 1852728542}
-  m_PrefabAsset: {fileID: 0}
 --- !u!225 &1051730430 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 1321822688568068381, guid: 4599c73d429970747bac1312071a185e,
@@ -464,7 +458,7 @@ PrefabInstance:
         type: 3}
       propertyPath: spiritPositionTransform
       value: 
-      objectReference: {fileID: 1011725806}
+      objectReference: {fileID: 1852728544}
     - target: {fileID: 7353786134980448413, guid: 3d6f2437da527814c9d0e4e1d80a1c45,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -650,6 +644,12 @@ PrefabInstance:
 --- !u!20 &1852728543 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 1839967511998124424, guid: ed4f576053ab8d14784403b9b7a76853,
+    type: 3}
+  m_PrefabInstance: {fileID: 1852728542}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1852728544 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8579464826684879496, guid: ed4f576053ab8d14784403b9b7a76853,
     type: 3}
   m_PrefabInstance: {fileID: 1852728542}
   m_PrefabAsset: {fileID: 0}
