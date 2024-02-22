@@ -440,7 +440,8 @@ public partial class CS_Player : MonoBehaviour
     {
         if (isWaterOnThe)
         {
-            Instantiate(puddleEffect, lefTrs);
+            var eff = Instantiate(puddleEffect, lefTrs);
+            Destroy(eff, 1);
         }
         else
         {
@@ -541,7 +542,8 @@ public partial class CS_Player : MonoBehaviour
         {
             collider.enabled = true;
             attackOk = true;
-            Instantiate(Eff_Attack02, transform);
+            var eff = Instantiate(Eff_Attack02, transform);
+            Destroy(eff, 1);
         }
 
     }
