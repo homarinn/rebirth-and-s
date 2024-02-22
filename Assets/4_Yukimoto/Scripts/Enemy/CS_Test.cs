@@ -26,9 +26,15 @@ public class CS_ATest : MonoBehaviour
             return;
         }
         
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            var effectObject = Instantiate(effect, enemyPlayer.transform);
+            Destroy(effectObject, 1.0f);
+        } 
+        
         if(Input.GetKeyDown(KeyCode.F))
         {
-            Instantiate(effect, enemyPlayer.transform);
+            enemyPlayer.CancelStandby();
         }
     }
 }

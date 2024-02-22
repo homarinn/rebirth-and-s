@@ -252,17 +252,6 @@ public class CS_EnemyPlayer : MonoBehaviour
     public bool CanWeaponHit { get { return canWeaponHit; } }
 
     // ----------------------------
-    // 被ダメージ
-    // ----------------------------
-
-    /// <summary> 被ダメージからの無敵時間(秒) </summary>
-    [Header("被ダメージからの無敵時間(秒)")]
-    [SerializeField] private float invincibleTime;
-
-    /// <summary> 無敵中ならtrue </summary>
-    private bool isInvincible = false;
-
-    // ----------------------------
     // 死亡
     // ----------------------------
 
@@ -428,15 +417,30 @@ public class CS_EnemyPlayer : MonoBehaviour
     [System.Serializable]
     private struct Effect
     {
-        public GameObject hit;
+        /// <summary> 攻撃1エフェクト </summary>
+        [Header("攻撃1エフェクト")]
+        public GameObject attack1;
+
+        /// <summary> 攻撃2エフェクト </summary>
+        [Header("攻撃2エフェクト")]
+        public GameObject attack2;
+
+        /// <summary> 防御エフェクト </summary>
+        [Header("防御エフェクト")]
+        public GameObject guard;
+
+        /// <summary> 防御エフェクトを付与するオブジェクト </summary>
+        [Header("防御エフェクトを付与するオブジェクト")]
+        public Transform guardParent;
     }
+
+    /// <summary> エフェクト </summary>
+    [Header("エフェクト")]
+    [SerializeField] private Effect effect;
 
     // -----------------------
     // タイマー
     // -----------------------
-
-    /// <summary> 無敵時間用タイマー </summary>
-    private float invincibleTimer = 0;
 
     /// <summary> 攻撃用タイマー </summary>
     private float attackTimer = 0;
@@ -518,6 +522,16 @@ public class CS_EnemyPlayer : MonoBehaviour
         {
             ChangeState(State.Dead);
             return;
+        }
+
+        // -----------------------------
+        // プレイヤーの死亡確認
+        // -----------------------------
+
+        // プレイヤーが死亡したので待機
+        if (CheckPlayerDead())
+        {
+            Standby();
         }
 
         // -------------------------------
@@ -624,12 +638,6 @@ public class CS_EnemyPlayer : MonoBehaviour
         if (speedParameter.chaseMax <= 0)
         {
             Debug.Log("追尾速度が0以下に設定されています");
-            return;
-        }
-
-        // プレイヤーが死亡したので待機
-        if (CheckPlayerDead())
-        {
             return;
         }
 
@@ -797,8 +805,11 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーの方を向く
         LookTarget(player);
 
-        // 攻撃SE
+        // 攻撃1SE
         PlayOneSound(sound.attack);
+
+        // 攻撃1エフェクト
+        CreateEffect(effect.attack1, transform);
     }
 
     private void AnimAttackOk()
@@ -843,8 +854,11 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーの方を向く
         LookTarget(player);
 
-        // 攻撃SE
+        // 攻撃2SE
         PlayOneSound(sound.attack);
+
+        // 攻撃2エフェクト
+        CreateEffect(effect.attack2, transform);
     }
 
     /// <summary>
@@ -968,6 +982,7 @@ public class CS_EnemyPlayer : MonoBehaviour
 
     private void AnimDamgeFailed()
     {
+        // 待機状態に移行
         ChangeState(State.Idle);
     }
 
@@ -1003,12 +1018,6 @@ public class CS_EnemyPlayer : MonoBehaviour
             return;
         }
 
-        // 無敵時間中はダメージを受けない
-        if (isInvincible)
-        {
-            return;
-        }
-
         // 必殺技中はダメージを受けない
         if (currentState == State.Ult)
         {
@@ -1034,6 +1043,9 @@ public class CS_EnemyPlayer : MonoBehaviour
 
             // 防御SE
             PlayOneSound(sound.guard);
+
+            // 防御エフェクト
+            CreateEffect(effect.guard, effect.guardParent);
         }
         else
         {
@@ -1060,14 +1072,17 @@ public class CS_EnemyPlayer : MonoBehaviour
                 return;
         }
 
+        // 被ダメージモーション中に追加でモーションを起こさない
+        if (currentState == State.ReceiveDamage)
+        {
+            return;
+        }
+
         // 防御中なら被ダメージモーションはしない
         if (guardParameter.isGuard)
         {
             return;
         }
-
-        // 被ダメージ後の無敵時間を設定
-        invincibleTimer = invincibleTime;
 
         // HPが残っているので被ダメージ状態に移行
         ChangeState(State.ReceiveDamage);
@@ -1442,6 +1457,21 @@ public class CS_EnemyPlayer : MonoBehaviour
 
     #endregion
 
+    #region エフェクト
+
+    /// <summary>
+    /// エフェクトを生成する
+    /// </summary>
+    /// <param name="e"> 生成するエフェクト </param>
+    /// <param name="effectParent"> エフェクトを付与するオブジェクト </param>
+    private void CreateEffect(GameObject e, Transform effectParent)
+    {
+        var effectObject = Instantiate(e, effectParent);
+        Destroy(effectObject, 1.0f);
+    }
+
+    #endregion
+
     /// <summary>
     /// 状態を移行する
     /// </summary>
@@ -1633,9 +1663,6 @@ public class CS_EnemyPlayer : MonoBehaviour
         // タイマーを進める
         // ----------------------------
 
-        // 無敵時間を減らす
-        if (isInvincible) invincibleTimer -= Time.deltaTime;
-
         // 攻撃してからの時間を計測
         if (!attackParameter.canAttack) attackTimer += Time.deltaTime;
 
@@ -1651,8 +1678,6 @@ public class CS_EnemyPlayer : MonoBehaviour
         // ----------------------------------
         // 一定時間経ったか確認
         // ----------------------------------
-
-        isInvincible = invincibleTimer > 0;
 
         attackParameter.canAttack = attackTimer >= attackParameter.interval;
         ultParameter.canUlt = ultTimer >= ultParameter.interval;
