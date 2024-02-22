@@ -849,17 +849,22 @@ PrefabInstance:
     - target: {fileID: 3398034125425779506, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: m_Height
-      value: 1.7
+      value: 1.49
       objectReference: {fileID: 0}
     - target: {fileID: 3398034125425779506, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: m_Radius
-      value: 0.2
+      value: 0.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 3398034125425779506, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3398034125425779506, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: m_Center.y
-      value: 0.44
+      value: 0.53
       objectReference: {fileID: 0}
     - target: {fileID: 3568157514801464534, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
@@ -4554,7 +4559,7 @@ MonoBehaviour:
   difenceInterval: 0.5
   difenceDamageCut: 0.5
   isDifence: 0
-  maxHP: 100
+  maxHP: 10000
   hp: 0
   damageAtackOkAttack: 30
   weaponTransform: {fileID: 0}
