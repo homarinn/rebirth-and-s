@@ -53,7 +53,7 @@ public class CS_Camera : MonoBehaviour
     private void CameraMove(float mouseX, float mouseY)
     {
         // プレイヤーが取得できてない場合何もしない
-        if(playerTransform == null || !playerTransform.GetComponent<CS_Player>().Action)
+        if(playerTransform == null)
         {
             Debug.Log("プレイヤー取得できない");
             return;
@@ -68,5 +68,4 @@ public class CS_Camera : MonoBehaviour
         }
 
     }
-
 }

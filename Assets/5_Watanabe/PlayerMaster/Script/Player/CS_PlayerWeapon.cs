@@ -43,11 +43,6 @@ public class CS_PlayerWeapon : MonoBehaviour
         }
         else if (other.gameObject.tag == "Enemy")
         {
-            if(!cs_Player.AttackOk)
-            {
-                return;
-            }
-            cs_Player.AttackOk = false;
             // •ê
             if(other.GetComponent<CS_Enemy1>() != null)
             {
