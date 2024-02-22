@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a5e69fedfbba64595d03281c59003c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goDialogue: {fileID: 155623973}
 --- !u!20 &231826515 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 5616902399623861375, guid: 641915dec3eea5345b180a344dbff0f9,
