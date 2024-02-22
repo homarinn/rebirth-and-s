@@ -151,8 +151,14 @@ public partial class CS_Player : MonoBehaviour
     private AudioClip SE_Jump;
 
     // Effect
+    [SerializeField, Header("エフェクト位置")]
+    private Transform effectTrs;
     [SerializeField, Header("防御エフェクト")]
     private GameObject Eff_Difence;
+    [SerializeField, Header("通常攻撃01")]
+    private GameObject Eff_Attack01;
+    [SerializeField, Header("通常攻撃02")]
+    private GameObject Eff_Attack02;
 
 
     // =======================
@@ -472,6 +478,7 @@ public partial class CS_Player : MonoBehaviour
         else if (attackDamage != 0)
         {
             collider.enabled = true;
+            Instantiate(Eff_Attack01, transform);
         }
     }
 
@@ -514,6 +521,7 @@ public partial class CS_Player : MonoBehaviour
         else if (attackDamage != 0)
         {
             collider.enabled = true;
+            Instantiate(Eff_Attack02, transform);
         }
 
     }
@@ -607,7 +615,7 @@ public partial class CS_Player : MonoBehaviour
 
         if (isDifence)
         {
-            Instantiate(Eff_Difence, transform);
+            Instantiate(Eff_Difence, effectTrs);
             audio.PlayOneShot(SE_Difence);
             // ガード中ダメージ半減
             hp -= _damage * difenceDamageCut;
