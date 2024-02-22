@@ -138,6 +138,8 @@ public partial class CS_Player : MonoBehaviour
     }
 
     private Transform cameraTransform = null;       // カメラの位置
+    [SerializeField]
+    private Transform weaponTransform;
 
     // コンポーネント
     private Rigidbody rb;
@@ -171,7 +173,8 @@ public partial class CS_Player : MonoBehaviour
     private GameObject Eff_Attack01;
     [SerializeField, Header("通常攻撃02")]
     private GameObject Eff_Attack02;
-
+    [SerializeField, Header("必殺エフェクト")]
+    private GameObject Eff_Ult;
 
     // =======================
     //
@@ -496,7 +499,8 @@ public partial class CS_Player : MonoBehaviour
         {
             collider.enabled = true;
             attackOk = true;
-            Instantiate(Eff_Attack01, transform);
+            var eff = Instantiate(Eff_Attack01, transform);
+            Destroy(eff, 1);
         }
     }
 
@@ -592,6 +596,7 @@ public partial class CS_Player : MonoBehaviour
         attackDamage = attackDamage == 0 ? ultPower : 0;
         if (attackDamage == 0)
         {
+            Eff_Ult.GetComponent<TrailRenderer>().enabled = false;
             collider.enabled = false;
         }
         else if (attackDamage != 0)
@@ -608,6 +613,7 @@ public partial class CS_Player : MonoBehaviour
     private void AnimUltAudio()
     {
         audio.PlayOneShot(SE_Ult);
+        Eff_Ult.GetComponent<TrailRenderer>().enabled = true;
     }
 
     /// <summary>
