@@ -54,7 +54,7 @@ public class CS_Event01 : MonoBehaviour
         {
             case eState.FadeHide:
                 cgFade.alpha = 0.0f;
-                goMabataki.GetComponent<Animator>().SetBool("bMove", true);
+                goMabataki.GetComponent<Animator>().SetBool("bHide", true);
                 break;
             case eState.Standby:
                 cgFade.alpha = 0.0f;
@@ -89,7 +89,7 @@ public class CS_Event01 : MonoBehaviour
             case eState.Standby:
                 eventBGM.Play();
                 Animator animator = goMabataki.GetComponent<Animator>();
-                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Fade") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("FadeHide") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
                     goDialogue.GetComponent<CS_Dialogue>().Benable = true;
                 }

@@ -27,7 +27,6 @@ public class CS_PlayerWeapon : MonoBehaviour
     {
         var cs_Player = GetComponentInParent<CS_Player>();
         float attackDamage = cs_Player.AttackDamage;
-        //Debug.Log(attackDamage);
         if (attackDamage == 0)
         {
             return;
