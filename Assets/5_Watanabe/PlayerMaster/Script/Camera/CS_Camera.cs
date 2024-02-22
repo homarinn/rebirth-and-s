@@ -55,7 +55,7 @@ public class CS_Camera : MonoBehaviour
 
         transform.position = playerTransform.position +  transform.rotation * offsetPos;
         // ƒvƒŒƒCƒ„[‚ªæ“¾‚Å‚«‚Ä‚È‚¢ê‡‰½‚à‚µ‚È‚¢
-        if(playerTransform == null)
+        if(playerTransform == null || !playerTransform.GetComponent<CS_Player>().Action)
         {
             return;
         }
@@ -67,4 +67,5 @@ public class CS_Camera : MonoBehaviour
         }
 
     }
+
 }

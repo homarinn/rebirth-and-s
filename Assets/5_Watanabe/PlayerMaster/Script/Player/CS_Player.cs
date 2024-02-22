@@ -77,6 +77,18 @@ public partial class CS_Player : MonoBehaviour
             return attackDamage;
         }
     }
+    bool attackOk = true;
+    public bool AttackOk
+    {
+        get
+        {
+            return attackOk;
+        }
+        set
+        {
+            attackOk = value;
+        }
+    }
 
     [SerializeField, Header("攻撃1インターバル")]
     private float attack1Interval = 0;
@@ -151,9 +163,14 @@ public partial class CS_Player : MonoBehaviour
     private AudioClip SE_Jump;
 
     // Effect
+    [SerializeField, Header("エフェクト位置")]
+    private Transform effectTrs;
     [SerializeField, Header("防御エフェクト")]
     private GameObject Eff_Difence;
-
+    [SerializeField, Header("通常攻撃01")]
+    private GameObject Eff_Attack01;
+    [SerializeField, Header("通常攻撃02")]
+    private GameObject Eff_Attack02;
 
     // =======================
     //
@@ -195,6 +212,10 @@ public partial class CS_Player : MonoBehaviour
     private bool action = true;
     public bool Action
     {
+        get
+        {
+            return action;
+        }
         set
         {
             action = value;
@@ -264,7 +285,6 @@ public partial class CS_Player : MonoBehaviour
                     {
                         Vector3 pos = Vector3.Scale(csLookCollision.EnemyPos, new Vector3(1, 0, 1));
                         transform.LookAt(pos);
-                        Debug.Log("向け" + pos.ToString());
                     }
                     else
                     {
@@ -418,7 +438,8 @@ public partial class CS_Player : MonoBehaviour
     {
         if (isWaterOnThe)
         {
-            Instantiate(puddleEffect, lefTrs);
+            var eff = Instantiate(puddleEffect, lefTrs);
+            Destroy(eff, 1);
         }
         else
         {
@@ -467,11 +488,15 @@ public partial class CS_Player : MonoBehaviour
         attackDamage = attackDamage == 0 ? attack1Power : 0;
         if (attackDamage == 0)
         {
+            attackOk = false;
             collider.enabled = false;
         }
         else if (attackDamage != 0)
         {
             collider.enabled = true;
+            attackOk = true;
+            var eff = Instantiate(Eff_Attack01, transform);
+            Destroy(eff, 1);
         }
     }
 
@@ -510,10 +535,14 @@ public partial class CS_Player : MonoBehaviour
         if (attackDamage == 0)
         {
             collider.enabled = false;
+            attackOk = false;
         }
         else if (attackDamage != 0)
         {
             collider.enabled = true;
+            attackOk = true;
+            var eff = Instantiate(Eff_Attack02, transform);
+            Destroy(eff, 1);
         }
 
     }
@@ -563,10 +592,12 @@ public partial class CS_Player : MonoBehaviour
         attackDamage = attackDamage == 0 ? ultPower : 0;
         if (attackDamage == 0)
         {
+            attackOk = false;
             collider.enabled = false;
         }
         else if (attackDamage != 0)
         {
+            attackOk = true;
             collider.enabled = true;
         }
     }
@@ -607,7 +638,8 @@ public partial class CS_Player : MonoBehaviour
 
         if (isDifence)
         {
-            Instantiate(Eff_Difence, transform);
+            var eff = Instantiate(Eff_Difence, effectTrs);
+            Destroy(eff, 1);
             audio.PlayOneShot(SE_Difence);
             // ガード中ダメージ半減
             hp -= _damage * difenceDamageCut;
