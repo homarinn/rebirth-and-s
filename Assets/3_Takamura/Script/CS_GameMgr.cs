@@ -117,7 +117,6 @@ public class CS_GameMgr : MonoBehaviour
             case eState.Game:
                 if (stageBGM != null)
                 {
-                    stageBGM.volume = 0.1f;
                     stageBGM.Play();
                 }
                 break;
