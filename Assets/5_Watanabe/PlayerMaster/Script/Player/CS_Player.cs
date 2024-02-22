@@ -286,7 +286,6 @@ public partial class CS_Player : MonoBehaviour
                     {
                         Vector3 pos = Vector3.Scale(csLookCollision.EnemyPos, new Vector3(1, 0, 1));
                         transform.LookAt(pos);
-                        Debug.Log("向け" + pos.ToString());
                     }
                     else
                     {
@@ -637,7 +636,8 @@ public partial class CS_Player : MonoBehaviour
 
         if (isDifence)
         {
-            Instantiate(Eff_Difence, effectTrs);
+            var eff = Instantiate(Eff_Difence, effectTrs);
+            Destroy(eff, 1);
             audio.PlayOneShot(SE_Difence);
             // ガード中ダメージ半減
             hp -= _damage * difenceDamageCut;
