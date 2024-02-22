@@ -113,19 +113,15 @@ public class CS_Spirit : MonoBehaviour
                     healFlag = true;
                 }
 
-                //回復可能状態なら
-                if (!healStop)
+                //回復可能状態なら回復する
+                if (healFlag && player.Hp > 0)
                 {
-                    //回復する
-                    if (healFlag && player.Hp > 0)
-                    {
-                        PlayerHealing();
-                        ApplyHealEffect();
-                    }
-                    else
-                    {
-                        healFlag = false;
-                    }
+                    PlayerHealing();
+                    ApplyHealEffect();
+                }
+                else
+                {
+                    healFlag = false;
                 }
 
                 //クールタイム減少
@@ -147,6 +143,15 @@ public class CS_Spirit : MonoBehaviour
     ///</summary>
     void PlayerHealing()
     {
+        //回復が許可されていないなら回転処理をスキップ
+        if (healStop)
+        {
+            healFlag = false;
+            currentCoolTime = healCoolTime;
+            currentAngle = 0.0f;           
+            return;
+        }
+
         //回転速度を補正
         float rSpeed = rotationSpeed * 360.0f;
 
