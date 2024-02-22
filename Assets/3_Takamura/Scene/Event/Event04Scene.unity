@@ -1047,9 +1047,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4522967223254549001, guid: 80154821c16d27f4993f1906174cfabd,
         type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4522967223254549001, guid: 80154821c16d27f4993f1906174cfabd,
+        type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: f2b607ad32459364ca12c56a92732bf5, type: 3}
+      objectReference: {fileID: 8300000, guid: 3c7d4412650499743865eaa62dda69e5, type: 3}
     - target: {fileID: 4522967223254549001, guid: 80154821c16d27f4993f1906174cfabd,
         type: 3}
       propertyPath: m_PlayOnAwake
@@ -1076,7 +1081,7 @@ PrefabInstance:
         type: 3}
       propertyPath: se
       value: 
-      objectReference: {fileID: 1631356595}
+      objectReference: {fileID: 1631356597}
     - target: {fileID: 7614062408334916607, guid: 80154821c16d27f4993f1906174cfabd,
         type: 3}
       propertyPath: file
@@ -1204,6 +1209,12 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!82 &1631356597 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 4522967223254549001, guid: 80154821c16d27f4993f1906174cfabd,
+    type: 3}
+  m_PrefabInstance: {fileID: 1631356591}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1943557628
 PrefabInstance:
   m_ObjectHideFlags: 0

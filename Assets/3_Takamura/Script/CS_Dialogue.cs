@@ -24,6 +24,8 @@ public class CS_Dialogue : MonoBehaviour
     {
         get { return textIndex; }
     }
+    [SerializeField, Header("SE")]
+    AudioSource se;
     [SerializeField, Header("次の文字を表示するまでの時間(秒)")]
     float delayDuration;
     [SerializeField, Header("1文表示完了後の待機時間(秒)")]
@@ -32,7 +34,7 @@ public class CS_Dialogue : MonoBehaviour
     Coroutine showCoroutine;
     //! @brief 一文表示終了フラグ
     bool bFinishString;
-
+    //! @brief 一度だけ通るためのフラグ
     bool bOnce = false;
 
     //! @brief 表示処理が有効かどうか
@@ -72,9 +74,10 @@ public class CS_Dialogue : MonoBehaviour
                 if (!string.IsNullOrEmpty(splitText[textIndex]))
                 {
                     //! 名前判定
-                    int index = splitText[textIndex].IndexOf("/");
-                    int index0 = splitText[textIndex].IndexOf("（");
-                    if (index != -1)
+                    int indexName = splitText[textIndex].IndexOf("/");
+                    int indexStop = splitText[textIndex].IndexOf("（");
+                    int indexSE = splitText[textIndex].IndexOf("#");
+                    if (indexName != -1)
                     {
                         //! 名前更新
                         talkernameText.text = splitText[textIndex].Replace("/", "");
@@ -85,7 +88,7 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                     }
-                    else if (index0 != -1)
+                    else if (indexStop != -1)
                     {
                         //! 名前非表示
                         talkernameText.text = " ";
@@ -96,6 +99,22 @@ public class CS_Dialogue : MonoBehaviour
                         textIndex++;
                         bEnable = false;
                         bOnce = false;
+                    } else if(indexSE != -1)
+                    {
+                        talkernameText.text = " ";
+                        dialogueText.text = splitText[textIndex].Replace("#", "");
+                        //! 文字列を一括表示する
+                        StopCoroutine(showCoroutine);
+                        dialogueText.maxVisibleCharacters = dialogueText.text.Length;
+                        
+                        //! 効果音再生
+                        if(se != null)
+                        {
+                            se.Play();
+                        }
+
+                        bFinishString = true;
+                        textIndex++;
                     }
                     else
                     {
