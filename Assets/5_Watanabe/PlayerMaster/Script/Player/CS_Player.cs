@@ -138,6 +138,8 @@ public partial class CS_Player : MonoBehaviour
     }
 
     private Transform cameraTransform = null;       // カメラの位置
+    [SerializeField]
+    private Transform weaponTransform;
 
     // コンポーネント
     private Rigidbody rb;

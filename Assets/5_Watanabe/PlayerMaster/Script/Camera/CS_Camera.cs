@@ -52,13 +52,13 @@ public class CS_Camera : MonoBehaviour
     /// <param name="mouseY">マウスY移動量</param>
     private void CameraMove(float mouseX, float mouseY)
     {
-
-        transform.position = playerTransform.position +  transform.rotation * offsetPos;
         // プレイヤーが取得できてない場合何もしない
         if(playerTransform == null || !playerTransform.GetComponent<CS_Player>().Action)
         {
             return;
         }
+
+        transform.position = playerTransform.position +  transform.rotation * offsetPos;
         // X方向に一定量移動していれば横回転
         if (Mathf.Abs(mouseX) > 0.001f)
         {
