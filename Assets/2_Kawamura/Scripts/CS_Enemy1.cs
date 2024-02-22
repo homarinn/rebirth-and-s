@@ -156,7 +156,8 @@ public class CS_Enemy1 : MonoBehaviour
     bool canFight;                                   //戦闘可能か？
     bool isDead;                                   //死亡したか？
 
-    AudioSource shotAudioSource;                   //弾を撃つ用のAudioSource
+    AudioSource[] audioSources;
+    //AudioSource shotAudioSource;                   //弾を撃つ用のAudioSource
 
     [Header("<=====降下時間（秒）=====>")]
     [Header("ダウン時")]
@@ -183,6 +184,9 @@ public class CS_Enemy1 : MonoBehaviour
 
     [Header("弾を撃つSE")]
     [SerializeField] private AudioClip shotSE;
+
+    [Header("弾を撃つSE")]
+    [SerializeField] private AudioClip chargeSE;
 
     //[Header("曲線軌道にするか？（弱攻撃）")]
     //[SerializeField] bool isCurveWeakMagicMissile;
@@ -329,8 +333,8 @@ public class CS_Enemy1 : MonoBehaviour
         //ChooseAttackType();
 
         //AudioSourceの取得
-        shotAudioSource = GetComponent<AudioSource>();
-        //blowOffAudioSource = audioSources[1];
+        audioSources = GetComponents<AudioSource>();
+        //shotAudioSource = GetComponent<AudioSource>();
 
         ////AudioSourceの取得
         //AudioSource[] audioSources = GetComponents<AudioSource>();
@@ -748,6 +752,8 @@ public class CS_Enemy1 : MonoBehaviour
             trail.Play();  //エフェクト再生
             trailScript.GetSetIsPlay = true;
             Debug.Log("trail再生生成終わり");
+
+            audioSources[1].Play();
         }
     }
 
@@ -878,6 +884,7 @@ public class CS_Enemy1 : MonoBehaviour
     {
         isAttack = true;  //攻撃開始
         myAnimator.SetBool("Attack", true);  //モーション発動
+        audioSources[1].Play();
 
         if (!trailScript.GetSetIsPlay)
         {
@@ -1091,17 +1098,17 @@ public class CS_Enemy1 : MonoBehaviour
     /// <returns>発射出来るか？</returns>
     bool CheckCanShoot()
     {
-        //ステージの中心からプレイヤーまでの距離
-        Vector2 playerDirection = new Vector2(
-            player.transform.position.x,
-            player.transform.position.z);
-        float distance = playerDirection.sqrMagnitude;
+        ////ステージの中心からプレイヤーまでの距離
+        //Vector2 playerDirection = new Vector2(
+        //    player.transform.position.x,
+        //    player.transform.position.z);
+        //float distance = playerDirection.sqrMagnitude;
 
-        //一定距離以上だと発射不可
-        if(distance > maxCanShootDistance)
-        {
-            return false;
-        }
+        ////一定距離以上だと発射不可
+        //if(distance > maxCanShootDistance)
+        //{
+        //    return false;
+        //}
 
         return true;  //発射可能
     }
@@ -1143,8 +1150,8 @@ public class CS_Enemy1 : MonoBehaviour
                 script[i] = null;
 
                 //音
-                shotAudioSource.PlayOneShot(shotSE);
-                //shotAudioSource.PlayOneShot(shotAudioSource.clip);
+                audioSources[0].PlayOneShot(shotSE);
+                //shotAudioSource.PlayOneShot(shotSE);
 
                 //最後より一つ前の弾が放たれたらアニメーション速度を元に戻す
                 if (i == magicMissileNumber[num] - 2)
@@ -1250,6 +1257,9 @@ public class CS_Enemy1 : MonoBehaviour
             //接地検知オブジェクト有効化
             groundDetection.SetActive(true);
 
+            //効果音停止
+            audioSources[1].Stop();
+
             //エフェクト停止
             mist.Stop();
             trail.Stop();
@@ -1317,6 +1327,9 @@ public class CS_Enemy1 : MonoBehaviour
             myAnimator.SetBool("Fall", true);
             myAnimator.SetBool("Attack", false);
             myAnimator.SetFloat("AnimationSpeed", 1);  //速度を戻す
+
+            //効果音停止
+            audioSources[1].Stop();
 
             //エフェクトの停止
             mist.Stop();
