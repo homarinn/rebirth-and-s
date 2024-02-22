@@ -20,6 +20,8 @@ public class CS_Event00 : MonoBehaviour
     float time = 0.0f;
     [SerializeField, Header("セリフを表示し始めるまでの時間")]
     float enableTime;
+    //! @brief イベント終了フラグ
+    bool bFinish = false;
 
 
     // Start is called before the first frame update
@@ -36,6 +38,7 @@ public class CS_Event00 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (bFinish == true) return;
         time += Time.deltaTime;
         if (time < 1.0f) return;
 
@@ -46,6 +49,7 @@ public class CS_Event00 : MonoBehaviour
             {
                 SEtext.SetActive(false);
                 goEventMgr.GetComponent<CS_Event01>().ChangeState(CS_Event01.eState.FadeHide);
+                bFinish = true;
             }
             else
             {
