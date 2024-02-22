@@ -21,9 +21,13 @@ public class CS_Event04Wink : MonoBehaviour
         {
             anim.SetBool("bShow", true);
         }
-        else if (index == 10)
+        else if (index == 11)
         {
             anim.SetBool("bHalf", true);
+        }
+        else if (index == 25)
+        {
+            anim.SetBool("bHalf", false);
         }
     }
 }

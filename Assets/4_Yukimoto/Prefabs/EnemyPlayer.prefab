@@ -678,6 +678,8 @@ MonoBehaviour:
       type: 3}
     attack2: {fileID: 206095068332160183, guid: c810d246ed9ab92488c04d1f0d275ff8,
       type: 3}
+    ult_sword: {fileID: 1393149056801700881, guid: 47f531abfb3fff742a06f4b47240c8da,
+      type: 3}
     guard: {fileID: 5024009746357069194, guid: 906bfa2689d2bdf459ccae71ee04b536, type: 3}
     guardParent: {fileID: 4323001346262687098}
 --- !u!1 &1393033421661020282
