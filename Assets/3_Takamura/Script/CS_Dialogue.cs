@@ -95,6 +95,7 @@ public class CS_Dialogue : MonoBehaviour
                         bFinishString = false;
                         textIndex++;
                         bEnable = false;
+                        bOnce = false;
                     }
                     else
                     {

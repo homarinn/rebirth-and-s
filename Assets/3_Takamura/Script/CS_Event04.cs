@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CS_Event03 : MonoBehaviour
+public class CS_Event04 : MonoBehaviour
 {
     Animator anim;
     [SerializeField, Header("dialogueのオブジェクト")]
@@ -19,7 +19,7 @@ public class CS_Event03 : MonoBehaviour
         int index = goDialogue.GetComponent<CS_Dialogue>().TextIndex;
         if (index == 3)
         {
-            anim.SetBool("bMove03", true);
+            anim.SetBool("bMove04", true);
         }
     }
 }
