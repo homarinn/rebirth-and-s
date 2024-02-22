@@ -632,7 +632,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcf53af9d3180614280890d472557b14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
   player: {fileID: 0}
   maxHp: 250
   speedParameter:
@@ -679,6 +678,8 @@ MonoBehaviour:
     attack2: {fileID: 206095068332160183, guid: c810d246ed9ab92488c04d1f0d275ff8,
       type: 3}
     ult_sword: {fileID: 1393149056801700881, guid: 47f531abfb3fff742a06f4b47240c8da,
+      type: 3}
+    ult_finish: {fileID: 5490836656742950375, guid: caeb0a34aef8ee24391db50f4f531efb,
       type: 3}
     guard: {fileID: 5024009746357069194, guid: 906bfa2689d2bdf459ccae71ee04b536, type: 3}
     guardParent: {fileID: 4323001346262687098}
