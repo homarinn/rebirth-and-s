@@ -174,12 +174,16 @@ public partial class CS_Player : MonoBehaviour
     {
         get
         {
-            return Mathf.Clamp(ultTimer, 0, 5);
+            return ultTimer;
         }
     }
-
-
-    [Serializable]
+    public float UltInterval
+    {
+        get
+        {
+            return ultParameter.interval;
+        }
+    }
     private struct DifenceParameter
     {
         [Header("ダメージカット%")]
