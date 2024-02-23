@@ -856,8 +856,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
+      propertyPath: ultParameter.power
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
       propertyPath: receptionTime.attack
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: ultParameter.interval
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
@@ -867,7 +877,17 @@ PrefabInstance:
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
       propertyPath: attackParameter.interval
-      value: 5
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: attackParameter.power_attack1
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
+      propertyPath: attackParameter.power_attack2
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5141234283029988823, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
