@@ -2395,14 +2395,14 @@ MonoBehaviour:
   SE_Damage: {fileID: 8300000, guid: 776151ead8eabe14189a292b1877484c, type: 3}
   SE_Ult: {fileID: 8300000, guid: 98edc1f76e7e2c94a9e679cde73a3bb7, type: 3}
   SE_Jump: {fileID: 8300000, guid: 637a3a7e930ca464aa1140d8062d02f8, type: 3}
-  effectTrs: {fileID: 0}
-  Eff_Difence: {fileID: 5024009746357069194, guid: eb395517415e8b54db4af8d27ceb4935,
+  effectTrs: {fileID: 4030148390725037107}
+  Eff_Difence: {fileID: 5024009746357069194, guid: 2a074bcf3686b664eb8bf1ecd63ea052,
     type: 3}
   Eff_Attack01: {fileID: 7825825217749650993, guid: 88d8e31db18c9cb4d89c6a7cafd74e2f,
     type: 3}
   Eff_Attack02: {fileID: 206095068332160183, guid: 26cb54594b5a4dd4993e5b95fb657112,
     type: 3}
-  Eff_UltTachi: {fileID: 4932088507883938021, guid: 0e5709a7ddb77924090c112cf73bb98a,
+  Eff_UltTachi: {fileID: 4932088507883938021, guid: 9f4ddcce82a29c54696b7aa3533cf943,
     type: 3}
   Eff_Ult: {fileID: 1393149056801700881, guid: b394e9eea4d533947b71db502c355207, type: 3}
 --- !u!54 &3757920466159725578
