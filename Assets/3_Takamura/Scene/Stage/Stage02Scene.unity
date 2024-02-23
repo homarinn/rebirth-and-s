@@ -139,8 +139,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
         type: 3}
+      propertyPath: hp
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
+        type: 3}
       propertyPath: hpMax
-      value: 200
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
+        type: 3}
+      propertyPath: stoppingTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
+        type: 3}
+      propertyPath: attackInterval
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2792997973151148272, guid: dc7860a1ed2317e4488f18d248925495,
         type: 3}
