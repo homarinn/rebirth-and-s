@@ -896,9 +896,6 @@ MonoBehaviour:
   guardParameter:
     cutRatio: 80
     interval: 2
-  receptionTime:
-    attack: 1
-    ult: 0.2
   playerAnimation:
     ult: {fileID: 7400000, guid: 320a71571419a994394ddb7f9468cfbf, type: 2}
     attack1: {fileID: 7400000, guid: 539042840a7da314ab1f0fce875c1490, type: 2}

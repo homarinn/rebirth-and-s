@@ -290,10 +290,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3738171213775353714, guid: 219e5754dfee11549b856f0a07404c0e,
         type: 3}
+      propertyPath: m_VoxelSize
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 3738171213775353714, guid: 219e5754dfee11549b856f0a07404c0e,
+        type: 3}
       propertyPath: m_NavMeshData
       value: 
       objectReference: {fileID: 23800000, guid: 70ca5942d05da164dbeee5e480aea02b,
         type: 2}
+    - target: {fileID: 3738171213775353714, guid: 219e5754dfee11549b856f0a07404c0e,
+        type: 3}
+      propertyPath: m_OverrideVoxelSize
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7150817384455691716, guid: 219e5754dfee11549b856f0a07404c0e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4741,7 +4751,6 @@ MonoBehaviour:
   maxHP: 100
   hp: 0
   damageAtackOkAttack: 30
-  weaponTransform: {fileID: 0}
   SE_Move: {fileID: 8300000, guid: 51e1fb83cad6d72448690d1452c39bc4, type: 3}
   SE_Attack: {fileID: 8300000, guid: 9aec4e9a772570245b1e574ac1f743ad, type: 3}
   SE_Sliding: {fileID: 8300000, guid: 26f60acc4ec90fd43912448c053ae368, type: 3}
