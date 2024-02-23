@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -5,12 +6,6 @@ using UnityEngine;
 /// </summary>
 public partial class CS_Player : MonoBehaviour
 {
-    // =======================
-    //
-    // 変数
-    //
-    // =======================
-
     enum State
     {
         Normal,
@@ -23,52 +18,115 @@ public partial class CS_Player : MonoBehaviour
     }
     State state;
 
-    // 移動
-    [SerializeField, Header("移動速度")]
-    private float moveSpeed = 0;
-    [SerializeField, Header("プレイヤーの旋回速度")]
-    private float rotationSpeed = 0;
+    [Serializable]
+    private struct Parameter
+    {
+        [Header("体力")]
+        public float hp;
+    }
+    [SerializeField, Header("基礎パラメータ")]
+    private Parameter parameter;
 
-    [SerializeField, Header("水たまり上の移動速度低下(0～1)")]
-    private float waterOnTheMoveSpeedCut = 0;
-    private bool isWaterOnThe = false;
-    [SerializeField, Header("水たまりエフェクト")]
-    private GameObject puddleEffect;
-    [SerializeField, Header("水たまり足場")]
-    private Transform lefTrs;
 
-    private bool moveOK = true;    // 移動許可
+    private float hp;       // 現在のHP
+    public float MaxHP
+    {
+        get
+        {
+            return parameter.hp;
+        }
+    }
+    public float Hp
+    {
+        get
+        {
+            return hp;
+        }
+        set
+        {
+            hp = value;
+        }
+    }
 
-    // スライディング
-    [SerializeField, Header("スライディング速度")]
-    private float slidingSpeed = 0;
-    [SerializeField, Header("スライディングインターバル")]
-    private float slidingInterval = 0;
+
+    [Serializable]
+    private struct MoveParameter
+    {
+        [Header("移動速度")]
+        public float moveSpeed;
+
+        [Header("旋回速度")]
+        public float rotationSpeed;
+
+        [Header("水たまり上の移動速度低下(0～1)")]
+        public float waterOnTheMoveSpeedCut;
+    }
+    [SerializeField, Header("移動パラメータ")]
+    private MoveParameter moveParameter;
+
+    private bool isWaterOnThe = false;  // 水たまりの上か判定
+    private bool moveOK = true;         // 移動許可
+
+    [Serializable]
+    private struct SlidingParameter
+    {
+        [Header("速度")]
+        public float speed;
+
+        [Header("インターバル")]
+        public float interval;
+    }
+    [SerializeField, Header("スライディングパラメータ")]
+    private SlidingParameter slidingParameter;
     private float slidingTimer = 0;
 
-    // 攻撃威力
-    [SerializeField, Header("Auto振り向きの範囲コライダー")]
-    CS_LookCollision csLookCollision;
-    [SerializeField, Header("攻撃用のコライダー")]
-    private Collider collider;
-    [SerializeField, Header("攻撃１の威力")]
-    private float attack1Power = 0;
-    public float Attack1Power
+    // ======== 攻撃関連 ======== //
+
+    [Serializable]
+    private struct Attack01Parameter
+    {
+        [Header("威力")]
+        public float damage;
+
+        [Header("インターバル")]
+        public float interval;
+    }
+    [SerializeField, Header("攻撃1のパラメータ")]
+    private Attack01Parameter attack01Parameter;
+
+    // 攻撃01の威力
+    public float Attack01Damage
     {
         get
         {
-            return attack1Power;
+            return attack01Parameter.damage;
         }
     }
-    [SerializeField, Header("攻撃2の威力")]
-    private float attack2Power = 0;
-    public float Attack2Power
+
+    [Serializable]
+    private struct Attack02Parameter
+    {
+        [Header("威力")]
+        public float damage;
+
+        [Header("インターバル")]
+        public float interval;
+    }
+    [SerializeField, Header("攻撃2のパラメータ")]
+    private Attack02Parameter attack02Parameter;
+
+    // 攻撃02の威力
+    public float Attack02Damage
     {
         get
         {
-            return attack2Power;
+            return attack02Parameter.damage;
         }
     }
+
+    [SerializeField, Header("プレイヤー武器コライダー")]
+    private Collider colPlayerWeapon;
+
     private float attackDamage = 0;
     public float AttackDamage
     {
@@ -89,46 +147,57 @@ public partial class CS_Player : MonoBehaviour
             attackOk = value;
         }
     }
-
-    [SerializeField, Header("攻撃1インターバル")]
-    private float attack1Interval = 0;
-    [SerializeField, Header("攻撃2インターバル")]
-    private float attack2Interval = 0;
     private float attackTimer = 0;
-
-    // 攻撃２が発動可能か
     private bool attack2Ok = false;
 
-    // 必殺
-    [SerializeField, Header("必殺技の威力")]
-    private float ultPower = 0;
-    public float UltPower
+    [Serializable]
+    private struct UltParameter
+    {
+        [Header("威力")]
+        public float damage;
+
+        [Header("インターバル")]
+        public float interval;
+    }
+    [SerializeField, Header("必殺パラメータ")]
+    private UltParameter ultParameter;
+    private float ultTimer = 0;
+
+    public float UltDamage
     {
         get
         {
-            return ultPower;
+            return ultParameter.damage;
         }
     }
-    [SerializeField, Header("必殺技のインターバル")]
-    private float ultInterval = 0;
-    private float ultTimer = 0;
+    public float UltTimer
+    {
+        get
+        {
+            return Mathf.Clamp(ultTimer, 0, 5);
+        }
+    }
 
-    // 防御
-    [SerializeField, Header("防御インターバル")]
-    private float difenceInterval = 0;
-    private float difenceTimer = 0;
-    [SerializeField, Header("防御中のダメージカット%")]
-    private float difenceDamageCut = 0;
-    [SerializeField]
-    private bool isDifence = false;
 
-    [SerializeField, Header("HPの最大値")]
-    private float maxHP = 0;    // 最大HP
-    [SerializeField] private float hp;           // 現在のHP
-    private bool isInvisible = false;
-    private bool isDeath = false;
+    [Serializable]
+    private struct DifenceParameter
+    {
+        [Header("ダメージカット%")]
+        public float cut;
+
+        [Header("インターバル")]
+        public float interval;
+    }
+    [SerializeField, Header("防御パラメータ")]
+    private DifenceParameter difenceParameter;
+
     [SerializeField, Header("ダメージアニメーションを再生する攻撃")]
     private float damageAtackOkAttack = 0;
+    private float difenceTimer = 0;
+    private bool isDifence = false;
+
+    private bool isInvisible = false;
+    private bool isDeath = false;
     public bool IsDeath
     {
         get
@@ -137,11 +206,13 @@ public partial class CS_Player : MonoBehaviour
         }
     }
 
-    private Transform cameraTransform = null;       // カメラの位置
     // コンポーネント
     private Rigidbody rb;
     private Animator anim;
     private AudioSource audio;
+    private CS_LookCollision csLookCollision; // 敵検知スクリプト
+    private Transform trsCamera;          // カメラのTrs
+
 
     // SE
     [SerializeField, Header("移動SE")]
@@ -174,43 +245,14 @@ public partial class CS_Player : MonoBehaviour
     private GameObject Eff_UltTachi;
     [SerializeField, Header("必殺エフェクト")]
     private GameObject Eff_Ult;
+    [SerializeField, Header("水たまりエフェクト")]
+    private GameObject puddleEffect;
+    [SerializeField, Header("水たまり足場")]
+    private Transform lefTrs;
 
-    // =======================
-    //
-    // ゲッター・セッター
-    //
-    // =======================
 
-    // HPの最大値
-    public float MaxHP
-    {
-        get
-        {
-            return maxHP;
-        }
-    }
 
-    // HP
-    public float Hp
-    {
-        get
-        {
-            return hp;
-        }
-        set
-        {
-            hp = value;
-        }
-    }
 
-    // 必殺技タイマー
-    public float UltTimer
-    {
-        get
-        {
-            return Mathf.Clamp(ultTimer, 0, 5);
-        }
-    }
 
     private bool action = true;
     public bool Action
@@ -231,16 +273,15 @@ public partial class CS_Player : MonoBehaviour
     //
     // =======================
 
-
     /// <summary>
-    /// 実体化したときに呼び出される
+    /// 実体化イベント
     /// </summary>
     private void Awake()
     {
         // HPを設定
-        hp = maxHP;
+        hp = parameter.hp;
         // 必殺インターバル設定
-        ultTimer = ultInterval;
+        ultTimer = ultParameter.interval; ;
     }
 
     /// <summary>
@@ -252,9 +293,10 @@ public partial class CS_Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         audio = GetComponent<AudioSource>();
+        csLookCollision = GetComponentInChildren<CS_LookCollision>();
 
         // カメラの位置を取得
-        cameraTransform = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Transform>();
+        trsCamera = GameObject.FindGameObjectWithTag("PlayerCamera").GetComponent<Transform>();
     }
 
     /// <summary>
@@ -291,7 +333,7 @@ public partial class CS_Player : MonoBehaviour
                     }
                     else
                     {
-                        Vector3 cameraForward = Vector3.Scale(cameraTransform.forward, new Vector3(1, 0, 1)).normalized;
+                        Vector3 cameraForward = Vector3.Scale(trsCamera.forward, new Vector3(1, 0, 1)).normalized;
                         // 進行方向に回転
                         if (cameraForward != Vector3.zero)
                         {
@@ -317,7 +359,7 @@ public partial class CS_Player : MonoBehaviour
                 // 必殺入力
                 if (Input.GetKeyDown(KeyCode.Space) && ultTimer <= 0)
                 {
-                    Vector3 cameraForward = Vector3.Scale(cameraTransform.forward, new Vector3(1, 0, 1)).normalized;
+                    Vector3 cameraForward = Vector3.Scale(trsCamera.forward, new Vector3(1, 0, 1)).normalized;
                     // 進行方向に回転
                     if (cameraForward != Vector3.zero)
                     {
@@ -375,7 +417,7 @@ public partial class CS_Player : MonoBehaviour
         }
 
         // スライディングのインターバルタイマーを減らす
-        if (slidingInterval > 0)
+        if (slidingParameter.interval > 0)
         {
             slidingTimer -= Time.deltaTime;
         }
@@ -408,13 +450,13 @@ public partial class CS_Player : MonoBehaviour
         Vector2 inputAxis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         // カメラの方向からX-Z単位ベクトルを取得
-        Vector3 cameraForward = Vector3.Scale(cameraTransform.forward, new Vector3(1, 0, 1)).normalized;
-        Vector3 moveForward = cameraForward * inputAxis.y + cameraTransform.right * inputAxis.x;
+        Vector3 cameraForward = Vector3.Scale(trsCamera.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 moveForward = cameraForward * inputAxis.y + trsCamera.right * inputAxis.x;
 
         // 進行方向に回転
         if (moveForward != Vector3.zero)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveForward), rotationSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveForward), moveParameter.rotationSpeed);
         }
         if (anim != null)
         {
@@ -425,12 +467,12 @@ public partial class CS_Player : MonoBehaviour
         }
         if (isWaterOnThe)
         {
-            rb.velocity = moveForward.normalized * (moveSpeed * waterOnTheMoveSpeedCut);
+            rb.velocity = moveForward.normalized * (moveParameter.moveSpeed * moveParameter.waterOnTheMoveSpeedCut);
         }
         else
         {
             // Playerの向いている方向に進む
-            rb.velocity = moveForward.normalized * moveSpeed;
+            rb.velocity = moveForward.normalized * moveParameter.moveSpeed;
         }
     }
 
@@ -461,11 +503,11 @@ public partial class CS_Player : MonoBehaviour
     {
         if (isWaterOnThe)
         {
-            rb.velocity = transform.forward * (slidingSpeed * waterOnTheMoveSpeedCut);
+            rb.velocity = transform.forward * (slidingParameter.speed * moveParameter.waterOnTheMoveSpeedCut);
         }
         else
         {
-            rb.velocity = transform.forward * slidingSpeed;
+            rb.velocity = transform.forward * slidingParameter.speed;
         }
     }
 
@@ -475,8 +517,7 @@ public partial class CS_Player : MonoBehaviour
     private void AnimSlidingFailed()
     {
         state = State.Normal;
-        slidingTimer = slidingInterval;
-        //rb.velocity = Vector3.zero;
+        slidingTimer = slidingParameter.interval;
     }
 
     #endregion
@@ -488,15 +529,15 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimAttackSetPower()
     {
-        attackDamage = attackDamage == 0 ? attack1Power : 0;
+        attackDamage = attackDamage == 0 ? attack01Parameter.damage : 0;
         if (attackDamage == 0)
         {
             attackOk = false;
-            collider.enabled = false;
+            colPlayerWeapon.enabled = false;
         }
         else if (attackDamage != 0)
         {
-            collider.enabled = true;
+            colPlayerWeapon.enabled = true;
             attackOk = true;
             var eff = Instantiate(Eff_Attack01, transform);
             Destroy(eff, 1);
@@ -509,7 +550,7 @@ public partial class CS_Player : MonoBehaviour
     private void AnimAttack1Failied()
     {
         state = State.Normal;
-        attackTimer = attack1Interval;
+        attackTimer = attack01Parameter.interval;
         attack2Ok = false;
     }
 
@@ -534,15 +575,15 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimAttack2SetPower()
     {
-        attackDamage = attackDamage == 0 ? attack2Power : 0;
+        attackDamage = attackDamage == 0 ? attack02Parameter.damage : 0;
         if (attackDamage == 0)
         {
-            collider.enabled = false;
+            colPlayerWeapon.enabled = false;
             attackOk = false;
         }
         else if (attackDamage != 0)
         {
-            collider.enabled = true;
+            colPlayerWeapon.enabled = true;
             attackOk = true;
             var eff = Instantiate(Eff_Attack02, transform);
             Destroy(eff, 1);
@@ -556,7 +597,7 @@ public partial class CS_Player : MonoBehaviour
     private void AnimAttack2Failied()
     {
         state = State.Normal;
-        attackTimer = attack2Interval;
+        attackTimer = attack02Parameter.interval;
     }
 
 
@@ -579,7 +620,7 @@ public partial class CS_Player : MonoBehaviour
 
     private void AnimDifenceFailed()
     {
-        difenceTimer = difenceInterval;
+        difenceTimer = difenceParameter.interval;
         state = State.Normal;
     }
 
@@ -592,16 +633,16 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void AnimUltAttackSetPower()
     {
-        attackDamage = attackDamage == 0 ? ultPower : 0;
+        attackDamage = attackDamage == 0 ? ultParameter.damage : 0;
         if (attackDamage == 0)
         {
             attackOk = false;
-            collider.enabled = false;
+            colPlayerWeapon.enabled = false;
         }
         else if (attackDamage != 0)
         {
             attackOk = true;
-            collider.enabled = true;
+            colPlayerWeapon.enabled = true;
             var eff = Instantiate(Eff_Ult, effectTrs);
             Destroy(eff, 2);
         }
@@ -623,7 +664,7 @@ public partial class CS_Player : MonoBehaviour
     private void AnimUltFailed()
     {
         state = State.Normal;
-        ultTimer = ultInterval;
+        ultTimer = ultParameter.interval;
     }
 
     private void AnimUltTachi()
@@ -653,7 +694,7 @@ public partial class CS_Player : MonoBehaviour
             Destroy(eff, 1);
             audio.PlayOneShot(SE_Difence);
             // ガード中ダメージ半減
-            hp -= _damage * difenceDamageCut;
+            hp -= _damage * difenceParameter.cut;
         }
         else
         {
