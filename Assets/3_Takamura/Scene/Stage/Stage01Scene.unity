@@ -1287,6 +1287,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 52b00f7c099a2224facad48826ee4792, type: 2}
+    - target: {fileID: 6676384815485972441, guid: ed4f576053ab8d14784403b9b7a76853,
+        type: 3}
+      propertyPath: moveParameter.waterOnTheMoveSpeedCut
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -2364,29 +2364,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a27cac37a921b545afd03e35129ef6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  rotationSpeed: 0.05
-  waterOnTheMoveSpeedCut: 0.5
-  puddleEffect: {fileID: 1790143808323739139, guid: 1aaed39295b6be544a43cf937361fc71,
-    type: 3}
-  lefTrs: {fileID: 256397918365673309}
-  slidingSpeed: 10
-  slidingInterval: 0.5
-  csLookCollision: {fileID: 9055143303312566247}
-  collider: {fileID: 4601254944454018391}
-  attack1Power: 10
-  attack2Power: 20
-  attack1Interval: 0.2
-  attack2Interval: 0.2
-  ultPower: 50
-  ultInterval: 5
-  difenceInterval: 0.5
-  difenceDamageCut: 0.5
-  isDifence: 0
-  maxHP: 100
-  hp: 0
+  parameter:
+    hp: 100
+  moveParameter:
+    moveSpeed: 7
+    rotationSpeed: 0.05
+    waterOnTheMoveSpeedCut: 0
+  slidingParameter:
+    speed: 10
+    interval: 0.5
+  attack01Parameter:
+    damage: 10
+    interval: 0.2
+  attack02Parameter:
+    damage: 20
+    interval: 0.2
+  colPlayerWeapon: {fileID: 4601254944454018391}
+  ultParameter:
+    damage: 30
+    interval: 5
+  difenceParameter:
+    cut: 0.5
+    interval: 0.5
   damageAtackOkAttack: 30
-  weaponTransform: {fileID: 0}
   SE_Move: {fileID: 8300000, guid: 51e1fb83cad6d72448690d1452c39bc4, type: 3}
   SE_Attack: {fileID: 8300000, guid: 9aec4e9a772570245b1e574ac1f743ad, type: 3}
   SE_Sliding: {fileID: 8300000, guid: 26f60acc4ec90fd43912448c053ae368, type: 3}
@@ -2405,6 +2405,9 @@ MonoBehaviour:
   Eff_UltTachi: {fileID: 4932088507883938021, guid: 9f4ddcce82a29c54696b7aa3533cf943,
     type: 3}
   Eff_Ult: {fileID: 1393149056801700881, guid: b394e9eea4d533947b71db502c355207, type: 3}
+  puddleEffect: {fileID: 1790143808323739139, guid: 1aaed39295b6be544a43cf937361fc71,
+    type: 3}
+  lefTrs: {fileID: 256397918365673309}
 --- !u!54 &3757920466159725578
 Rigidbody:
   m_ObjectHideFlags: 0
