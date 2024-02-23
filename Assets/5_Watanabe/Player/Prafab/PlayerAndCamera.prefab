@@ -1295,7 +1295,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4030148390725037107}
   m_Layer: 6
-  m_Name: EffPos
+  m_Name: EffectPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2341,7 +2341,7 @@ Animator:
   m_GameObject: {fileID: 5404059835143721561}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ae278517d95860c4b8ee967897dd2dfb, type: 2}
+  m_Controller: {fileID: 9100000, guid: 52b00f7c099a2224facad48826ee4792, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2395,7 +2395,7 @@ MonoBehaviour:
   SE_Damage: {fileID: 8300000, guid: 776151ead8eabe14189a292b1877484c, type: 3}
   SE_Ult: {fileID: 8300000, guid: 98edc1f76e7e2c94a9e679cde73a3bb7, type: 3}
   SE_Jump: {fileID: 8300000, guid: 637a3a7e930ca464aa1140d8062d02f8, type: 3}
-  effectTrs: {fileID: 4030148390725037107}
+  effectTrs: {fileID: 0}
   Eff_Difence: {fileID: 5024009746357069194, guid: eb395517415e8b54db4af8d27ceb4935,
     type: 3}
   Eff_Attack01: {fileID: 7825825217749650993, guid: 88d8e31db18c9cb4d89c6a7cafd74e2f,
@@ -2430,7 +2430,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &692343522685268105
 CapsuleCollider:
