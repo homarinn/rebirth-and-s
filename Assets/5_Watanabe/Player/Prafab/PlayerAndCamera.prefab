@@ -2381,8 +2381,8 @@ MonoBehaviour:
     interval: 0.2
   colPlayerWeapon: {fileID: 4601254944454018391}
   ultParameter:
-    damage: 30
-    interval: 5
+    damage: 60
+    interval: 30
   difenceParameter:
     cut: 0.5
     interval: 0.5
