@@ -721,8 +721,6 @@ public class CS_Enemy1 : MonoBehaviour
         //    scaleY,
         //    newScaleZ);
 
-
-
         //各変数の更新
         SetShootInterval(type, magicMissileCount - 1);
         magicMissileCount++;
@@ -997,6 +995,17 @@ public class CS_Enemy1 : MonoBehaviour
     }
 
     /// <summary>
+    /// AnimationEvent用の関数(もや放出用)
+    /// </summary>
+    void DeathEventReleaseMist()
+    {
+        //エフェクト再生
+        Vector3 pos = transform.position;
+        pos.y += 2.0f;
+        Instantiate(releaseMist, pos, Quaternion.identity);
+    }
+
+    /// <summary>
     /// AnimationEvent用の関数(死亡用)
     /// </summary>
     void DeathEvent()
@@ -1264,11 +1273,6 @@ public class CS_Enemy1 : MonoBehaviour
             mist.Stop();
             trail.Stop();
             trailScript.GetSetIsPlay = false;
-
-            //エフェクト再生
-            Vector3 pos = transform.position;
-            pos.y += 2.0f;
-            Instantiate(releaseMist, pos, Quaternion.identity);
 
             //地面に下ろす(重力落下にしたので要らない)
             //目標までの距離から割合を算出してtimeArriveGroundの数値を変える
@@ -1669,6 +1673,8 @@ public class CS_Enemy1 : MonoBehaviour
         trail.Stop();
         trailScript.GetSetIsPlay = false;
 
+        //効果音停止
+        audioSources[1].Stop();
     }
 
     /// <summary>
