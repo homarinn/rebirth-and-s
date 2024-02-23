@@ -76,15 +76,15 @@ public class CS_PlayerWeapon : MonoBehaviour
             }
 
             // SE
-            if (attackDamage == cs_Player.Attack1Power)
+            if (attackDamage == cs_Player.Attack01Damage)
             {
                 audio.PlayOneShot(SE_Attack1Hit);
             }
-            else if (attackDamage == cs_Player.Attack2Power)
+            else if (attackDamage == cs_Player.Attack02Damage)
             {
                 audio.PlayOneShot(SE_Attack2Hit);
             }
-            else if (attackDamage == cs_Player.UltPower)
+            else if (attackDamage == cs_Player.UltDamage)
             {
             }
         }
