@@ -461,7 +461,7 @@ public class CS_Enemy1 : MonoBehaviour
         }
 
         //ƒ_ƒEƒ“
-        if(damageAmount > downedDamageAmount)
+        if(damageAmount >= downedDamageAmount)
         {
             Downed();
             return;
