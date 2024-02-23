@@ -34,6 +34,8 @@ public class CS_Event01 : MonoBehaviour
     [SerializeField]
     float test;
 
+    bool isAudio = false;
+
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
     public void ChangeState(eState nextState)
@@ -87,7 +89,12 @@ public class CS_Event01 : MonoBehaviour
                 ChangeState(eState.Standby);
                 break;
             case eState.Standby:
-                eventBGM.Play();
+                if (!isAudio)
+                {
+                    isAudio = true;
+                    eventBGM.Play();
+                }
+
                 Animator animator = goMabataki.GetComponent<Animator>();
                 if (animator.GetCurrentAnimatorStateInfo(0).IsName("FadeHide") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {

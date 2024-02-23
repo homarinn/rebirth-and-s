@@ -34,6 +34,8 @@ public class CS_EventMgr : MonoBehaviour
     [SerializeField, Header("EventBGM")]
     AudioSource eventBGM;
 
+    bool isAudio = false;
+
     //! @brief ステートの変更
     //! @param nextstate:変更予定のステート
     void ChangeState(eState nextState)
@@ -94,7 +96,11 @@ public class CS_EventMgr : MonoBehaviour
                 }
                 break;
             case eState.Standby:
-                eventBGM.Play();
+                if (!isAudio)
+                {
+                    isAudio = true;
+                    eventBGM.Play();
+                }
                 if (eventBGM.volume <= 0.3f)
                 {
                     eventBGM.volume += 0.2f * Time.deltaTime;
