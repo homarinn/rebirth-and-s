@@ -174,12 +174,16 @@ public partial class CS_Player : MonoBehaviour
     {
         get
         {
-            return Mathf.Clamp(ultTimer, 0, 5);
+            return ultTimer;
         }
     }
-
-
-    [Serializable]
+    public float UltInterval
+    {
+        get
+        {
+            return ultParameter.interval;
+        }
+    }
     private struct DifenceParameter
     {
         [Header("ダメージカット%")]
@@ -205,6 +209,19 @@ public partial class CS_Player : MonoBehaviour
             return isDeath;
         }
     }
+    private bool action = true;
+    public bool Action
+    {
+        get
+        {
+            return action;
+        }
+        set
+        {
+            action = value;
+        }
+    }
+
 
     // コンポーネント
     private Rigidbody rb;
@@ -212,7 +229,6 @@ public partial class CS_Player : MonoBehaviour
     private AudioSource audio;
     private CS_LookCollision csLookCollision; // 敵検知スクリプト
     private Transform trsCamera;          // カメラのTrs
-
 
     // SE
     [SerializeField, Header("移動SE")]
@@ -251,21 +267,6 @@ public partial class CS_Player : MonoBehaviour
     private Transform lefTrs;
 
 
-
-
-
-    private bool action = true;
-    public bool Action
-    {
-        get
-        {
-            return action;
-        }
-        set
-        {
-            action = value;
-        }
-    }
 
     // =======================
     //
