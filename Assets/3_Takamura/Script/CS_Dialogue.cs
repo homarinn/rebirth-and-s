@@ -12,6 +12,8 @@ public class CS_Dialogue : MonoBehaviour
     TextMeshProUGUI dialogueText;
     [SerializeField, Header("テキストファイル")]
     TextAsset file;
+    [SerializeField, Header("敵の名前テキストカラー")]
+    Color nameColor;
     //! @brief 読込用バッファ
     string pBuffer;
     //! @brief 改行で分割した1文
@@ -79,6 +81,14 @@ public class CS_Dialogue : MonoBehaviour
                     int indexSE = splitText[textIndex].IndexOf("#");
                     if (indexName != -1)
                     {
+                        if(splitText[textIndex].IndexOf("精霊") != -1)
+                        {
+                            talkernameText.color = new Color(1.0f, 1.0f, 1.0f);
+                        }
+                        else
+                        {
+                            talkernameText.color = nameColor;
+                        }
                         //! 名前更新
                         talkernameText.text = splitText[textIndex].Replace("/", "");
 
