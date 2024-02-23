@@ -820,8 +820,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimAttack1Faild()
     {
-        // プレイヤーがまだ近くにいる場合
-        if (IsNear(player))
+        // プレイヤーがまだ近くにいて
+        // 止まるように指示されてない場合
+        if (IsNear(player) && !isStop)
         {
             // 攻撃2に移行
             ChangeState(State.Attack2);
@@ -846,6 +847,13 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimAttack2()
     {
+        if(isStop)
+        {
+            // 武器が当たらないようにする
+            canWeaponHit = false;
+            return;
+        }
+
         // 武器が当たるようにする
         canWeaponHit = true;
 

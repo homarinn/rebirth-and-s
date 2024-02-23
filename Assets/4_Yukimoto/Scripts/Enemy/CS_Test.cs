@@ -36,5 +36,10 @@ public class CS_ATest : MonoBehaviour
         {
             enemyPlayer.CancelStandby();
         }
+
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            enemyPlayer.Standby();
+        }
     }
 }
