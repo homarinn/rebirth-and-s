@@ -77,7 +77,7 @@ public class CS_UIControl : MonoBehaviour
         {
             bOnce = true;
         }
-        Debug.Log("once : " + bOnce);
+        //Debug.Log("once : " + bOnce);
     }
 
     //! @brief Stage‚É‡‚Á‚½“G‚ÌHP‚ğİ’è
