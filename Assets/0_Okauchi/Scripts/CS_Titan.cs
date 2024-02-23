@@ -18,6 +18,7 @@ public class CS_Titan : MonoBehaviour
         DOWN,       //ダウン
         DIE,        //死亡
     }
+    [SerializeField, Header("state")]
     private State state = State.IDLE;
 
     //アニメーター
@@ -193,8 +194,12 @@ public class CS_Titan : MonoBehaviour
     private Transform weaknessTransform;
 
     //死亡しました
+    private bool isDeadAnimation = false;
     public bool isDead = false;
 
+    private bool isStopping = false;
+    private float stoppingIdleTimeCount = 0.0f;
+    private const float stoppingIdleTime = 1.5f;
 
     private void Awake()
     {
@@ -237,17 +242,30 @@ public class CS_Titan : MonoBehaviour
             default: 
                 break;
         }
+
+        if(isStopping)
+        {
+            stoppingIdleTimeCount -= Time.deltaTime;
+            if(stoppingIdleTimeCount <= 0.0f)
+            {
+                isStopping = false;
+                StartIdle();
+            }
+        }
     }
 
     //動き始める関数
     public void StartMoving()
     {
+        isStopping = false;
         StartWalk();
     }
 
     //止める関数
     public void StopMoving()
     {
+        isStopping = true;
+        stoppingIdleTimeCount = stoppingIdleTime;
         StartIdle();
     }
 
@@ -482,6 +500,7 @@ public class CS_Titan : MonoBehaviour
     //----------------------------------
     public void StartDown()
     {
+        if (isStopping || isDeadAnimation) return;
         //Stateとアニメーションの遷移
         state = State.DOWN;
         animator.SetTrigger("triggerStartDown");
@@ -529,6 +548,7 @@ public class CS_Titan : MonoBehaviour
         state = State.DIE;
         animator.SetTrigger("triggerDie");
         walkSE.Stop();
+        isDeadAnimation = true;
     }
     private void Die()
     {
@@ -578,8 +598,11 @@ public class CS_Titan : MonoBehaviour
         //ダウン中or死亡中でない場合は
         if (state != State.DOWN && state != State.DIE)
         {
-            //ダウンをスタートさせる
-            StartDown();
+            if(hp > 0.0f)
+            {
+                //ダウンをスタートさせる
+                StartDown();
+            }
         }
     }
 

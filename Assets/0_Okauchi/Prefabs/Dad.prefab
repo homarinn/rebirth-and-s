@@ -118,9 +118,9 @@ MonoBehaviour:
   damageCutPercentage: 0.75
   rushInterval: 0.18
   rushTime: 0.52
-  rushDefaultPower: 25
+  rushDefaultPower: 15
   rushDefaultSpeed: 16
-  rushPowerChargingIncrement: 7
+  rushPowerChargingIncrement: 3
   rushSpeedChargingIncrement: 4
   rushCountMin: 3
   rushCountMax: 5
