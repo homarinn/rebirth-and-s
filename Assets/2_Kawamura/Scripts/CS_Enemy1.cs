@@ -182,6 +182,9 @@ public class CS_Enemy1 : MonoBehaviour
     [Header("“y‰ŒƒGƒtƒFƒNƒg")]
     [SerializeField] ParticleSystem dustCloud;
 
+    [Header("’e¶¬Žž‚ÌSE")]
+    [SerializeField] private AudioClip createIceSE;
+
     [Header("’e‚ðŒ‚‚ÂSE")]
     [SerializeField] private AudioClip shotSE;
 
@@ -736,6 +739,9 @@ public class CS_Enemy1 : MonoBehaviour
         addPuddleRenderQueue++;
         if(addPuddleRenderQueue >= 20) { addPuddleRenderQueue = 0; }
         //if(addPuddleRenderQueue >= 15) { addPuddleRenderQueue = 0; }
+
+        //Œø‰Ê‰¹Ä¶
+        audioSources[2].PlayOneShot(createIceSE);
 
         //‘S‚Ä¶¬‚µ‚½‚ç¶¬‚ðŽ~‚ßAUŒ‚‚ÉˆÚ‚é
         if (magicMissileCount > magicMissileNumber[num])
