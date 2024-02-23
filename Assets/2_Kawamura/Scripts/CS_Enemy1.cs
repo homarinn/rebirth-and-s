@@ -182,6 +182,9 @@ public class CS_Enemy1 : MonoBehaviour
     [Header("土煙エフェクト")]
     [SerializeField] ParticleSystem dustCloud;
 
+    [Header("弾生成時のSE")]
+    [SerializeField] private AudioClip createIceSE;
+
     [Header("弾を撃つSE")]
     [SerializeField] private AudioClip shotSE;
 
@@ -458,7 +461,7 @@ public class CS_Enemy1 : MonoBehaviour
         }
 
         //ダウン
-        if(damageAmount > downedDamageAmount)
+        if(damageAmount >= downedDamageAmount)
         {
             Downed();
             return;
@@ -721,8 +724,6 @@ public class CS_Enemy1 : MonoBehaviour
         //    scaleY,
         //    newScaleZ);
 
-
-
         //各変数の更新
         SetShootInterval(type, magicMissileCount - 1);
         magicMissileCount++;
@@ -738,6 +739,9 @@ public class CS_Enemy1 : MonoBehaviour
         addPuddleRenderQueue++;
         if(addPuddleRenderQueue >= 20) { addPuddleRenderQueue = 0; }
         //if(addPuddleRenderQueue >= 15) { addPuddleRenderQueue = 0; }
+
+        //効果音再生
+        audioSources[2].PlayOneShot(createIceSE);
 
         //全て生成したら生成を止め、攻撃に移る
         if (magicMissileCount > magicMissileNumber[num])
@@ -994,6 +998,17 @@ public class CS_Enemy1 : MonoBehaviour
         {
             PlayDustCloudEffect();
         }
+    }
+
+    /// <summary>
+    /// AnimationEvent用の関数(もや放出用)
+    /// </summary>
+    void DeathEventReleaseMist()
+    {
+        //エフェクト再生
+        Vector3 pos = transform.position;
+        pos.y += 2.0f;
+        Instantiate(releaseMist, pos, Quaternion.identity);
     }
 
     /// <summary>
@@ -1264,11 +1279,6 @@ public class CS_Enemy1 : MonoBehaviour
             mist.Stop();
             trail.Stop();
             trailScript.GetSetIsPlay = false;
-
-            //エフェクト再生
-            Vector3 pos = transform.position;
-            pos.y += 2.0f;
-            Instantiate(releaseMist, pos, Quaternion.identity);
 
             //地面に下ろす(重力落下にしたので要らない)
             //目標までの距離から割合を算出してtimeArriveGroundの数値を変える
@@ -1669,6 +1679,8 @@ public class CS_Enemy1 : MonoBehaviour
         trail.Stop();
         trailScript.GetSetIsPlay = false;
 
+        //効果音停止
+        audioSources[1].Stop();
     }
 
     /// <summary>

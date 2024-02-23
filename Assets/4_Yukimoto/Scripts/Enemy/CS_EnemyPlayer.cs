@@ -267,22 +267,12 @@ public class CS_EnemyPlayer : MonoBehaviour
     // 攻撃検知用
     // ----------------------------
 
-    /// <summary> 攻撃などを検知できる時間 </summary>
-    [System.Serializable]
-    private struct ReceptionTime
-    {
-        /// <summary> 攻撃を検知できる時間(秒) </summary>
-        [Header("攻撃を検知できる時間(秒)")]
-        public float attack;
+    /// <summary> 攻撃を検知できる時間(秒) </summary>
+    private const float receptionAttackTime = 1.0f;
 
-        /// <summary> 必殺技を検知できる時間(秒) </summary>
-        [Header("必殺技を検知できる時間(秒)")]
-        public float ult;
-    }
-
-    /// <summary> 攻撃などを検知できる時間 </summary>
-    [Header("攻撃などを検知できる時間")]
-    [SerializeField] private ReceptionTime receptionTime;
+    /// <summary> 必殺技を検知できる時間(秒) </summary>
+    [Header("必殺技を検知できる時間(秒)")]
+    private const float receptionUltTime = 0.2f;
 
     // --------------------
     // AI制御用
@@ -830,8 +820,9 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimAttack1Faild()
     {
-        // プレイヤーがまだ近くにいる場合
-        if (IsNear(player))
+        // プレイヤーがまだ近くにいて
+        // 止まるように指示されてない場合
+        if (IsNear(player) && !isStop)
         {
             // 攻撃2に移行
             ChangeState(State.Attack2);
@@ -856,6 +847,13 @@ public class CS_EnemyPlayer : MonoBehaviour
     /// </summary>
     private void AnimAttack2()
     {
+        if(isStop)
+        {
+            // 武器が当たらないようにする
+            canWeaponHit = false;
+            return;
+        }
+
         // 武器が当たるようにする
         canWeaponHit = true;
 
@@ -1280,7 +1278,7 @@ public class CS_EnemyPlayer : MonoBehaviour
         // プレイヤーの必殺技のアニメーションが
         // ある程度再生されたら検知
         return elapsedTime >= ultStartTime &&
-            elapsedTime < ultStartTime + receptionTime.ult;
+            elapsedTime < ultStartTime + receptionUltTime;
     }
 
     /// <summary>
@@ -1317,7 +1315,7 @@ public class CS_EnemyPlayer : MonoBehaviour
 
         // 攻撃検知可能な時間を経過しているので
         // 攻撃を検知できない
-        if (elapsedTime > receptionTime.attack)
+        if (elapsedTime > receptionAttackTime)
         {
             return false;
         }
