@@ -2193,7 +2193,7 @@ MonoBehaviour:
     type: 3}
   reflctEffect: {fileID: 6793924868558427089, guid: 5171262e8a5cdb741ac4fbbeed5ee1c5,
     type: 3}
-  reflectTrs: {fileID: 0}
+  reflectTrs: {fileID: 4030148390725037107}
 --- !u!1 &5322875876326109795
 GameObject:
   m_ObjectHideFlags: 0
