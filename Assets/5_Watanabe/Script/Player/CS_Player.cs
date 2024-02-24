@@ -65,7 +65,6 @@ public partial class CS_Player : MonoBehaviour
     private MoveParameter moveParameter;
 
     private bool isWaterOnThe = false;  // 水たまりの上か判定
-    private bool moveOK = true;         // 移動許可
 
     [Serializable]
     private struct SlidingParameter
@@ -346,7 +345,6 @@ public partial class CS_Player : MonoBehaviour
 
                     rb.velocity = Vector3.zero;
                     state = State.Attack;
-                    rb.velocity = Vector3.zero;
                     anim.SetTrigger("AttackTrigger");  // アニメーションを再生
                 }
 
@@ -373,8 +371,8 @@ public partial class CS_Player : MonoBehaviour
                         transform.LookAt(pos);
                     }
 
-                    state = State.Ult;
                     rb.velocity = Vector3.zero;
+                    state = State.Ult;
                     anim.SetTrigger("UltTrigger");
                 }
                 if (hp <= 0)
@@ -444,7 +442,7 @@ public partial class CS_Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        if (!moveOK && state != State.Normal)
+        if (state != State.Normal)
         {
             return; // 移動不可
         }
