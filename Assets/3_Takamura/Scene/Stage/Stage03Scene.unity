@@ -891,6 +891,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
         type: 3}
+      propertyPath: guardParameter.cutRatio
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571286890000043425, guid: e84d9e8bab4e69545ab38469e21d6e68,
+        type: 3}
       propertyPath: attackParameter.interval
       value: 10
       objectReference: {fileID: 0}

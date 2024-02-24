@@ -184,6 +184,7 @@ public partial class CS_Player : MonoBehaviour
             return ultParameter.interval;
         }
     }
+    [Serializable]
     private struct DifenceParameter
     {
         [Header("ダメージカット%")]

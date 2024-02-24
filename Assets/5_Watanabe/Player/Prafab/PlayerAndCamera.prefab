@@ -2369,7 +2369,7 @@ MonoBehaviour:
   moveParameter:
     moveSpeed: 7
     rotationSpeed: 0.05
-    waterOnTheMoveSpeedCut: 0
+    waterOnTheMoveSpeedCut: 0.3
   slidingParameter:
     speed: 10
     interval: 0.5
@@ -2384,7 +2384,7 @@ MonoBehaviour:
     damage: 60
     interval: 30
   difenceParameter:
-    cut: 0.5
+    cut: 0.1
     interval: 0.5
   damageAtackOkAttack: 30
   SE_Move: {fileID: 8300000, guid: 51e1fb83cad6d72448690d1452c39bc4, type: 3}
@@ -2433,7 +2433,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!136 &692343522685268105
 CapsuleCollider:
