@@ -307,6 +307,7 @@ public partial class CS_Player : MonoBehaviour
     {
         if (isDeath || !action)
         {
+            anim.SetFloat("Speed", 0);
             return;
         }
         // インターバルを更新
